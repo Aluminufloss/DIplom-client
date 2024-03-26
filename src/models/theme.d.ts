@@ -1,7 +1,7 @@
 // import original module declarations
 import { css, SimpleInterpolation } from "styled-components";
 
-interface ThemeColor {
+interface ThemeColors {
   white: string;
   black: string;
   sidebarWhite: string;
@@ -36,9 +36,26 @@ interface ZIndexes {
   [name: string]: number;
 }
 
+declare module 'styled-components' {
+  export interface DefaultTheme {
+    fontFamily: string,
+    fontColor: string,
+    bgColor: string,
+    typography: {
+      fnMedium: SimpleInterpolation,
+      fnRegular: SimpleInterpolation,
+      fnText: SimpleInterpolation,
+    },
+    fontWeightValues: FontWeight,
+    fontFamilyValues: FontFamily,
+    zIndex: ZIndexes,
+    colorValues: ThemeColors,
+  }
+}
+
 export interface ThemeConfig {
-  schemeName?: string;
-  primaryColor?: string;
-  primaryHover?: string;
-  primaryTextColor?: string;
+  schemeName?: string,
+  primaryColor?: string,
+  primaryHover?: string,
+  primaryTextColor?: string
 }
