@@ -15,13 +15,14 @@ interface ThemeColors {
   redSecondary: string;
   blue: string;
   yellow: string;
-  orangeMain: string;
+  primary: string;
   orangeSecondary: string;
   error: string;
   overlayColor: string;
 }
 
 interface FontWeight {
+  semiBold: number;
   medium: number;
   regular: number;
   text: number;
@@ -42,9 +43,11 @@ declare module 'styled-components' {
     fontColor: string,
     bgColor: string,
     typography: {
+      fnSemiBold: SimpleInterpolation,
       fnMedium: SimpleInterpolation,
       fnRegular: SimpleInterpolation,
       fnText: SimpleInterpolation,
+      fnTitle1: SimpleInterpolation,
     },
     fontWeightValues: FontWeight,
     fontFamilyValues: FontFamily,
@@ -54,7 +57,6 @@ declare module 'styled-components' {
 }
 
 export interface ThemeConfig {
-  schemeName?: string,
   primaryColor?: string,
   primaryHover?: string,
   primaryTextColor?: string
