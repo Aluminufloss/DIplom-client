@@ -1,5 +1,8 @@
-import ThemeClientProvider from "@/theme/ThemeProvider";
 import type { Metadata } from "next";
+
+import ThemeClientProvider from "@/providers/ThemeProvider";
+import GlobalStylesProvider from "@/providers/GlobalStylesProvider";
+
 import { Poppins } from "next/font/google";
 
 const inter = Poppins({ weight: "400", subsets: ["latin"] });
@@ -16,6 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GlobalStylesProvider />
       <ThemeClientProvider>
         <body className={inter.className}>{children}</body>
       </ThemeClientProvider>
