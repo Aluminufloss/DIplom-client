@@ -1,7 +1,8 @@
+import ThemeClientProvider from "@/theme/ThemeProvider";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
-const inter = Poppins({ weight: "400", subsets: ['latin'] });
+const inter = Poppins({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ManageryApp",
@@ -15,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <ThemeClientProvider>
+        <body className={inter.className}>{children}</body>
+      </ThemeClientProvider>
     </html>
   );
 }
