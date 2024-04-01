@@ -1,7 +1,7 @@
 import { normalize } from 'styled-normalize';
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyle = createGlobalStyle<{ fontVariable: string }>`
+const GlobalStyle = createGlobalStyle`
 
   ${normalize};
 
@@ -15,8 +15,6 @@ const GlobalStyle = createGlobalStyle<{ fontVariable: string }>`
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-
   }
 
   html {

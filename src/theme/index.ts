@@ -10,6 +10,11 @@ export const themeDefault: DefaultTheme = {
   fontColor: colors.black,
   bgColor: colors.white,
   typography: {
+    fnSemiBold: css`
+      font-family: ${fontFamily.primary};
+      font-weight: ${fontWeight.semiBold};
+      font-style: normal;
+    `,
     fnMedium: css`
       font-family: ${fontFamily.primary};
       font-weight: ${fontWeight.medium};
@@ -24,10 +29,23 @@ export const themeDefault: DefaultTheme = {
       font-family: ${fontFamily.primary};
       font-weight: ${fontWeight.text};
     `,
+    fnTitle1: css`
+      font-size: 16px;
+      line-height: 24px;
+    `,
   },
-	zIndex,
+  zIndex,
   fontWeightValues: fontWeight,
   fontFamilyValues: fontFamily,
   colorValues: colors,
 };
 
+export const createTheme = (configParams?: {
+  primaryColor?: string,
+}): DefaultTheme => ({
+  ...themeDefault,
+  colorValues: {
+    ...themeDefault.colorValues,
+    primary: configParams?.primaryColor ?? themeDefault.colorValues.primary,
+  }
+});

@@ -6,6 +6,7 @@ export const fontFamily: FontFamily = {
 };
 
 export const fontWeight: FontWeight = {
+  semiBold: 600,
   medium: 500,
   regular: 400,
   text: 450,
@@ -18,9 +19,9 @@ export const colors: ThemeColors = {
   grey: "#C1C1C1",
   darkGrey: "#A0A0A0",
   lightGrey: "#DFDFDF",
-  strokeGrey: "#",
+  strokeGrey: "#F5F6F7",
   hoverGrey: "#",
-  orangeMain: "#FABB18",
+  primary: "#FABB18",
   orangeSecondary: "#EFAE04",
   yellow: "#FFF44F",
   redMain: "#F85640",
