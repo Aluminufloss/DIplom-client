@@ -33,6 +33,18 @@ export const themeDefault: DefaultTheme = {
       font-size: 16px;
       line-height: 24px;
     `,
+    fnTitle2: css`
+      font-size: 20px;
+      line-height: 28px;
+    `,
+    fnLabel1: css`
+      font-size: 12px;
+      line-height: 16px;
+    `,
+    fnLabel2: css`
+      font-size: 14px;
+      line-height: 18px;
+    `,
   },
   zIndex,
   fontWeightValues: fontWeight,
@@ -41,11 +53,11 @@ export const themeDefault: DefaultTheme = {
 };
 
 export const createTheme = (configParams?: {
-  primaryColor?: string,
+  primaryColor?: string;
 }): DefaultTheme => ({
   ...themeDefault,
   colorValues: {
     ...themeDefault.colorValues,
     primary: configParams?.primaryColor ?? themeDefault.colorValues.primary,
-  }
+  },
 });

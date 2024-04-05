@@ -11,3 +11,8 @@ export enum DeviceTypes {
   desktop = 'desktop',
   tablet = 'tablet',
 }
+
+export enum AppRoutes {
+  login = 'login',
+  registration = 'registration',
+}
