@@ -12,8 +12,8 @@ export const validationRegSchema = Yup.object().shape({
     ),
   password: Yup.string()
     .required("Password is Required.")
-    .min(5, "Password is too short - should be 5 chars minimum.")
-    .max(20, "Password is too long - should be 20 chars maximum.")
+    .min(5, "Password is too short")
+    .max(20, "Password is too long")
     .matches(/(?=.*[0-9])/, "Password must contain a number.")
     .matches(/[!@#%&_]/, "Password must contain a special character.")
     .matches(

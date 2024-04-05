@@ -5,20 +5,21 @@ import styled from "styled-components";
 import { Form, Formik } from "formik";
 import Image from "next/image";
 
+import { FormTypes } from "../../models";
 import { STATIC_URLS } from "@/utils/constant";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
-import Input from "@/components/UI/input";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
-import LinkButton from "@/components/UI/buttons/LinkButton";
-import ChangeFormLink from "../ChangeFormLink";
-import { FormTypes } from "../../models";
 import InputWithValidation from "../InputWithValidation";
+import ChangeFormLink from "../ChangeFormLink";
 
 type PropsType = {};
 
 const RegistrationForm: React.FC<PropsType> = () => {
-  const handleFormSubmit = React.useCallback(() => {}, []);
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const handleFormSubmit = React.useCallback(() => { 
+    setIsSubmitted(true); 
+  }, []);
 
   return (
     <Formik
@@ -28,11 +29,12 @@ const RegistrationForm: React.FC<PropsType> = () => {
         password: "",
         passwordAgain: "",
       }}
+      validateOnChange={isSubmitted}
+      validateOnBlur={false}
       validationSchema={validationRegSchema}
       onSubmit={handleFormSubmit}
-      validateOnChange
     >
-      {({ values, errors, handleChange }) => (
+      {({ values, errors, touched,  handleChange }) => (
         <StyledContainer>
           <Image
             src={`${STATIC_URLS.LOGO}/logo_big.png`}
@@ -46,8 +48,9 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputName="email"
             inputType="email"
             inputValue={values.email}
-            inputClassname="form__email-input"
+            inputClassname="form__email-input form__input"
             errorString={errors.email}
+            isTouched={touched.email}
             onChange={handleChange}
             labelText="Enter your email"
           />
@@ -56,8 +59,9 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputName="username"
             inputType="text"
             inputValue={values.username}
-            inputClassname="form__username-input"
+            inputClassname="form__username-input form__input"
             errorString={errors.username}
+            isTouched={touched.username}
             onChange={handleChange}
             labelText="Enter your username"
           />
@@ -66,8 +70,9 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputName="password"
             inputType="password"
             inputValue={values.password}
-            inputClassname="form__password-input"
+            inputClassname="form__password-input form__input"
             errorString={errors.password}
+            isTouched={touched.password}
             onChange={handleChange}
             labelText="Enter your password"
           />
@@ -76,26 +81,23 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputName="passwordAgain"
             inputType="password"
             inputValue={values.passwordAgain}
-            inputClassname="form__password-input"
+            inputClassname="form__password-input form__input"
             errorString={errors.passwordAgain}
+            isTouched={touched.passwordAgain}
             onChange={handleChange}
             labelText="Confirm your password"
           />
-
-          <LinkButton
-            href="#"
-            className="form__forgot-password-btn"
-            title="Forgot password?"
-          />
           <PrimaryButton
             title="Log in"
-            onClick={() => {}}
+            type="submit"
+            onClick={handleFormSubmit}
             className="form__login-btn"
           />
           <ChangeFormLink
             type={FormTypes.registration}
             linkText="Login"
             question="Have an account?"
+            className="form__link"
           />
         </StyledContainer>
       )}
@@ -107,10 +109,15 @@ const StyledContainer = styled(Form)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
 
-  overflow: hidden;
+  justify-content: space-between;
+
+  position: relative;
 
   width: 100%;
+  max-height: 90vh;
 
   padding: 48px 32px;
 
@@ -120,6 +127,10 @@ const StyledContainer = styled(Form)`
   .form {
     &__logo {
       margin-bottom: 10px;
+    }
+
+    &__input {
+
     }
 
     &__title {
@@ -135,17 +146,18 @@ const StyledContainer = styled(Form)`
     }
 
     &__password-input {
-      margin-top: 20px;
     }
 
     &__forgot-password-btn {
-      margin-top: 16px;
 
       align-self: flex-end;
     }
 
+    &__link {
+      margin-top: 32px;
+    }
+
     &__login-btn {
-      margin-top: 20px;
     }
   }
 `;
