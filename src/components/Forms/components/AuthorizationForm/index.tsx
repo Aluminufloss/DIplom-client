@@ -12,6 +12,7 @@ import LinkButton from "@/components/UI/buttons/LinkButton";
 import ChangeFormLink from "../ChangeFormLink";
 import { FormTypes } from "../../models";
 import { Form, Formik } from "formik";
+import RememberMeButton from "../RememberMeButton";
 
 type PropsType = {};
 
@@ -47,11 +48,14 @@ const AuthorizationForm: React.FC<PropsType> = () => {
             placeholder="Password"
             className="form__password-input"
           />
-          <LinkButton
-            href="#"
-            className="form__forgot-password-btn"
-            title="Forgot password?"
-          />
+          <div className="form__actions-container">
+            <RememberMeButton />
+            <LinkButton
+              href="#"
+              className="form__forgot-password-btn"
+              title="Forgot password?"
+            />
+          </div>
           <PrimaryButton
             type="submit"
             title="Log in"
@@ -88,13 +92,22 @@ const StyledContainer = styled(Form)`
       margin-top: 24px;
     }
 
+    &__actions-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      width: 100%;
+
+      margin-top: 16px;
+    }
+
     &__password-input {
       margin-top: 20px;
     }
 
     &__forgot-password-btn {
-      margin-top: 16px;
-
       align-self: flex-end;
     }
 
