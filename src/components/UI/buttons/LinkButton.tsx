@@ -19,7 +19,7 @@ const LinkButton: React.FC<PropsType> = (props) => {
 
 const StyledButton = styled(Link)`
   ${(props) => props.theme.typography.fnSemiBold};
-  ${(props) => props.theme.typography.fnTitle1};
+  ${(props) => props.theme.typography.fnLabel2};
 
   color: ${(props) => props.theme.colorValues.primary};
 
