@@ -13,15 +13,18 @@ type PropsType = {
   labelText: string;
   inputClassname?: string;
   errorString?: string;
+  isTouched?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const InputWithValidation: React.FC<PropsType> = (props) => {
   const isInputEmpty = !props.inputValue.length;
 
+  const hasError = props.errorString;
+
   return (
     <StyledInput>
-      <label
+      {/* <label
         htmlFor={props.inputName}
         className={cn(!isInputEmpty && "input__label--active", "input__label")}
       >
@@ -33,11 +36,12 @@ const InputWithValidation: React.FC<PropsType> = (props) => {
         )}
       >
         {props.inputValue}
-      </span>
+      </span> */}
       <Input
         name={props.inputName}
         type={props.inputType}
         value={props.inputValue}
+        placeholder={props.labelText}
         onChange={props.onChange}
         className={cn(props.inputClassname, "input")}
       />
@@ -51,7 +55,9 @@ const StyledInput = styled.div`
   width: 100%;
 
   .input {
-		margin-bottom: 4px;
+    margin-bottom: 4px;
+
+    box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
 
     &__label {
       position: absolute;
@@ -73,7 +79,7 @@ const StyledInput = styled.div`
 
     &__text--visible {
       position: absolute;
-      bottom: 5px;
+      top: 22px;
       left: 16px;
 
       opacity: 1;
@@ -87,7 +93,9 @@ const StyledInput = styled.div`
       ${(props) => props.theme.typography.fnRegular};
       ${(props) => props.theme.typography.fnLabel2};
 
-			margin-bottom: 10px;
+      color: ${(props) => props.theme.colorValues.redSecondary};
+
+      margin-bottom: 12px;
     }
   }
 `;

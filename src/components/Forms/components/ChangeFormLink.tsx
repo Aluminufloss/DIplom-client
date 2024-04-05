@@ -10,6 +10,7 @@ type PropsType = {
   question: string;
   linkText: string;
   type: FormTypes;
+  className?: string;
 };
 
 const ChangeFormLink: React.FC<PropsType> = (props) => {
@@ -19,7 +20,7 @@ const ChangeFormLink: React.FC<PropsType> = (props) => {
       : AppRoutes.registration;
 
   return (
-    <StyledContainer>
+    <StyledContainer className={props.className}>
       <span className="additional-action--text">{props.question}</span>
       <LinkButton
         href={link}
