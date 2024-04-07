@@ -4,13 +4,14 @@ import styled from "styled-components";
 
 type PropsType = {
   className?: string;
+  textClassName?: string;
 };
 
 const RememberMeButton: React.FC<PropsType> = (props) => {
   return (
     <StyledCheckBox className={cn(props.className)}>
       <input type="checkbox" className="input" />
-      <span className="text">Remember me</span>
+      <span className={cn("text", props.textClassName)}>Remember me</span>
     </StyledCheckBox>
   );
 };
