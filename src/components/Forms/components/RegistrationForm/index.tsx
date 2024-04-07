@@ -6,20 +6,47 @@ import { Form, Formik } from "formik";
 import Image from "next/image";
 
 import { FormTypes } from "../../models";
-import { STATIC_URLS } from "@/utils/constant";
+import { AppRoutes, STATIC_URLS } from "@/utils/constant";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import InputWithValidation from "../InputWithValidation";
 import ChangeFormLink from "../ChangeFormLink";
+import AuthService from "@/api/services/AuthService";
+import { useRouter } from "next/navigation";
+import media from "@/utils/media";
 
 type PropsType = {};
 
+type SubmitParamsType = {
+  email: string;
+  password: string;
+  username: string;
+};
+
 const RegistrationForm: React.FC<PropsType> = () => {
   const [isSubmitted, setIsSubmitted] = React.useState(false);
-  const handleFormSubmit = React.useCallback(() => { 
-    setIsSubmitted(true); 
-  }, []);
+
+  const router = useRouter();
+
+  const handleFormSubmit = React.useCallback(
+    async (values: SubmitParamsType) => {
+      try {
+        const response = await AuthService.registration(
+          values.email,
+          values.password,
+          values.username
+        );
+
+        localStorage.setItem("accessToken", response.data.accessToken);
+
+        router.push(AppRoutes.tasks);
+      } catch (err) {
+
+      }
+    },
+    []
+  );
 
   return (
     <Formik
@@ -34,7 +61,7 @@ const RegistrationForm: React.FC<PropsType> = () => {
       validationSchema={validationRegSchema}
       onSubmit={handleFormSubmit}
     >
-      {({ values, errors, touched,  handleChange }) => (
+      {({ values, errors, touched, handleChange }) => (
         <StyledContainer>
           <Image
             src={`${STATIC_URLS.LOGO}/logo_big.png`}
@@ -70,7 +97,8 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputName="password"
             inputType="password"
             inputValue={values.password}
-            inputClassname="form__password-input form__input"
+            inputClassname="form__input"
+            errorStringClassName="form__error-string"
             errorString={errors.password}
             isTouched={touched.password}
             onChange={handleChange}
@@ -81,7 +109,7 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputName="passwordAgain"
             inputType="password"
             inputValue={values.passwordAgain}
-            inputClassname="form__password-input form__input"
+            inputClassname="form__input"
             errorString={errors.passwordAgain}
             isTouched={touched.passwordAgain}
             onChange={handleChange}
@@ -90,7 +118,7 @@ const RegistrationForm: React.FC<PropsType> = () => {
           <PrimaryButton
             title="Log in"
             type="submit"
-            onClick={handleFormSubmit}
+            onClick={() => {}}
             className="form__login-btn"
           />
           <ChangeFormLink
@@ -109,7 +137,7 @@ const StyledContainer = styled(Form)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
 
   justify-content: space-between;
@@ -129,10 +157,6 @@ const StyledContainer = styled(Form)`
       margin-bottom: 10px;
     }
 
-    &__input {
-
-    }
-
     &__title {
       ${(props) => props.theme.typography.fnSemiBold};
       ${(props) => props.theme.typography.fnTitle2};
@@ -145,11 +169,7 @@ const StyledContainer = styled(Form)`
       margin-bottom: 16px;
     }
 
-    &__password-input {
-    }
-
     &__forgot-password-btn {
-
       align-self: flex-end;
     }
 
@@ -158,6 +178,32 @@ const StyledContainer = styled(Form)`
     }
 
     &__login-btn {
+      margin-top: 12px;
+    }
+  }
+
+  ${media.desktop} {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    .form {
+      &__title {
+        ${(props) => props.theme.typography.fnTitle1};
+        max-width: 260px;
+      }
+
+      &__input {
+        ${(props) => props.theme.typography.fnLabel2}
+      }
+
+      &__link {
+        ${(props) => props.theme.typography.fnLabel2}
+      }
+
+      &__error-string {
+        ${(props) => props.theme.typography.fnLabel2}
+      }
     }
   }
 `;
