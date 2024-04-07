@@ -1,4 +1,4 @@
-import React from "react";
+import React, { InputHTMLAttributes } from "react";
 import styled from "styled-components";
 import cn from "classnames";
 
@@ -12,19 +12,21 @@ type PropsType = {
   inputValue: string;
   labelText: string;
   inputClassname?: string;
+  errorStringClassName?: string;
   errorString?: string;
   isTouched?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const InputWithValidation: React.FC<PropsType> = (props) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const isInputEmpty = !props.inputValue.length;
 
   const hasError = props.errorString;
 
   return (
     <StyledInput>
-      {/* <label
+      <label
         htmlFor={props.inputName}
         className={cn(!isInputEmpty && "input__label--active", "input__label")}
       >
@@ -36,16 +38,16 @@ const InputWithValidation: React.FC<PropsType> = (props) => {
         )}
       >
         {props.inputValue}
-      </span> */}
+      </span>
       <Input
         name={props.inputName}
         type={props.inputType}
         value={props.inputValue}
-        placeholder={props.labelText}
         onChange={props.onChange}
-        className={cn(props.inputClassname, "input")}
+        forwardedRef={inputRef}
+        className={cn(props.inputClassname, "input", !isInputEmpty && "input--active")}
       />
-      <p className="input__error">{props.errorString}</p>
+      <p className={cn("input__error", props.errorStringClassName)}>{props.errorString}</p>
     </StyledInput>
   );
 };
@@ -58,6 +60,8 @@ const StyledInput = styled.div`
     margin-bottom: 4px;
 
     box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
+
+    color: transparent;
 
     &__label {
       position: absolute;
