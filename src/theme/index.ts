@@ -37,6 +37,10 @@ export const themeDefault: DefaultTheme = {
       font-size: 20px;
       line-height: 28px;
     `,
+    fnTitle3: css`
+      font-size: 24px;
+      line-height: 32px;
+    `,
     fnLabel1: css`
       font-size: 12px;
       line-height: 16px;
