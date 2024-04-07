@@ -2,22 +2,45 @@
 
 import React from "react";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Form, Formik } from "formik";
 
-import { STATIC_URLS } from "@/utils/constant";
+import { FormTypes } from "../../models";
+import { AppRoutes, STATIC_URLS } from "@/utils/constant";
+import AuthService from "@/api/services/AuthService";
 
 import Input from "@/components/UI/input";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import LinkButton from "@/components/UI/buttons/LinkButton";
 import ChangeFormLink from "../ChangeFormLink";
-import { FormTypes } from "../../models";
-import { Form, Formik } from "formik";
 import RememberMeButton from "../RememberMeButton";
+import media from "@/utils/media";
+import LoadingIndicator from "@/components/UI/LoadingIndicator";
 
-type PropsType = {};
+const AuthorizationForm: React.FC = () => {
+  const [hasError, setHasError] = React.useState(false);
 
-const AuthorizationForm: React.FC<PropsType> = () => {
-  const handleFormSubmit = React.useCallback(() => {}, []);
+  const router = useRouter();
+
+  const handleFormSubmit = React.useCallback(
+    async (values: { email: string; password: string }) => {
+      try {
+        if (!values.email || !values.password) {
+          return;
+        }
+
+        const response = await AuthService.login(values.email, values.password);
+
+        localStorage.setItem("accessToken", response.data.accessToken);
+
+        router.push(AppRoutes.tasks);
+      } catch (err) {
+        setHasError(true);
+      }
+    },
+    []
+  );
 
   return (
     <Formik
@@ -36,7 +59,7 @@ const AuthorizationForm: React.FC<PropsType> = () => {
             name="email"
             value={values.email}
             onChange={handleChange}
-            type="email"
+            type="text"
             placeholder="Email"
             className="form__email-input"
           />
@@ -49,7 +72,7 @@ const AuthorizationForm: React.FC<PropsType> = () => {
             className="form__password-input"
           />
           <div className="form__actions-container">
-            <RememberMeButton />
+            <RememberMeButton textClassName="form__remember-me-btn"/>
             <LinkButton
               href="#"
               className="form__forgot-password-btn"
@@ -62,10 +85,16 @@ const AuthorizationForm: React.FC<PropsType> = () => {
             onClick={() => {}}
             className="form__login-btn"
           />
+          {hasError && (
+            <p className="form__error-string">
+              Check the correctness of the entered data.
+            </p>
+          )}
           <ChangeFormLink
             type={FormTypes.login}
             linkText="Sign up."
             question="Don't have an account?"
+            className="form__change-form-link"
           />
         </StyledContainer>
       )}
@@ -81,11 +110,14 @@ const StyledContainer = styled(Form)`
   overflow: hidden;
 
   width: 100%;
+  max-width: 720px;
 
   padding: 48px 32px;
 
   border-radius: 8px;
   border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
+
+  box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
 
   .form {
     &__email-input {
@@ -113,6 +145,38 @@ const StyledContainer = styled(Form)`
 
     &__login-btn {
       margin-top: 20px;
+    }
+
+    &__error-string {
+      ${(props) => props.theme.typography.fnLabel2};
+      ${(props) => props.theme.typography.fnRegular};
+      color: ${(props) => props.theme.colorValues.error};
+
+      margin-top: 16px;
+    }
+  }
+
+  ${media.desktop} {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    .form {
+      &__error-string {
+        ${(props) => props.theme.typography.fnLabel1}
+      }
+
+      &__forgot-password-btn {
+        ${(props) => props.theme.typography.fnLabel1}
+      }
+
+      &__remember-me-btn {
+        ${(props) => props.theme.typography.fnLabel1}
+      }
+
+      &__change-form-link {
+        ${(props) => props.theme.typography.fnLabel1}
+      }
     }
   }
 `;
