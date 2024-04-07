@@ -1,5 +1,5 @@
-export function getMediaQuery(minWidth: number): string {
-  return `@media (min-width: ${minWidth}px)`;
+export function getMediaQuery(maxWdith: number): string {
+  return `@media (max-width: ${maxWdith}px)`;
 }
 
 export const mediaValues = {
@@ -20,5 +20,5 @@ const media = {
 export default media;
 
 export function getIsMobile(): boolean {
-  return !window.matchMedia("(min-width: 720px)").matches
+  return !window.matchMedia("(max-width: 720px)").matches
 }
