@@ -1,6 +1,4 @@
-"use client";
-
-import React from "react";
+import React, { forwardRef } from "react";
 import { Field } from "formik";
 import styled from "styled-components";
 
@@ -11,11 +9,12 @@ type PropsType = {
   id?: string;
   name?: string;
   width?: number;
+  forwardedRef?: React.RefObject<HTMLInputElement>;
   className?: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-const Input: React.FC<PropsType> = (props) => {
+const Input: React.FC<PropsType> = forwardRef<HTMLInputElement, PropsType>((props, ref) => {
   return (
     <StyledInput
       id={props.id}
@@ -25,10 +24,11 @@ const Input: React.FC<PropsType> = (props) => {
       width={props.width}
       onChange={props.onChange}
       placeholder={props.placeholder}
+      ref={ref}
       className={props.className}
     />
   );
-};
+});
 
 const StyledInput = styled(Field)<PropsType>`
   ${(props) => props.theme.typography.fnMedium};
