@@ -1,6 +1,7 @@
 "use client";
 
 import { STATIC_URLS } from "@/utils/constant";
+import media from "@/utils/media";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -39,12 +40,29 @@ const StyledFormsLayout = styled.div`
   }
 
   .content {
-		flex-grow: 1;
+    flex-grow: 1;
 
-		display: flex;
-		justify-content: center;
-		align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-		padding: 40px 24px;
+    padding: 40px 24px;
+  }
+
+  ${media.custom(1150)} {
+    justify-content: center;
+    align-items: center;
+
+    .image__container {
+      width: 0;
+    }
+  }
+
+  ${media.desktop} {
+    padding: 28px 24px;
+
+    .content {
+      padding: 0;
+    }
   }
 `;
