@@ -42,12 +42,16 @@ const StyledSearch = styled.div`
 
   border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
 
-  padding: 12px 16px;
+  padding: 8px 12px;
 
   .input {
     width: 100%;
 
     background-color: ${(props) => props.theme.colorValues.strokeGrey};
+  }
+
+  .focused {
+    max-width: 340px;
   }
 `;
 

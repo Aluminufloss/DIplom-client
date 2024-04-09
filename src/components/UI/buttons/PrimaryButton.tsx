@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 type PropsType = {
   title: string;
-  onClick: () => void;
+  onClick?: () => void;
   type?: "submit" | "reset" | undefined;
   className?: string;
 };
@@ -42,7 +42,7 @@ const StyledButton = styled.button`
 
   &:active {
     background-color: ${(props) => props.theme.colorValues.orangeSecondary};
-    transform: translateY(1px);
+    transform: translateY(1px) scale(0.98);
   }
 `;
 

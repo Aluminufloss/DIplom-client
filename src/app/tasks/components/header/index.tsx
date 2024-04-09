@@ -19,6 +19,12 @@ const Header: React.FC<PropsType> = (props) => {
 const StyledHeader = styled.header`
 	width: 100%;
 
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	z-index: 100;
+
 	display: flex;
 	align-items: center;
 
@@ -26,7 +32,7 @@ const StyledHeader = styled.header`
 
 	border-bottom: 1px solid ${props => props.theme.colorValues.lightGrey};
 
-	padding: 20px 24px;
+	padding: 16px 24px;
 `;
 
 export default Header;

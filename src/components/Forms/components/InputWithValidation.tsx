@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from "react";
+import React from "react";
 import styled from "styled-components";
 import cn from "classnames";
 
@@ -15,6 +15,7 @@ type PropsType = {
   errorStringClassName?: string;
   errorString?: string;
   isTouched?: boolean;
+  shouldShowPasswordText?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
@@ -34,7 +35,8 @@ const InputWithValidation: React.FC<PropsType> = (props) => {
       </label>
       <span
         className={cn(
-          !isInputEmpty ? "input__text--visible" : "input__text--hidden"
+          !isInputEmpty ? "input__text--visible" : "input__text--hidden",
+          props.shouldShowPasswordText && "input__text--no-secure"
         )}
       >
         {props.inputValue}
@@ -45,9 +47,15 @@ const InputWithValidation: React.FC<PropsType> = (props) => {
         value={props.inputValue}
         onChange={props.onChange}
         forwardedRef={inputRef}
-        className={cn(props.inputClassname, "input", !isInputEmpty && "input--active")}
+        className={cn(
+          props.inputClassname,
+          "input",
+          !isInputEmpty && "input--active"
+        )}
       />
-      <p className={cn("input__error", props.errorStringClassName)}>{props.errorString}</p>
+      <p className={cn("input__error", props.errorStringClassName)}>
+        {props.errorString}
+      </p>
     </StyledInput>
   );
 };
@@ -87,10 +95,16 @@ const StyledInput = styled.div`
       left: 16px;
 
       opacity: 1;
+
+      -webkit-text-security: disc;
     }
 
     &__text--hidden {
       opacity: 0;
+    }
+
+    &__text--no-secure {
+      -webkit-text-security: none;
     }
 
     &__error {

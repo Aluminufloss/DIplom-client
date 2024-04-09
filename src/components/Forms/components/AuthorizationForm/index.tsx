@@ -7,7 +7,9 @@ import Image from "next/image";
 import { Form, Formik } from "formik";
 
 import { FormTypes } from "../../models";
+import media from "@/utils/media";
 import { AppRoutes, STATIC_URLS } from "@/utils/constant";
+
 import AuthService from "@/api/services/AuthService";
 
 import Input from "@/components/UI/input";
@@ -15,8 +17,6 @@ import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import LinkButton from "@/components/UI/buttons/LinkButton";
 import ChangeFormLink from "../ChangeFormLink";
 import RememberMeButton from "../RememberMeButton";
-import media from "@/utils/media";
-import LoadingIndicator from "@/components/UI/LoadingIndicator";
 
 const AuthorizationForm: React.FC = () => {
   const [hasError, setHasError] = React.useState(false);
@@ -74,7 +74,7 @@ const AuthorizationForm: React.FC = () => {
           <div className="form__actions-container">
             <RememberMeButton textClassName="form__remember-me-btn"/>
             <LinkButton
-              href="#"
+              href={AppRoutes.sendChangePasswordLink}
               className="form__forgot-password-btn"
               title="Forgot password?"
             />

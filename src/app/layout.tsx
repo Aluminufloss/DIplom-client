@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { Provider } from "react-redux";
 
 import ThemeClientProvider from "@/providers/ThemeProvider";
 import GlobalStylesProvider from "@/providers/GlobalStylesProvider";
+
+import store from "@/store";
 
 import { Poppins } from "next/font/google";
 

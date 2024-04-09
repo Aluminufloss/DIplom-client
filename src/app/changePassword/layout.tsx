@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import styled from "styled-components";
 
 import media from "@/utils/media";
@@ -19,6 +20,8 @@ export default function FormsLayout({
 const StyledFormsLayout = styled.div`
   width: 100%;
   height: 100%;
+
+  position: relative;
 
   display: flex;
 

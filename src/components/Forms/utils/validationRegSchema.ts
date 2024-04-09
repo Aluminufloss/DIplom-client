@@ -13,13 +13,9 @@ export const validationRegSchema = Yup.object().shape({
   password: Yup.string()
     .required("Password is Required.")
     .min(5, "Password is too short")
-    .max(20, "Password is too long")
-    .matches(/(?=.*[0-9])/, "Password must contain a number.")
-    .matches(/[!@#%&_]/, "Password must contain a special character.")
-    .matches(
-      /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-      "Password can only contain Latin letters."
-    ),
+    .max(30, "Password is too long")
+    .matches(/[!@#%&_]/, "Password must contain a special character. (!@#%&_)")
+    .matches(/[a-zA-Z0-9]/, 'Password can only contain Latin letters and numbers.'),
   passwordAgain: Yup.string()
     .required("Confirm your password")
     .oneOf([Yup.ref("password")], "Passwords must match"),

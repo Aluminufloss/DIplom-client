@@ -2,25 +2,34 @@
 
 import React from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Form, Formik } from "formik";
 
-import { STATIC_URLS } from "@/utils/constant";
+import { AppRoutes, STATIC_URLS } from "@/utils/constant";
 import media from "@/utils/media";
+import { validationRegSchema } from "../utils/validationRegSchema";
+
+import AuthService from "@/api/services/AuthService";
 
 import InputWithValidation from "../components/InputWithValidation";
-import AuthService from "@/api/services/AuthService";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
+import ConfirmationMessageModal from "@/components/ConfirmationMessageModal";
 
 type PropsType = {
   searchParams: string[];
 };
 
 const ChangePasswordForm: React.FC<PropsType> = (props) => {
-  const [hasError, setHasError] = React.useState(false);
   const [isPasswordsVisible, setIsPasswordsVisible] = React.useState(false);
-  const router = useRouter();
+  const [isConfirmationMessageVisible, setIsConfirmationMessageVisible] =
+    React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(true);
+
+  const confirmationMessage = isSuccess
+    ? `You’ve successfully changed password.
+       Press button to go back on login page`
+    : `Something went wrong with changing your password.,
+       Try it later. Press button to go back on login page`;
 
   const email = props.searchParams[1].replace("%40", "@");
 
@@ -30,75 +39,101 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
         if (!values.passwordAgain || !values.password) {
           return;
         }
-        
-        await AuthService.changePassword(values.password, email);
+
+        const response = await AuthService.changePassword(
+          values.password,
+          email
+        );
+        console.log("res", response);
+
+        setIsSuccess(true);
+        setIsConfirmationMessageVisible(true);
       } catch (err) {
-        setHasError(true);
+        console.log(err);
+        setIsSuccess(false);
+        setIsConfirmationMessageVisible(true);
       }
     },
     [email]
   );
 
   return (
-    <Formik
-      initialValues={{ password: "", passwordAgain: "" }}
-      onSubmit={handleFormSubmit}
-    >
-      {({ values, touched, errors, handleChange }) => (
-        <StyledContainer>
-          <Image
-            src={`${STATIC_URLS.LOGO}/logo_big.png`}
-            alt="App logo"
-            width={228}
-            height={60}
-          />
+    <>
+      {!isConfirmationMessageVisible ? (
+        <Formik
+          initialValues={{ password: "", passwordAgain: "" }}
+          validationSchema={validationRegSchema}
+          onSubmit={handleFormSubmit}
+        >
+          {({ values, touched, errors, handleChange }) => (
+            <StyledContainer>
+              <Image
+                src={`${STATIC_URLS.LOGO}/logo_big.png`}
+                alt="App logo"
+                width={228}
+                height={60}
+              />
 
-          <span className="form__title">Password change</span>
+              <span className="form__title">Password change</span>
 
-          <p className="form__description">Enter new password</p>
+              <p className="form__description">Enter new password</p>
 
-          <InputWithValidation
-            inputName="password"
-            inputType="password"
-            inputValue={values.password}
-            inputClassname="form__input"
-            errorString={errors.password}
-            isTouched={touched.password}
-            onChange={handleChange}
-            labelText="Enter your new password"
-          />
+              <InputWithValidation
+                inputName="password"
+                inputType="password"
+                inputValue={values.password}
+                inputClassname="form__input"
+                errorString={errors.password}
+                isTouched={touched.password}
+                labelText="Enter your new password"
+                shouldShowPasswordText={isPasswordsVisible}
+                onChange={handleChange}
+              />
 
-          <InputWithValidation
-            inputName="passwordAgain"
-            inputType="password"
-            inputValue={values.passwordAgain}
-            inputClassname="form__input"
-            errorString={errors.passwordAgain}
-            isTouched={touched.passwordAgain}
-            onChange={handleChange}
-            labelText="Enter your password again"
-          />
+              <InputWithValidation
+                inputName="passwordAgain"
+                inputType="password"
+                inputValue={values.passwordAgain}
+                inputClassname="form__input"
+                errorString={errors.passwordAgain}
+                isTouched={touched.passwordAgain}
+                labelText="Enter your password again"
+                shouldShowPasswordText={isPasswordsVisible}
+                onChange={handleChange}
+              />
 
-          <div className="form__show-passwords">
-            <input type="checkbox" className="form__show-passwords--checkbox" />
-            <span className="form__show-passwords--text">Show passwords</span>
-          </div>
+              <div className="form__show-passwords">
+                <input
+                  type="checkbox"
+                  className="form__show-passwords--checkbox"
+                  onClick={() => setIsPasswordsVisible((prev) => !prev)}
+                />
+                <span className="form__show-passwords--text">
+                  Show passwords
+                </span>
+              </div>
 
-          <PrimaryButton
-            type="submit"
-            title="Change password"
-            onClick={() => {}}
-            className="form__login-btn"
-          />
+              <PrimaryButton
+                type="submit"
+                title="Change password"
+                className="form__login-btn"
+              />
 
-          {hasError && (
-            <p className="form__error-string">
-              Check the correctness of the entered data.
-            </p>
+              {!isSuccess && (
+                <p className="form__error-string">
+                  Check the correctness of the entered data.
+                </p>
+              )}
+            </StyledContainer>
           )}
-        </StyledContainer>
+        </Formik>
+      ) : (
+        <ConfirmationMessageModal
+          message={confirmationMessage}
+          isSuccess={isSuccess}
+        />
       )}
-    </Formik>
+    </>
   );
 };
 
