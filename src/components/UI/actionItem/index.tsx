@@ -18,18 +18,18 @@ const ActionItem: React.FC<PropsType> = (props) => {
 };
 
 const StyledActionItem = styled.button`
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
 
-	transition: all .3s ease;
+  transition: all 0.3s ease;
 
-	&:hover {
-		transform: scale(1.1);
-	}
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 export default ActionItem;

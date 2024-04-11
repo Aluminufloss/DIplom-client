@@ -6,8 +6,9 @@ import styled from "styled-components";
 import { store } from "@/store";
 
 import Header from "./components/header";
-import TabbedView from "@/components/SidebarModals/TabbedView";
-import TaskTabbedView from "@/components/SidebarModals/TaskTabbedView";
+import TabbedSidebar from "@/components/SidebarModals/TabbedSidebar";
+import TaskSidebar from "@/components/SidebarModals/TaskSidebar";
+import UserSidebar from "@/components/SidebarModals/UserSidebar";
 
 const TasksLayout = ({
   children,
@@ -18,8 +19,9 @@ const TasksLayout = ({
     <Provider store={store}>
       <StyledLayout>
         <Header />
-        <TabbedView />
-				<TaskTabbedView />
+        <TabbedSidebar />
+        <TaskSidebar />
+        <UserSidebar />
         {children}
       </StyledLayout>
     </Provider>

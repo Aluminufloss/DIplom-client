@@ -1,13 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import tabbedView from './slices/TabbedView';
+import tabbedSidebar from "./slices/TabbedSidebar";
+import userSidebar from "./slices/UserSidebar";
+import taskSidebar from "./slices/TaskSidebar";
 
-
-export const store =  configureStore({
+export const store = configureStore({
   reducer: {
-		tabbedView,
-	}
-})
+    tabbedSidebar,
+    userSidebar,
+    taskSidebar,
+  },
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

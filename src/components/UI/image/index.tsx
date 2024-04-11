@@ -7,6 +7,7 @@ type PropsType = {
   height?: number;
   src: string;
   alt: string;
+  fill?: boolean;
   className?: string;
 };
 
@@ -20,6 +21,7 @@ const ReusableImage: React.FC<PropsType> = (props) => {
 			height={height} 
 			src={props.src} 
 			alt={props.alt} 
+      fill={props.fill}
       className={props.className}
 		/>
   );

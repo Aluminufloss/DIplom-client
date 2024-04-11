@@ -7,8 +7,8 @@ type PropsType = {
 	
 }
 
-const TaskTabbedView: React.FC<PropsType> = (props) => {
-	const modalState = useAppSelector(state => state.tabbedView);
+const UserSidebar: React.FC<PropsType> = (props) => {
+	const modalState = useAppSelector(state => state.userSidebar);
 
 	return (
 		<StyledView isViewVisible={modalState.isViewVisible}>
@@ -39,4 +39,4 @@ const StyledView = styled.div<StyleProps>`
 	transition: all .7s ease;
 `;
 
-export default TaskTabbedView;
+export default UserSidebar;

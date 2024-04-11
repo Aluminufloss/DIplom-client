@@ -1,18 +1,25 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
 import ReusableImage from "../image";
 
 type PropsType = {
   type: "categories" | "details";
   iconPath: string;
   itemText: string;
+  isActiveTab: boolean;
   onCLick?: () => void;
   className?: string;
 };
 
 const TabItem: React.FC<PropsType> = (props) => {
   return (
-    <StyledTabItem type={props.type}>
+    <StyledTabItem
+      type={props.type}
+      className={props.className}
+      isActiveTab={props.isActiveTab}
+      onClick={props.onCLick}
+    >
       <ReusableImage
         src={props.iconPath}
         alt="Tab action"
@@ -25,6 +32,7 @@ const TabItem: React.FC<PropsType> = (props) => {
 
 type StyleType = {
   type: "categories" | "details";
+  isActiveTab: boolean;
 };
 
 const StyledTabItem = styled.div<StyleType>`
@@ -36,36 +44,41 @@ const StyledTabItem = styled.div<StyleType>`
 
   border-radius: 5px;
 
+  background-color: ${(props) =>
+    props.isActiveTab && props.theme.colorValues.primary};
+
   padding: 5px 8px;
 
-  transition: all .5s ease;
+  transition: all 0.5s ease;
+
+  cursor: pointer;
 
   .tab-item {
     &__text {
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
-      color: ${(props) => props.theme.colorValues.black};
+      color: ${(props) =>
+        props.isActiveTab
+          ? props.theme.colorValues.white
+          : props.theme.colorValues.black};
 
       margin-left: 5px;
     }
   }
 
-  &:hover {
-    background-color: ${(props) =>
-      props.type === "categories"
-        ? props.theme.colorValues.primary
-        : props.theme.colorValues.black};
+  ${(props) =>
+    !props.isActiveTab &&
+    css`
+      &:hover {
+        background-color: ${props.type === "categories"
+          ? props.theme.colorValues.lightGrey
+          : props.theme.colorValues.black};
 
-    .tab-item {
-      &__text {
-        color: ${(props) => props.theme.colorValues.white};
+        .tab-item__icon {
+          color: ${props.theme.colorValues.white};
+        }
       }
-
-      &__icon {
-        color: ${(props) => props.theme.colorValues.white};
-      }
-    }
-  }
+    `}
 `;
 
 export default TabItem;

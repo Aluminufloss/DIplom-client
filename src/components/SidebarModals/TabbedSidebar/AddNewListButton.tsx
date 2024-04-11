@@ -5,11 +5,13 @@ import { STATIC_URLS } from "@/utils/constant";
 
 import ReusableImage from "@/components/UI/image";
 
-type PropsType = {};
+type PropsType = {
+  className?: string;
+};
 
 const AddNewListButton: React.FC<PropsType> = (props) => {
   return (
-    <StyledButton>
+    <StyledButton className={props.className}>
       <div className="button__new-list">
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
@@ -33,31 +35,42 @@ const StyledButton = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
-  padding: 5px 8px;
+  justify-content: space-between;
 
   .button__new-list {
-    border-radius: 5px;
-
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    padding: 5px 8px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
 
     &--text {
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
       color: ${(props) => props.theme.colorValues.black};
+
+      margin-left: 5px;
     }
 
     &--group {
       display: flex;
       flex-direction: row;
       align-items: center;
+
+      padding: 5px 8px;
+
+      border-radius: 5px;
+
+      cursor: pointer;
     }
 
     &:hover,
     &--group:hover {
-      background-color: ${(props) => props.theme.colorValues.hoverGrey};
+      background-color: ${(props) => props.theme.colorValues.lightGrey};
     }
   }
 `;

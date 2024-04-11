@@ -7,11 +7,11 @@ import { Form, Formik } from "formik";
 
 import { AppRoutes, STATIC_URLS } from "@/utils/constant";
 import media from "@/utils/media";
-import { validationRegSchema } from "../utils/validationRegSchema";
+import { validationRegSchema } from "../../utils/validationRegSchema";
 
 import AuthService from "@/api/services/AuthService";
 
-import InputWithValidation from "../components/InputWithValidation";
+import InputWithValidation from "../InputWithValidation";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import ConfirmationMessageModal from "@/components/ConfirmationMessageModal";
 

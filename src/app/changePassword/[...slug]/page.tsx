@@ -1,4 +1,4 @@
-import ChangePasswordForm from "@/components/Forms/ChangePasswordForm";
+import ChangePasswordForm from "@/components/Forms/components/ChangePasswordForm";
 
 
 export default function ChangePasswordPage({ params }: { params: { slug: string[] } }) {

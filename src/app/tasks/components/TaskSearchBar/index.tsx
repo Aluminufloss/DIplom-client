@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import ReusableImage from "@/components/UI/image";
+
 import { STATIC_URLS } from "@/utils/constant";
-import cn from "classnames";
+
+import ReusableImage from "@/components/UI/image";
 
 type PropsType = {};
 
@@ -11,10 +12,8 @@ const TaskSearchBar: React.FC<PropsType> = (props) => {
 
   return (
     <StyledSearch
-      onFocus={() => {
-        setIsInputFocused((prev) => !prev);
-      }}
-      className={cn(isInputFocused && "focused")}
+      onClick={() => setIsInputFocused(true)}
+      isFocused={isInputFocused}
     >
       <ReusableImage
         src={`${STATIC_URLS.SVG_ICONS}/search.svg`}
@@ -22,6 +21,7 @@ const TaskSearchBar: React.FC<PropsType> = (props) => {
       />
       <input
         type="search"
+        onBlur={() => setIsInputFocused(false)}
         placeholder="Search your tasks..."
         className="input"
       />
@@ -29,29 +29,28 @@ const TaskSearchBar: React.FC<PropsType> = (props) => {
   );
 };
 
-const StyledSearch = styled.div`
+const StyledSearch = styled.div<{ isFocused: boolean }>`
   width: 100%;
-  max-width: 300px;
+  max-width: ${props => props.isFocused ? '340px' : '300px'};
 
   display: flex;
   align-items: center;
 
   border-radius: 5px;
 
-  background-color: ${(props) => props.theme.colorValues.strokeGrey};
+  background-color: ${props => props.theme.colorValues.strokeGrey};
 
-  border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
+  border: 1px solid ${props => props.theme.colorValues.lightGrey};
 
   padding: 8px 12px;
 
+  transition: max-width 0.3s ease;
+
   .input {
     width: 100%;
+    height: 100%;
 
-    background-color: ${(props) => props.theme.colorValues.strokeGrey};
-  }
-
-  .focused {
-    max-width: 340px;
+    background-color: ${props => props.theme.colorValues.strokeGrey};
   }
 `;
 
