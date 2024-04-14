@@ -23,7 +23,7 @@ const StyledButton = styled(Link)`
 
   color: ${(props) => props.theme.colorValues.primary};
 
-	text-decoration: none;
+	text-decoration: underline;
 
   transition: all 0.1s linear;
 

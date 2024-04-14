@@ -11,7 +11,7 @@ const UserSidebar: React.FC<PropsType> = (props) => {
 	const modalState = useAppSelector(state => state.userSidebar);
 
 	return (
-		<StyledView isViewVisible={modalState.isViewVisible}>
+		<StyledView $isViewVisible={modalState.isViewVisible}>
 			<div>
 
 			</div>
@@ -20,7 +20,7 @@ const UserSidebar: React.FC<PropsType> = (props) => {
 }
 
 type StyleProps = {
-	isViewVisible: boolean;
+	$isViewVisible: boolean;
 }
 
 const StyledView = styled.div<StyleProps>`
@@ -30,7 +30,7 @@ const StyledView = styled.div<StyleProps>`
 
 	position: fixed;
 	top: 75px;
-	right: ${props => props.isViewVisible ? "0" : "-230px"};
+	right: ${props => props.$isViewVisible ? "0" : "-230px"};
 
 	z-index: 50;
 

@@ -51,6 +51,7 @@ declare module 'styled-components' {
       fnTitle2: SimpleInterpolation,
       fnTitle3: SimpleInterpolation,
       fnTitle4: SimpleInterpolation,
+      fnTitle5: SimpleInterpolation,
       fnLabel0: SimpleInterpolation,
       fnLabel1: SimpleInterpolation,
       fnLabel2: SimpleInterpolation,

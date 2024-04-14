@@ -1,17 +1,19 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { STATIC_URLS } from "@/utils/constant";
 import { getTodayDay } from "@/utils/getTodayDay";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
-
-import TabItem from "@/components/UI/tabItem";
-import AddNewListButton from "./AddNewListButton";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { setSelectedTab } from "@/store/slices/TabbedSidebar";
 import { TabEnum } from "@/store/slices/TabbedSidebar/models";
 
-type PropsType = {};
+import TabItem from "@/components/UI/tabItem";
+import AddNewListButton from "./AddNewListButton";
+
+type PropsType = {
+  className?: string;
+};
 
 const TabbedSidebar: React.FC<PropsType> = (props) => {
   const modalState = useAppSelector((state) => state.tabbedSidebar);
@@ -21,7 +23,10 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
   const today = getTodayDay();
 
   return (
-    <StyledView isViewVisible={modalState.isViewVisible}>
+    <StyledView
+      $isViewVisible={modalState.isViewVisible}
+      className={props.className}
+    >
       <div className="tab-item__today">
         <TabItem
           iconPath={`${STATIC_URLS.SVG_ICONS}/today.svg`}
@@ -65,7 +70,7 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
 };
 
 type StyleProps = {
-  isViewVisible: boolean;
+  $isViewVisible: boolean;
 };
 
 const StyledView = styled.div<StyleProps>`
@@ -76,14 +81,19 @@ const StyledView = styled.div<StyleProps>`
   padding: 24px 16px;
 
   position: fixed;
-  top: 75px;
-  left: ${(props) => (props.isViewVisible ? "0" : "-230px")};
+  left: -230px;
 
   z-index: 50;
 
   background-color: ${(props) => props.theme.colorValues.sidebarWhite};
 
-  transition: all 0.5s ease;
+  transition: left 0.5s ease;
+
+  ${(props) =>
+    props.$isViewVisible &&
+    css`
+      left: 0;
+    `}
 
   .tab-item {
     margin-bottom: 12px;

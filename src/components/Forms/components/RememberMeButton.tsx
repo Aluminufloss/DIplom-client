@@ -3,14 +3,21 @@ import cn from "classnames";
 import styled from "styled-components";
 
 type PropsType = {
+  name: string;
   className?: string;
   textClassName?: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const RememberMeButton: React.FC<PropsType> = (props) => {
   return (
     <StyledCheckBox className={cn(props.className)}>
-      <input type="checkbox" className="input" />
+      <input
+        name={props.name}
+        type="checkbox"
+        className="input"
+        onChange={props.onChange}
+      />
       <span className={cn("text", props.textClassName)}>Remember me</span>
     </StyledCheckBox>
   );
@@ -37,7 +44,7 @@ const StyledCheckBox = styled.div`
   }
 
   input[type="checkbox"] {
-    accent-color: ${props => props.theme.colorValues.primary};
+    accent-color: ${(props) => props.theme.colorValues.primary};
   }
 `;
 

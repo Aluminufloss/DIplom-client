@@ -9,6 +9,7 @@ import { STATIC_URLS } from "@/utils/constant";
 import media from "@/utils/media";
 
 import AuthService from "@/api/services/AuthService";
+
 import Input from "@/components/UI/input";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import ConfirmationMessageModal from "@/components/ConfirmationMessageModal";
@@ -50,7 +51,7 @@ const SendChangePasswordLinkForm: React.FC = () => {
     <>
       {!isConfirmationModalVisible ? (
         <Formik initialValues={{ email: "" }} onSubmit={handleFormSubmit}>
-          {({ values, handleChange }) => (
+          {({ values, isSubmitting, handleChange }) => (
             <StyledContainer>
               <Image
                 src={`${STATIC_URLS.LOGO}/logo_big.png`}
@@ -78,6 +79,7 @@ const SendChangePasswordLinkForm: React.FC = () => {
               <PrimaryButton
                 type="submit"
                 title="Send link"
+                isLoading={isSubmitting}
                 className="form__login-btn"
               />
             </StyledContainer>

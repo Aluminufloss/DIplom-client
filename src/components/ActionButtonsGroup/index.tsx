@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
@@ -9,27 +11,21 @@ import { toggleTabbedSidebarVisibility } from "@/store/slices/TabbedSidebar";
 
 import ActionItem from "@/components/UI/actionItem";
 
-type PropsType = {
-  className?: string;
-};
-
-const ActionButtonsGroup: React.FC<PropsType> = (props) => {
+const ActionButtonsGroup: React.FC = (props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   return (
-    <StyledContainer className={props.className}>
+    <StyledContainer>
       <ActionItem
         onClick={() => dispatch(toggleTabbedSidebarVisibility())}
         imageSrc={`${STATIC_URLS.SVG_ICONS}/menu.svg`}
         imageAlt="menu icon"
-        clasName="action__item"
       />
       <ActionItem
         onClick={() => router.push(AppPaths.tasks)}
         imageSrc={`${STATIC_URLS.SVG_ICONS}/home.svg`}
         imageAlt="home icon"
-        clasName="action__item"
       />
     </StyledContainer>
   );
@@ -38,10 +34,6 @@ const ActionButtonsGroup: React.FC<PropsType> = (props) => {
 const StyledContainer = styled.div`
   display: flex;
   align-items: center;
-
-  .action__item {
-    margin-right: 16px;
-  }
 `;
 
 export default ActionButtonsGroup;

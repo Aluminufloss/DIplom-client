@@ -13,7 +13,7 @@ const TaskSearchBar: React.FC<PropsType> = (props) => {
   return (
     <StyledSearch
       onClick={() => setIsInputFocused(true)}
-      isFocused={isInputFocused}
+      $isFocused={isInputFocused}
     >
       <ReusableImage
         src={`${STATIC_URLS.SVG_ICONS}/search.svg`}
@@ -29,9 +29,9 @@ const TaskSearchBar: React.FC<PropsType> = (props) => {
   );
 };
 
-const StyledSearch = styled.div<{ isFocused: boolean }>`
+const StyledSearch = styled.div<{ $isFocused: boolean }>`
   width: 100%;
-  max-width: ${props => props.isFocused ? '340px' : '300px'};
+  max-width: ${props => props.$isFocused ? '340px' : '300px'};
 
   display: flex;
   align-items: center;

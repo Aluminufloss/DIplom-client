@@ -1,7 +1,9 @@
 import * as Yup from "yup";
 
 export const validationRegSchema = Yup.object().shape({
-  email: Yup.string().email("Email must be a valid").required("Email is Required."),
+  email: Yup.string()
+    .email("Email must be a valid")
+    .required("Email is Required."),
   username: Yup.string()
     .required("Username is Required.")
     .min(5, "Username is too Short.")
@@ -14,8 +16,10 @@ export const validationRegSchema = Yup.object().shape({
     .required("Password is Required.")
     .min(5, "Password is too short")
     .max(30, "Password is too long")
-    .matches(/[!@#%&_]/, "Password must contain a special character. (!@#%&_)")
-    .matches(/[a-zA-Z0-9]/, 'Password can only contain Latin letters and numbers.'),
+    .matches(
+      /[a-zA-Z0-9]/,
+      "Password can only contain Latin letters and numbers."
+    ),
   passwordAgain: Yup.string()
     .required("Confirm your password")
     .oneOf([Yup.ref("password")], "Passwords must match"),

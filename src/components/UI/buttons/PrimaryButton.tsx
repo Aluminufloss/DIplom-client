@@ -1,11 +1,13 @@
 import React from "react";
+import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 
 type PropsType = {
   title: string;
-  onClick?: () => void;
   type?: "submit" | "reset" | undefined;
   className?: string;
+  isLoading?: boolean;
+  onClick?: () => void;
 };
 
 const PrimaryButton: React.FC<PropsType> = (props) => {
@@ -15,7 +17,15 @@ const PrimaryButton: React.FC<PropsType> = (props) => {
       type={props.type}
       className={props.className}
     >
-      {props.title}
+      {!props.isLoading ? (
+        props.title
+      ) : (
+        <ClipLoader 
+          size={16} 
+          color="#ffffff" 
+          className="loader" 
+        />
+      )}
     </StyledButton>
   );
 };
@@ -26,6 +36,12 @@ const StyledButton = styled.button`
 
   background-color: ${(props) => props.theme.colorValues.primary};
   color: ${(props) => props.theme.colorValues.white};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
 
   width: 100%;
   max-width: 340px;

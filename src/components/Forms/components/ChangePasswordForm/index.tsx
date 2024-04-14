@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { Form, Formik } from "formik";
 
-import { AppRoutes, STATIC_URLS } from "@/utils/constant";
+import { STATIC_URLS } from "@/utils/constant";
 import media from "@/utils/media";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
@@ -31,7 +31,7 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
     : `Something went wrong with changing your password.,
        Try it later. Press button to go back on login page`;
 
-  const email = props.searchParams[1].replace("%40", "@");
+  const urlString = props.searchParams[0];
 
   const handleFormSubmit = React.useCallback(
     async (values: { password: string; passwordAgain: string }) => {
@@ -42,9 +42,8 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
 
         const response = await AuthService.changePassword(
           values.password,
-          email
+          urlString
         );
-        console.log("res", response);
 
         setIsSuccess(true);
         setIsConfirmationMessageVisible(true);
@@ -54,7 +53,7 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
         setIsConfirmationMessageVisible(true);
       }
     },
-    [email]
+    [urlString]
   );
 
   return (
@@ -65,7 +64,7 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
           validationSchema={validationRegSchema}
           onSubmit={handleFormSubmit}
         >
-          {({ values, touched, errors, handleChange }) => (
+          {({ values, touched, errors, isSubmitting, handleChange }) => (
             <StyledContainer>
               <Image
                 src={`${STATIC_URLS.LOGO}/logo_big.png`}
@@ -116,6 +115,7 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
               <PrimaryButton
                 type="submit"
                 title="Change password"
+                isLoading={isSubmitting}
                 className="form__login-btn"
               />
 

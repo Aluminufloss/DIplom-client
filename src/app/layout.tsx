@@ -20,6 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link rel="icon" href="/images/app_icon.ico" sizes="24x24" />
       <StyledComponentsRegistry>
         <GlobalStylesProvider />
         <ThemeClientProvider>

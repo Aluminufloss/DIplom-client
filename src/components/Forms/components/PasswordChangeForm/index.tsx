@@ -30,7 +30,7 @@ const RegistrationForm: React.FC<PropsType> = () => {
       onSubmit={handleFormSubmit}
       validateOnChange
     >
-      {({ values, errors, touched,  handleChange }) => (
+      {({ values, errors, touched, isSubmitting, handleChange }) => (
         <StyledContainer>
           <Image
             src={`${STATIC_URLS.LOGO}/logo_big.png`}
@@ -83,6 +83,7 @@ const RegistrationForm: React.FC<PropsType> = () => {
           <PrimaryButton
             title="Log in"
             onClick={() => {}}
+            isLoading={isSubmitting}
             className="form__login-btn"
           />
           <ChangeFormLink
@@ -120,7 +121,6 @@ const StyledContainer = styled(Form)`
     }
 
     &__input {
-
     }
 
     &__title {
@@ -139,7 +139,6 @@ const StyledContainer = styled(Form)`
     }
 
     &__forgot-password-btn {
-
       align-self: flex-end;
     }
 

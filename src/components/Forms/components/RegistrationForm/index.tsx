@@ -5,8 +5,9 @@ import styled from "styled-components";
 import { Form, Formik } from "formik";
 import Image from "next/image";
 
-import { FormTypes } from "../../models";
+import media from "@/utils/media";
 import { AppRoutes, STATIC_URLS } from "@/utils/constant";
+import { FormTypes } from "../../models";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
@@ -14,54 +15,54 @@ import InputWithValidation from "../InputWithValidation";
 import ChangeFormLink from "../ChangeFormLink";
 import AuthService from "@/api/services/AuthService";
 import { useRouter } from "next/navigation";
-import media from "@/utils/media";
+import ErrorString from "../ErrorString";
 
-type PropsType = {};
-
-type SubmitParamsType = {
+type FormParamsType = {
   email: string;
   password: string;
   username: string;
+  passwordAgain: string;
 };
 
-const RegistrationForm: React.FC<PropsType> = () => {
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
+const RegistrationForm: React.FC = () => {
+  const [validateOnChange, setValidateOnChange] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const initialFormParams: FormParamsType = React.useMemo(() => {
+    return {
+      email: "",
+      password: "",
+      username: "",
+      passwordAgain: "",
+    };
+  }, []);
 
   const router = useRouter();
 
-  const handleFormSubmit = React.useCallback(
-    async (values: SubmitParamsType) => {
-      try {
-        const response = await AuthService.registration(
-          values.email,
-          values.password,
-          values.username
-        );
+  const handleFormSubmit = React.useCallback(async (values: FormParamsType) => {
+    try {
+      setError("");
 
-        localStorage.setItem("accessToken", response.data.accessToken);
+      await AuthService.registration(
+        values.email,
+        values.password,
+        values.username
+      );
 
-        router.push(AppRoutes.tasks);
-      } catch (err) {
-
-      }
-    },
-    []
-  );
+      router.push(AppRoutes.tasks);
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+  }, []);
 
   return (
     <Formik
-      initialValues={{
-        email: "",
-        username: "",
-        password: "",
-        passwordAgain: "",
-      }}
-      validateOnChange={isSubmitted}
-      validateOnBlur={false}
+      initialValues={initialFormParams}
+      validateOnChange={validateOnChange}
       validationSchema={validationRegSchema}
       onSubmit={handleFormSubmit}
     >
-      {({ values, errors, touched, handleChange }) => (
+      {({ values, errors, touched, isSubmitting, handleChange }) => (
         <StyledContainer>
           <Image
             src={`${STATIC_URLS.LOGO}/logo_big.png`}
@@ -98,7 +99,6 @@ const RegistrationForm: React.FC<PropsType> = () => {
             inputType="password"
             inputValue={values.password}
             inputClassname="form__input"
-            errorStringClassName="form__error-string"
             errorString={errors.password}
             isTouched={touched.password}
             onChange={handleChange}
@@ -115,10 +115,14 @@ const RegistrationForm: React.FC<PropsType> = () => {
             onChange={handleChange}
             labelText="Confirm your password"
           />
+          {!!error.length && (
+            <ErrorString text={error} className="form__error-string" />
+          )}
           <PrimaryButton
-            title="Log in"
+            title="Registration"
             type="submit"
-            onClick={() => {}}
+            onClick={() => setValidateOnChange(true)}
+            isLoading={isSubmitting}
             className="form__login-btn"
           />
           <ChangeFormLink
@@ -136,26 +140,21 @@ const RegistrationForm: React.FC<PropsType> = () => {
 const StyledContainer = styled(Form)`
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
-
   justify-content: space-between;
+  align-items: center;
 
   position: relative;
 
   width: 100%;
-  max-height: 90vh;
 
   padding: 48px 32px;
 
   border-radius: 8px;
   border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
 
+  box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
+
   .form {
-    &__logo {
-      margin-bottom: 10px;
-    }
 
     &__title {
       ${(props) => props.theme.typography.fnSemiBold};
@@ -179,6 +178,10 @@ const StyledContainer = styled(Form)`
 
     &__login-btn {
       margin-top: 12px;
+    }
+
+    &__error-string {
+      margin-bottom: 6px;
     }
   }
 

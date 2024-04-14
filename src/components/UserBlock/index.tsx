@@ -11,15 +11,17 @@ const UserBlock: React.FC = (props) => {
     React.useState(false);
 
   return (
-    <StyledUserButton onClick={() => setIsDropdownMenuVisible((prev) => !prev)}>
+    <StyledUserButton>
       <p className="title">Title text</p>
-      <ReusableImage
-        src={`${STATIC_URLS.BACKGROUND}/user_default.png`}
-        alt="User icon"
-        width={24}
-        height={24}
-        className="image"
-      />
+      <div className="image__wrapper"  onClick={() => setIsDropdownMenuVisible((prev) => !prev)}>
+        <ReusableImage
+          src={`${STATIC_URLS.BACKGROUND}/user_default.png`}
+          alt="User icon"
+          width={24}
+          height={24}
+          className="image"
+        />
+      </div>
       {isDropdownMenuVisible && <UserDropDownMenu />}
     </StyledUserButton>
   );
@@ -39,6 +41,13 @@ const StyledUserButton = styled.div`
 
     &:hover {
       transform: scale(1.1);
+    }
+
+    &__wrapper {
+      width: 24px;
+      height: 24px;
+
+      user-select: none;
     }
   }
 

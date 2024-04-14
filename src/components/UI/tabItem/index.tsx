@@ -17,7 +17,7 @@ const TabItem: React.FC<PropsType> = (props) => {
     <StyledTabItem
       type={props.type}
       className={props.className}
-      isActiveTab={props.isActiveTab}
+      $isActiveTab={props.isActiveTab}
       onClick={props.onCLick}
     >
       <ReusableImage
@@ -32,7 +32,7 @@ const TabItem: React.FC<PropsType> = (props) => {
 
 type StyleType = {
   type: "categories" | "details";
-  isActiveTab: boolean;
+  $isActiveTab: boolean;
 };
 
 const StyledTabItem = styled.div<StyleType>`
@@ -45,7 +45,7 @@ const StyledTabItem = styled.div<StyleType>`
   border-radius: 5px;
 
   background-color: ${(props) =>
-    props.isActiveTab && props.theme.colorValues.primary};
+    props.$isActiveTab && props.theme.colorValues.primary};
 
   padding: 5px 8px;
 
@@ -58,7 +58,7 @@ const StyledTabItem = styled.div<StyleType>`
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
       color: ${(props) =>
-        props.isActiveTab
+        props.$isActiveTab
           ? props.theme.colorValues.white
           : props.theme.colorValues.black};
 
@@ -67,7 +67,7 @@ const StyledTabItem = styled.div<StyleType>`
   }
 
   ${(props) =>
-    !props.isActiveTab &&
+    !props.$isActiveTab &&
     css`
       &:hover {
         background-color: ${props.type === "categories"

@@ -18,7 +18,7 @@ $api.interceptors.request.use((config) => {
 
     return config;
   } catch (err) {
-    console.log(err, "Ошибка при формировании заголовка запроса");
+    console.warn(err, "Ошибка при формировании заголовка запроса");
   }
 
   return config;
@@ -42,7 +42,7 @@ $api.interceptors.response.use((config) => {
 
       return $api.request(originalRequest);
     } catch (err) {
-      console.log("Ошибка перехватчика на 401 статус-код");
+      console.warn("Ошибка перехватчика на 401 статус-код");
     }
   }
   throw error;

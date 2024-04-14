@@ -3,7 +3,6 @@
 import React from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Form, Formik } from "formik";
 
 import { FormTypes } from "../../models";
@@ -12,67 +11,80 @@ import { AppRoutes, STATIC_URLS } from "@/utils/constant";
 
 import AuthService from "@/api/services/AuthService";
 
-import Input from "@/components/UI/input";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import LinkButton from "@/components/UI/buttons/LinkButton";
-import ChangeFormLink from "../ChangeFormLink";
+import ReusableImage from "@/components/UI/image";
+import InputWithValidation from "../InputWithValidation";
 import RememberMeButton from "../RememberMeButton";
+import ChangeFormLink from "../ChangeFormLink";
+import ErrorString from "../ErrorString";
+
+type FormParamsType = {
+  email: string;
+  password: string;
+  shouldRememberMe?: boolean;
+};
 
 const AuthorizationForm: React.FC = () => {
-  const [hasError, setHasError] = React.useState(false);
+  const [isDataCorrect, setIsDataCorrect] = React.useState(true);
+
+  const initialFormParams: FormParamsType = React.useMemo(() => {
+    return {
+      email: "",
+      password: "",
+      shouldRememberMe: false,
+    };
+  }, []);
 
   const router = useRouter();
 
-  const handleFormSubmit = React.useCallback(
-    async (values: { email: string; password: string }) => {
-      try {
-        if (!values.email || !values.password) {
-          return;
-        }
-
-        const response = await AuthService.login(values.email, values.password);
-
-        localStorage.setItem("accessToken", response.data.accessToken);
-
-        router.push(AppRoutes.tasks);
-      } catch (err) {
-        setHasError(true);
+  const handleFormSubmit = React.useCallback(async (values: FormParamsType) => {
+    try {
+      if (!values.email || !values.password) {
+        return;
       }
-    },
-    []
-  );
+
+      const response = await AuthService.login(values.email, values.password);
+
+      localStorage.setItem("accessToken", response.data.accessToken);
+
+      router.push(AppRoutes.tasks);
+    } catch (err) {
+      setIsDataCorrect(false);
+    }
+  }, []);
 
   return (
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      onSubmit={handleFormSubmit}
-    >
-      {({ values, handleChange }) => (
+    <Formik initialValues={initialFormParams} onSubmit={handleFormSubmit}>
+      {({ values, isSubmitting, handleChange }) => (
         <StyledContainer>
-          <Image
+          <ReusableImage
             src={`${STATIC_URLS.LOGO}/logo_big.png`}
             alt="App logo"
             width={228}
             height={60}
+            className="form__logo"
           />
-          <Input
-            name="email"
-            value={values.email}
+          <InputWithValidation
+            inputName="email"
+            inputValue={values.email}
+            inputType="email"
+            labelText="Email"
             onChange={handleChange}
-            type="text"
-            placeholder="Email"
-            className="form__email-input"
           />
-          <Input
-            name="password"
-            value={values.password}
+          <InputWithValidation
+            inputName="password"
+            inputValue={values.password}
+            inputType="password"
+            labelText="Password"
             onChange={handleChange}
-            type="password"
-            placeholder="Password"
-            className="form__password-input"
           />
           <div className="form__actions-container">
-            <RememberMeButton textClassName="form__remember-me-btn"/>
+            <RememberMeButton
+              name="shouldRememberMe"
+              textClassName="form__remember-me-btn"
+              onChange={handleChange}
+            />
             <LinkButton
               href={AppRoutes.sendChangePasswordLink}
               className="form__forgot-password-btn"
@@ -82,13 +94,14 @@ const AuthorizationForm: React.FC = () => {
           <PrimaryButton
             type="submit"
             title="Log in"
-            onClick={() => {}}
+            isLoading={isSubmitting}
             className="form__login-btn"
           />
-          {hasError && (
-            <p className="form__error-string">
-              Check the correctness of the entered data.
-            </p>
+          {!isDataCorrect && (
+            <ErrorString
+              text="Check the correctness of the entered data."
+              className="form__error-string"
+            />
           )}
           <ChangeFormLink
             type={FormTypes.login}
@@ -107,8 +120,6 @@ const StyledContainer = styled(Form)`
   flex-direction: column;
   align-items: center;
 
-  overflow: hidden;
-
   width: 100%;
   max-width: 720px;
 
@@ -119,9 +130,11 @@ const StyledContainer = styled(Form)`
 
   box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
 
+  overflow: hidden;
+
   .form {
-    &__email-input {
-      margin-top: 24px;
+    &__logo {
+      margin-bottom: 24px;
     }
 
     &__actions-container {
@@ -148,10 +161,6 @@ const StyledContainer = styled(Form)`
     }
 
     &__error-string {
-      ${(props) => props.theme.typography.fnLabel2};
-      ${(props) => props.theme.typography.fnRegular};
-      color: ${(props) => props.theme.colorValues.error};
-
       margin-top: 16px;
     }
   }
