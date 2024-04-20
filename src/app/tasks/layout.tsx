@@ -2,10 +2,7 @@
 
 import React from "react";
 import { Provider } from "react-redux";
-import styled, { css } from "styled-components";
-import cn from "classnames";
-
-import { useDidUpdate } from "@/utils/hooks/useDidUpdate";
+import styled from "styled-components";
 
 import { store } from "@/store";
 
@@ -19,18 +16,21 @@ const TasksLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const [headerHeight, setHeaderHeight] = React.useState(0);
-  const headerRef = React.useRef<HTMLHeadElement>(null);
+  React.useEffect(() => {
+    (async () => {
+      const response = await fetch("/tasks/api");
+      const data = await response.json();
 
-  useDidUpdate(() => {
-    setHeaderHeight(headerRef.current?.clientHeight);
+      localStorage.setItem("accessToken", data.accessToken);
+    })();
   }, []);
+
 
   return (
     <Provider store={store}>
-      <StyledLayout $headerHeight={headerHeight}>
-        <Header ref={headerRef} />
-        <TabbedSidebar className={cn(headerHeight && "sidebar")} />
+      <StyledLayout>
+        <Header />
+        <TabbedSidebar />
         <TaskSidebar />
         <UserSidebar />
         <div className={"content"}>{children}</div>
@@ -39,9 +39,8 @@ const TasksLayout = ({
   );
 };
 
-const StyledLayout = styled.div<{ $headerHeight: number }>`
+const StyledLayout = styled.div`
   position: relative;
-
 
   .content {
     width: 100%;
@@ -51,19 +50,7 @@ const StyledLayout = styled.div<{ $headerHeight: number }>`
     flex-direction: column;
     align-items: center;
 
-    ${(props) =>
-      props.$headerHeight &&
-      css`
-        margin-top: ${props.$headerHeight + 24}px;
-      `}
-  }
-
-  .sidebar {
-    ${(props) =>
-      props.$headerHeight &&
-      css`
-        top: ${props.$headerHeight}px;
-      `}
+    margin-top: 77px;
   }
 `;
 
