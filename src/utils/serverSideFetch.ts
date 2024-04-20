@@ -13,7 +13,7 @@ type ResponseDataType = {
   accessToken?: string;
 };
 
-export const fetchWrapper = async (options: ParamsType): Promise<ResponseDataType | void> => {
+export const serverSideFetch = async (options: ParamsType): Promise<ResponseDataType | undefined> => {
   try {
     const response = await fetch(options.url, {
       headers: {
@@ -23,8 +23,6 @@ export const fetchWrapper = async (options: ParamsType): Promise<ResponseDataTyp
       method: options.method,
       credentials: "include",
     });
-
-    const data = await response.json();
 
     if (response.status === 401) {
       if (!options.refreshToken) {
@@ -64,8 +62,10 @@ export const fetchWrapper = async (options: ParamsType): Promise<ResponseDataTyp
       }
     }
 
+    const data = await response.json();
+
     return { data, accessToken: options.accessToken };
   } catch (err) {
-    console.log(err);
+    console.warn(err);
   }
 };
