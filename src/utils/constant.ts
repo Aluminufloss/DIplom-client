@@ -31,5 +31,5 @@ export enum AppPaths {
 }
 
 export enum ApiPaths {
-  getMe = `${API_URL}/me`,
+  me = `${API_URL}/me`,
 }
