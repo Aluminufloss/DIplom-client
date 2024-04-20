@@ -9,7 +9,7 @@ import axios from "axios";
 
 import { FormTypes } from "../../models";
 import media from "@/utils/media";
-import { AppRoutes, STATIC_URLS } from "@/utils/constant";
+import { AppPaths, STATIC_URLS } from "@/utils/constant";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
 import AuthService from "@/api/services/AuthService";
@@ -51,7 +51,7 @@ const RegistrationForm: React.FC = () => {
         username: values.username,
       });
 
-      router.push(AppRoutes.tasks);
+      router.push(AppPaths.login);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response && err.response.data) {
         setError(err.response.data.message);
