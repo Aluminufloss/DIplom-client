@@ -1,13 +1,11 @@
 import $api from "@/axios";
 import { AxiosError, AxiosResponse } from "axios";
-import { AuthResponse } from "../models/Response/Auth";
+import { AuthResponse, UserLoginType, UserRegistrationType } from "../models/Response/Auth";
 
 export default class AuthService {
-  static async login(
-    email: string,
-    password: string,
-    shouldRememberMe?: boolean
-  ): Promise<AxiosResponse<AuthResponse>> {
+  static async login(options: UserLoginType): Promise<AxiosResponse<AuthResponse>> {
+    const { email, password, shouldRememberMe } = options;
+    
     return $api.post<AuthResponse>("/login", {
       email,
       password,
@@ -15,8 +13,9 @@ export default class AuthService {
     });
   }
 
-  static async registration(email: string, password: string, username: string) {
+  static async registration(options: UserRegistrationType) {
     try {
+      const { email, password, username } = options;
       const response = await $api.post<AuthResponse>("/registration", {
         email,
         password,
