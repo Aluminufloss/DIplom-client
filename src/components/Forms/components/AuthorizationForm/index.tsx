@@ -4,10 +4,11 @@ import React from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
+import axios from "axios";
 
 import { FormTypes } from "../../models";
 import media from "@/utils/media";
-import { AppRoutes, STATIC_URLS } from "@/utils/constant";
+import { AppPaths, STATIC_URLS } from "@/utils/constant";
 
 import AuthService from "@/api/services/AuthService";
 
@@ -26,7 +27,9 @@ type FormParamsType = {
 };
 
 const AuthorizationForm: React.FC = () => {
-  const [isDataCorrect, setIsDataCorrect] = React.useState(true);
+  const [error, setError] = React.useState("");
+
+  const router = useRouter();
 
   const initialFormParams: FormParamsType = React.useMemo(() => {
     return {
@@ -36,21 +39,28 @@ const AuthorizationForm: React.FC = () => {
     };
   }, []);
 
-  const router = useRouter();
-
   const handleFormSubmit = React.useCallback(async (values: FormParamsType) => {
     try {
+      setError("");
+
       if (!values.email || !values.password) {
         return;
       }
 
-      const response = await AuthService.login(values.email, values.password);
+      const response = await AuthService.login({
+        email: values.email,
+        password: values.password,
+      });
 
       localStorage.setItem("accessToken", response.data.accessToken);
 
-      router.push(AppRoutes.tasks);
+      router.push(AppPaths.tasks);
     } catch (err) {
-      setIsDataCorrect(false);
+      if (axios.isAxiosError(err) && err.response && err.response.data) {
+        setError(err.response.data.message);
+      } else {
+        console.warn("An error occurred:", err);
+      }
     }
   }, []);
 
@@ -86,7 +96,7 @@ const AuthorizationForm: React.FC = () => {
               onChange={handleChange}
             />
             <LinkButton
-              href={AppRoutes.sendChangePasswordLink}
+              href={AppPaths.sendChangePasswordLink}
               className="form__forgot-password-btn"
               title="Forgot password?"
             />
@@ -97,9 +107,9 @@ const AuthorizationForm: React.FC = () => {
             isLoading={isSubmitting}
             className="form__login-btn"
           />
-          {!isDataCorrect && (
+          {!!error.length && (
             <ErrorString
-              text="Check the correctness of the entered data."
+              text={error}
               className="form__error-string"
             />
           )}
