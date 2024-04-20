@@ -3,18 +3,20 @@
 import React from "react";
 import styled from "styled-components";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import axios from "axios";
 
+import { FormTypes } from "../../models";
 import media from "@/utils/media";
 import { AppRoutes, STATIC_URLS } from "@/utils/constant";
-import { FormTypes } from "../../models";
 import { validationRegSchema } from "../../utils/validationRegSchema";
+
+import AuthService from "@/api/services/AuthService";
 
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import InputWithValidation from "../InputWithValidation";
 import ChangeFormLink from "../ChangeFormLink";
-import AuthService from "@/api/services/AuthService";
-import { useRouter } from "next/navigation";
 import ErrorString from "../ErrorString";
 
 type FormParamsType = {
@@ -43,15 +45,19 @@ const RegistrationForm: React.FC = () => {
     try {
       setError("");
 
-      await AuthService.registration(
-        values.email,
-        values.password,
-        values.username
-      );
+      await AuthService.registration({
+        email: values.email,
+        password: values.password,
+        username: values.username,
+      });
 
       router.push(AppRoutes.tasks);
     } catch (err) {
-      setError(err.response.data.message);
+      if (axios.isAxiosError(err) && err.response && err.response.data) {
+        setError(err.response.data.message);
+      } else {
+        console.warn("An error occurred:", err);
+      }
     }
   }, []);
 
@@ -155,7 +161,6 @@ const StyledContainer = styled(Form)`
   box-shadow: rgba(192, 194, 195, 0.1) 0px 8px 24px;
 
   .form {
-
     &__title {
       ${(props) => props.theme.typography.fnSemiBold};
       ${(props) => props.theme.typography.fnTitle2};
