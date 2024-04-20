@@ -29,3 +29,7 @@ export enum AppPaths {
   tasks = `${CLIENT_URL}/${AppRoutes.tasks}`,
   sendChangePasswordLink = `${CLIENT_URL}/${AppRoutes.sendChangePasswordLink}`,
 }
+
+export enum ApiPaths {
+  getMe = `${API_URL}/me`,
+}
