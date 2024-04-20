@@ -15,6 +15,7 @@ const PrimaryButton: React.FC<PropsType> = (props) => {
     <StyledButton
       onClick={props.onClick}
       type={props.type}
+      disabled={props.isLoading}
       className={props.className}
     >
       {!props.isLoading ? (
