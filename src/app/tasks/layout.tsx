@@ -4,7 +4,9 @@ import React from "react";
 import { Provider } from "react-redux";
 import styled from "styled-components";
 
+import { UserResponseType } from "@/models";
 import { store } from "@/store";
+import { typedFetchWrapper } from "@/utils/typedFetchWrapper";
 
 import Header from "../../components/Header";
 import TabbedSidebar from "@/components/SidebarModals/TabbedSidebar";
@@ -18,10 +20,9 @@ const TasksLayout = ({
 }>) => {
   React.useEffect(() => {
     (async () => {
-      const response = await fetch("/tasks/api");
-      const data = await response.json();
+      const response = await typedFetchWrapper<UserResponseType>({ url: "/tasks/api" });
 
-      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("accessToken", response.accessToken);
     })();
   }, []);
 

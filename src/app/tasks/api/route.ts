@@ -9,7 +9,7 @@ export async function GET() {
   const refreshToken = cookies().get('refreshToken')?.value;
 
   const data = await serverSideFetch({
-    url: ApiPaths.getMe,
+    url: ApiPaths.me,
     method: "POST",
     accessToken,
     refreshToken
