@@ -6,6 +6,14 @@ export interface AuthResponse {
   user: IUser;
 }
 
-export interface UploadImageRespone {
-  imagePath: string;
+export type UserRegistrationType = {
+  email: string;
+  password: string;
+  username?: string;
+}
+
+export type UserLoginType = {
+  email: string;
+  password: string;
+  shouldRememberMe?: boolean;
 }
