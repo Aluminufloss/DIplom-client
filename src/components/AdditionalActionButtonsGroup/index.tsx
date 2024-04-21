@@ -6,8 +6,10 @@ import styled from "styled-components";
 import { STATIC_URLS } from "@/utils/constant";
 
 import ActionItem from "@/components/UI/actionItem";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 
 const AdditionalActionButtonsGroup: React.FC = (props) => {
+  const dispatch = useAppDispatch();
 
   return (
     <StyledContainer>
