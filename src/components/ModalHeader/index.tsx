@@ -5,6 +5,8 @@ import { ModalType } from "@/store/slices/TaskModal/models";
 
 import SaveChangesButton from "./SaveChangesButton";
 import CancelChangesButton from "./CancelChangesButton";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import { setModalVisibility } from "@/store/slices/TaskModal";
 
 type PropsType = {
   modalType: ModalType;
@@ -17,10 +19,13 @@ const ModalHeader: React.FC<PropsType> = (props) => {
       : "Редактирование задачи";
   }, [props.modalType]);
 
+  const dispatch = useAppDispatch();
+
   return (
     <StyledHeader>
-      <CancelChangesButton onCancelChanges={() => {}}/>
+      <CancelChangesButton onCancelChanges={() => dispatch(setModalVisibility(false))}/>
       <p className="title">{modalTitle}</p>
+      <SaveChangesButton onSaveChanges={() => dispatch(setModalVisibility(false))}/>
     </StyledHeader>
   );
 };
