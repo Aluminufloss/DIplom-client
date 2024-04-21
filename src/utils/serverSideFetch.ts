@@ -1,11 +1,11 @@
+"use server"
 import { API_URL } from "@/utils/constant";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 type ParamsType = {
   url: string;
   method: string;
-  accessToken?: string;
-  refreshToken?: string;
 };
 
 type ResponseDataType = {
@@ -14,10 +14,14 @@ type ResponseDataType = {
 };
 
 export const serverSideFetch = async (options: ParamsType): Promise<ResponseDataType | undefined> => {
+  "use server"
   try {
+    const accessToken = cookies().get('accessToken')?.value;
+    const refreshToken = cookies().get('refreshToken')?.value;
+
     const response = await fetch(options.url, {
       headers: {
-        Authorization: options.accessToken ? `Bearer ${options.accessToken}` : '',
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
         Accept: "application/json",
       },
       method: options.method,
@@ -25,13 +29,13 @@ export const serverSideFetch = async (options: ParamsType): Promise<ResponseData
     });
 
     if (response.status === 401) {
-      if (!options.refreshToken) {
+      if (!refreshToken) {
         return;
       }
 
       const refreshResponse = await fetch(`${API_URL}/refresh`, {
         headers: {
-          cookie: `refreshToken=${options.refreshToken}`,
+          cookie: `refreshToken=${refreshToken}`,
           Accept: "application/json",
         },
         method: options.method,
@@ -56,15 +60,15 @@ export const serverSideFetch = async (options: ParamsType): Promise<ResponseData
           method: options.method,
         });
 
-        const responseData = await originalRequestResponse.json();
+        const data = await originalRequestResponse.json();
 
-        return responseData;
+        return { data, accessToken };
       }
     }
 
     const data = await response.json();
 
-    return { data, accessToken: options.accessToken };
+    return { data, accessToken };
   } catch (err) {
     console.warn(err);
   }
