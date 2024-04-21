@@ -2,13 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import tabbedSidebar from "./slices/TabbedSidebar";
 import userSidebar from "./slices/UserSidebar";
-import taskSidebar from "./slices/TaskSidebar";
+import taskModal from "./slices/TaskModal";
 
 export const store = configureStore({
   reducer: {
     tabbedSidebar,
     userSidebar,
-    taskSidebar,
+    taskModal,
   },
 });
 
