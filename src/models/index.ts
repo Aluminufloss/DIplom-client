@@ -26,5 +26,5 @@ export type GroupType = {
 
 export type UserResponseType = {
   data: IUser;
-  accessToken: string;
+  accessToken?: string;
 }

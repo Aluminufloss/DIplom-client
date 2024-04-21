@@ -19,14 +19,14 @@ export enum DeviceTypes {
 export enum AppRoutes {
   login = 'login',
   registration = 'registration',
-  tasks = 'tasks',
+  tasksToday = 'tasks/today',
   sendChangePasswordLink = 'changePassword',
 }
 
 export enum AppPaths {
   login = `${CLIENT_URL}/${AppRoutes.login}`,
   registration = `${CLIENT_URL}/${AppRoutes.registration}`,
-  tasks = `${CLIENT_URL}/${AppRoutes.tasks}`,
+  tasksToday = `${CLIENT_URL}/${AppRoutes.tasksToday}`,
   sendChangePasswordLink = `${CLIENT_URL}/${AppRoutes.sendChangePasswordLink}`,
 }
 

@@ -4,8 +4,10 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Form, Formik } from "formik";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-import { STATIC_URLS } from "@/utils/constant";
+import { AppPaths, STATIC_URLS } from "@/utils/constant";
 import media from "@/utils/media";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
@@ -13,7 +15,7 @@ import AuthService from "@/api/services/AuthService";
 
 import InputWithValidation from "../InputWithValidation";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
-import ConfirmationMessageModal from "@/components/ConfirmationMessageModal";
+import ErrorString from "../ErrorString";
 
 type PropsType = {
   searchParams: string[];
@@ -21,36 +23,29 @@ type PropsType = {
 
 const ChangePasswordForm: React.FC<PropsType> = (props) => {
   const [isPasswordsVisible, setIsPasswordsVisible] = React.useState(false);
-  const [isConfirmationMessageVisible, setIsConfirmationMessageVisible] =
-    React.useState(false);
-  const [isSuccess, setIsSuccess] = React.useState(true);
+  const [error, setError] = React.useState("");
 
-  const confirmationMessage = isSuccess
-    ? `You’ve successfully changed password.
-       Press button to go back on login page`
-    : `Something went wrong with changing your password.,
-       Try it later. Press button to go back on login page`;
+  const router = useRouter();
 
   const urlString = props.searchParams[0];
 
   const handleFormSubmit = React.useCallback(
     async (values: { password: string; passwordAgain: string }) => {
       try {
+        setError("");
         if (!values.passwordAgain || !values.password) {
           return;
         }
 
-        const response = await AuthService.changePassword(
-          values.password,
-          urlString
-        );
+        await AuthService.changePassword(values.password, urlString);
 
-        setIsSuccess(true);
-        setIsConfirmationMessageVisible(true);
+        router.push(AppPaths.login);
       } catch (err) {
-        console.log(err);
-        setIsSuccess(false);
-        setIsConfirmationMessageVisible(true);
+        if (axios.isAxiosError(err) && err.response && err.response.data) {
+          setError(err.response.data.message);
+        } else {
+          console.warn("An error occurred:", err);
+        }
       }
     },
     [urlString]
@@ -58,81 +53,72 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
 
   return (
     <>
-      {!isConfirmationMessageVisible ? (
-        <Formik
-          initialValues={{ password: "", passwordAgain: "" }}
-          validationSchema={validationRegSchema}
-          onSubmit={handleFormSubmit}
-        >
-          {({ values, touched, errors, isSubmitting, handleChange }) => (
-            <StyledContainer>
-              <Image
-                src={`${STATIC_URLS.LOGO}/logo_big.png`}
-                alt="App logo"
-                width={228}
-                height={60}
+      <Formik
+        initialValues={{ password: "", passwordAgain: "" }}
+        validationSchema={validationRegSchema}
+        validateOnChange={!!error.length}
+        onSubmit={handleFormSubmit}
+      >
+        {({ values, touched, errors, isSubmitting, handleChange }) => (
+          <StyledContainer>
+            <Image
+              src={`${STATIC_URLS.LOGO}/logo_big.png`}
+              alt="App logo"
+              width={228}
+              height={60}
+            />
+
+            <span className="form__title">Password change</span>
+
+            <p className="form__description">Enter new password</p>
+
+            <InputWithValidation
+              inputName="password"
+              inputType={isPasswordsVisible ? "text" : "password"}
+              inputValue={values.password}
+              inputClassname="form__input"
+              errorString={errors.password}
+              isTouched={touched.password}
+              labelText="Enter your new password"
+              shouldShowPasswordText={isPasswordsVisible}
+              onChange={handleChange}
+            />
+
+            <InputWithValidation
+              inputName="passwordAgain"
+              inputType={isPasswordsVisible ? "text" : "password"}
+              inputValue={values.passwordAgain}
+              inputClassname="form__input"
+              errorString={errors.passwordAgain}
+              isTouched={touched.passwordAgain}
+              labelText="Enter your password again"
+              shouldShowPasswordText={isPasswordsVisible}
+              onChange={handleChange}
+            />
+
+            <div className="form__show-passwords">
+              <input
+                type="checkbox"
+                className="form__show-passwords--checkbox"
+                onClick={() => setIsPasswordsVisible((prev) => !prev)}
               />
+              <span className="form__show-passwords--text">Show passwords</span>
+            </div>
 
-              <span className="form__title">Password change</span>
+            <PrimaryButton
+              type="submit"
+              title="Change password"
+              onClick={() => handleFormSubmit(values)}
+              isLoading={isSubmitting}
+              className="form__login-btn"
+            />
 
-              <p className="form__description">Enter new password</p>
-
-              <InputWithValidation
-                inputName="password"
-                inputType="password"
-                inputValue={values.password}
-                inputClassname="form__input"
-                errorString={errors.password}
-                isTouched={touched.password}
-                labelText="Enter your new password"
-                shouldShowPasswordText={isPasswordsVisible}
-                onChange={handleChange}
-              />
-
-              <InputWithValidation
-                inputName="passwordAgain"
-                inputType="password"
-                inputValue={values.passwordAgain}
-                inputClassname="form__input"
-                errorString={errors.passwordAgain}
-                isTouched={touched.passwordAgain}
-                labelText="Enter your password again"
-                shouldShowPasswordText={isPasswordsVisible}
-                onChange={handleChange}
-              />
-
-              <div className="form__show-passwords">
-                <input
-                  type="checkbox"
-                  className="form__show-passwords--checkbox"
-                  onClick={() => setIsPasswordsVisible((prev) => !prev)}
-                />
-                <span className="form__show-passwords--text">
-                  Show passwords
-                </span>
-              </div>
-
-              <PrimaryButton
-                type="submit"
-                title="Change password"
-                isLoading={isSubmitting}
-                className="form__login-btn"
-              />
-
-              {!isSuccess && (
-                <p className="form__error-string">
-                  Check the correctness of the entered data.
-                </p>
-              )}
-            </StyledContainer>
-          )}
-        </Formik>
-      ) : (
-        <ConfirmationMessageModal
-          message={confirmationMessage}
-          isSuccess={isSuccess}
-        />
-      )}
+            {!!error.length && (
+              <ErrorString text={error} className="form__error-string" />
+            )}
+          </StyledContainer>
+        )}
+      </Formik>
     </>
   );
 };
@@ -172,6 +158,7 @@ const StyledContainer = styled(Form)`
 
     &__login-btn {
       margin-top: 16px;
+      margin-bottom: 16px;
     }
 
     &__show-passwords {
