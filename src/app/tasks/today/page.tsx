@@ -1,6 +1,6 @@
 import TaskSection from "../../../components/Tasks/Tasks/TaskSection";
 
-export default function TodayTaskPage() {
+export default async function TodayTaskPage() {
   return (
     <TaskSection />
   );
