@@ -21,7 +21,7 @@ const RepeatSelector: React.FC<ParamsType> = (props) => {
   return (
     <StyledRepeatSelector className={props.className}>
       <div className="toggler__wrapper">
-        <span>Повторить задачу</span>
+        <span className="toggler__title">Повторить задачу</span>
         <Toggler isActive={isActive} onClick={onSelect} className="toggler" />
       </div>
       {isActive && (
@@ -44,6 +44,12 @@ const StyledRepeatSelector = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    &__title {
+      color: ${(props) => props.theme.colorValues.darkGrey};
+      ${(props) => props.theme.typography.fnTitle1};
+      ${(props) => props.theme.typography.fnMedium};
     }
   }
 
