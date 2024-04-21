@@ -13,7 +13,7 @@ type ResponseDataType = {
   accessToken?: string;
 };
 
-export const serverSideFetch = async (options: ParamsType): Promise<ResponseDataType | undefined> => {
+export const serverSideFetch = async <T>(options: ParamsType): Promise<ResponseDataType | undefined | T> => {
   "use server"
   try {
     const accessToken = cookies().get('accessToken')?.value;
