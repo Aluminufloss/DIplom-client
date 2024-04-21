@@ -70,7 +70,7 @@ const StyledInput = styled.div`
 
     &__label {
       position: absolute;
-      padding-right: 50px;
+      padding-right: 150px;
 
       pointer-events: none;
 
