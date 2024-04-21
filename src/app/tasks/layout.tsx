@@ -22,8 +22,8 @@ const TasksLayout = ({
         <Header />
         <TabbedSidebar />
         <UserSidebar />
-        <TaskModal />
-        <div className={"content"}>{children}</div>
+        <TaskModal/>
+        <div className="content">{children}</div>
       </StyledLayout>
     </Provider>
   );

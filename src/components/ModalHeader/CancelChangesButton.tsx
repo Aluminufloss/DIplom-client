@@ -25,6 +25,12 @@ const StyledButton = styled.button`
   top: 12px;
 
   cursor: pointer;
+
+  transition: scale 0.5s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 export default CancelChangesButton;
