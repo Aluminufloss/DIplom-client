@@ -14,7 +14,7 @@ const Header = React.forwardRef<HTMLHeadElement, {}>((props, ref) => {
     <StyledHeader ref={ref}>
       <ActionButtonsGroup />
       <TaskSearchBar />
-      <LogoLink href={AppPaths.tasks} alt="App logo" type="big" />
+      <LogoLink href={AppPaths.tasksToday} alt="App logo" type="big" />
       <AdditionalActionButtonsGroup />
       <UserBlock />
     </StyledHeader>

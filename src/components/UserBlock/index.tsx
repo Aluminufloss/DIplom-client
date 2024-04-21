@@ -2,17 +2,20 @@ import React from "react";
 import styled from "styled-components";
 
 import { STATIC_URLS } from "@/utils/constant";
+import { useAppSelector } from "@/utils/hooks/useAppSelector";
 
 import ReusableImage from "@/components/UI/image";
 import UserDropDownMenu from "../UserDropDownMenu";
 
-const UserBlock: React.FC = (props) => {
+const UserBlock: React.FC = () => {
+  const userInfo = useAppSelector((state) => state.userInfo);
+
   const [isDropdownMenuVisible, setIsDropdownMenuVisible] =
     React.useState(false);
 
   return (
     <StyledUserButton>
-      <p className="title">Title text</p>
+      <p className="title">{userInfo.username ?? userInfo.email}</p>
       <div className="image__wrapper"  onClick={() => setIsDropdownMenuVisible((prev) => !prev)}>
         <ReusableImage
           src={`${STATIC_URLS.BACKGROUND}/user_default.png`}
