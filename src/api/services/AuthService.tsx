@@ -29,7 +29,7 @@ export default class AuthService {
   }
 
   static async sendChangePasswordLink(email: string) {
-    return $api.post("/change", { email });
+    return $api.post("/sendChangeLink", { email });
   }
 
   static async changePassword(password: string, urlString: string) {
