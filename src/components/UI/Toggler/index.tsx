@@ -30,12 +30,16 @@ const StyledToggler = styled.div<{ $isActive: boolean }>`
 
   background-color: white;
 
+  cursor: pointer;
+
+  user-select: none;
+
   .toggler__circle {
-    height: 24px;
-    width: 36px;
+    height: 26px;
+    width: 32px;
 
     position: absolute;
-    left: ${(props) => (props.$isActive ? "74px" : "8px")};
+    left: ${(props) => (props.$isActive ? "82px" : "5px")};
     top: 4px;
 
     border-radius: 30px;
