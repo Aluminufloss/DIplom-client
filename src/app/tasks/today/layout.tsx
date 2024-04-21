@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { AppPaths } from "@/utils/constant";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { serverSideFetch } from "@/utils/serverSideFetch";
+import { setUserData } from "@/store/slices/User";
+import { UserResponseType } from "@/models";
 
 const TasksTodayLayout = ({
   children,
@@ -17,16 +19,21 @@ const TasksTodayLayout = ({
   
   React.useEffect(() => {
     (async () => {
-      const data = await serverSideFetch({
+      const response = await serverSideFetch<UserResponseType>({
         url: "http://localhost:5000/me",
         method: "POST",
       });
 
-      if (!data) {
+      if (!response) {
         router.push(AppPaths.login);
+        return;
       }
 
-      localStorage.setItem("accessToken", data?.accessToken);
+      if (response.accessToken) {
+        localStorage.setItem("accessToken", response.accessToken);
+      }
+
+      dispatch(setUserData(response.data))
     })();
   }, []);
   
