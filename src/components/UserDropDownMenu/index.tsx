@@ -1,11 +1,25 @@
+"use client"
+
 import React from "react";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
+
+import { AppPaths } from "@/utils/constant";
+import AuthService from "@/api/services/AuthService";
 
 import MenuItem from "./MenuItem";
 
-type PropsType = {};
+const UserDropDownMenu: React.FC = () => {
+  const router = useRouter();
 
-const UserDropDownMenu: React.FC<PropsType> = (props) => {
+  const onLogout = React.useCallback(async () => {
+    await AuthService.logout();
+
+    localStorage.removeItem("accessToken");
+
+    router.push(AppPaths.login);
+  }, [AuthService.logout]);
+
   return (
     <StyledMenu>
       <div className="menu__title-wrapper">
@@ -28,6 +42,12 @@ const UserDropDownMenu: React.FC<PropsType> = (props) => {
           type="themeLight"
           title="Light theme"
           onClick={() => {}}
+          className="menu__item"
+        />
+        <MenuItem
+          type="logout"
+          title="Logout"
+          onClick={onLogout}
           className="menu__item"
         />
       </ul>
