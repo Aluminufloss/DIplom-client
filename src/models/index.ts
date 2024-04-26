@@ -1,20 +1,12 @@
 import { IUser } from "@/api/models/Response/Auth/IUser";
+import { ITask } from "@/api/models/Response/Tasks/ITask";
 
-export type TaskType = {
-	id: string;
-	title: string;
-	description: string;
-	plannedDate: string;
-	category: string;
-	repeat: number[];
-	status: TaskStatusType;
-}
-
-export type TaskStatusType = "completed" | "incomplited";
+export type TaskStatusType = "active" | "completed" | "expired";
+export type TaskPriorityType = "low" | "medium" | "high";
 
 export type TasksListType = { 
 	id: string;
-	tasks: TaskType[],
+	tasks: ITask[],
 	groupId: string;
 }
 

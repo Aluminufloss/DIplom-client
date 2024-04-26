@@ -4,7 +4,7 @@ import $api from "@/axios";
 import { TasksResponse } from "../models/Response/Tasks";
 import { ITask } from "../models/Response/Tasks/ITask";
 
-export default class TasksTodayService {
+export default class TasksService {
   public static async getTodayTasks(
     userId: string
   ): Promise<AxiosResponse<TasksResponse>> {
