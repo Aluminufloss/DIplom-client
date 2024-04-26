@@ -1,13 +1,12 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import ReusableImage from "../image";
-
 type PropsType = {
   type: "categories" | "details";
   iconPath: string;
   itemText: string;
   isActiveTab: boolean;
+  children?: React.ReactNode;
   onCLick?: () => void;
   className?: string;
 };
@@ -20,11 +19,9 @@ const TabItem: React.FC<PropsType> = (props) => {
       $isActiveTab={props.isActiveTab}
       onClick={props.onCLick}
     >
-      <ReusableImage
-        src={props.iconPath}
-        alt="Tab action"
-        className="tab-item__icon"
-      />
+      <div className="tab-item__icon">
+        {props.children}
+      </div>
       <p className="tab-item__text">{props.itemText}</p>
     </StyledTabItem>
   );
@@ -63,6 +60,12 @@ const StyledTabItem = styled.div<StyleType>`
           : props.theme.colorValues.black};
 
       margin-left: 5px;
+    }
+
+    &__icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 
