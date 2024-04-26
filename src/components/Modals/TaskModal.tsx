@@ -1,10 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import { Form, Formik } from "formik";
 
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+
+import { setModalVisibility } from "@/store/slices/TaskModal";
+
 import ModalHeader from "../ModalHeader";
 import Input from "../UI/input";
-import { Form, Formik } from "formik";
 import PrioritySelector from "../TaskModalSelectors/PrioritySelector";
 import RepeatSelector from "../TaskModalSelectors/RepeatSelector";
 import PlannedDateSelector from "../TaskModalSelectors/PlannedDateSelector";
@@ -13,6 +17,8 @@ type ParamsType = {};
 
 const TaskModal: React.FC<ParamsType> = () => {
   const modalInfo = useAppSelector((state) => state.taskModal);
+
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -46,20 +52,22 @@ const TaskModal: React.FC<ParamsType> = () => {
           </StyledModal>
         )}
       </Formik>
-      <StyledOverlay $isModalVisible={modalInfo.isModalVisible}/>
+      {modalInfo.isModalVisible && <StyledOverlay
+        onClick={() => dispatch(setModalVisibility(false))}
+      />}
     </>
   );
 };
 
 const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
   position: absolute;
-  top: ${(props) => (props.$isModalVisible ? "0" : "-200%")};
+  top: ${(props) => (props.$isModalVisible ? "5%" : "-100%")};
   right: 50%;
   transform: translateX(50%);
 
   width: 100%;
   max-width: 840px;
-  max-height: 80vh;
+  max-height: 85vh;
 
   z-index: 300;
 
@@ -116,26 +124,22 @@ const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
   }
 `;
 
-const StyledOverlay = styled.div<{ $isModalVisible: boolean }>`
-  position: "absolute";
-
-  display: ${props => !props.$isModalVisible && "none"};
+const StyledOverlay = styled.div`
+  position: absolute;
 
   top: -77px;
   left: 0;
 
   width: 100vw;
-  height: 100vh;
+  height: 120vh;
 
   z-index: 200;
 
   background-color: rgba(0, 0, 0, 0.5);
 
-  transition: opacity 0.5s ease;
+  transition: opacity 1s ease;
 
   overflow: hidden;
-
-  opacity: ${(props) => (props.$isModalVisible ? 1 : 0)};
 `;
 
 export default TaskModal;

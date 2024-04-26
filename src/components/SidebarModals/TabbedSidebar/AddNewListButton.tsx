@@ -17,12 +17,12 @@ const AddNewListButton: React.FC<PropsType> = (props) => {
           src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
           alt="plus icon"
         />
-        <span className="button__new-list--text">Add new list</span>
+        <span className="button__new-list--text">Новый список</span>
       </div>
       <div className="button__new-list--group">
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/group.svg`}
-          alt="group icon"
+          alt="Создать новую группу"
         />
       </div>
     </StyledButton>

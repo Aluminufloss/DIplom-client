@@ -16,6 +16,7 @@ type PropsType = {
   errorString?: string;
   isTouched?: boolean;
   shouldShowPasswordText?: boolean;
+  children?: React.ReactNode;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
@@ -57,6 +58,7 @@ const InputWithValidation: React.FC<PropsType> = (props) => {
       <p className={cn("input__error-string", props.errorStringClassName)}>
         {props.errorString}
       </p>
+      {props.children}
     </StyledInput>
   );
 };
@@ -70,7 +72,7 @@ const StyledInput = styled.div`
 
     &__label {
       position: absolute;
-      padding-right: 150px;
+      padding-right: 100px;
 
       pointer-events: none;
 

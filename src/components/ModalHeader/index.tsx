@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+
+import { setModalVisibility } from "@/store/slices/TaskModal";
 import { ModalType } from "@/store/slices/TaskModal/models";
 
 import SaveChangesButton from "./SaveChangesButton";
 import CancelChangesButton from "./CancelChangesButton";
-import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
-import { setModalVisibility } from "@/store/slices/TaskModal";
 
 type PropsType = {
   modalType: ModalType;

@@ -9,6 +9,7 @@ type PropsType = {
   alt: string;
   fill?: boolean;
   className?: string;
+  onClick?: () => void;
 };
 
 const ReusableImage: React.FC<PropsType> = (props) => {
@@ -23,6 +24,7 @@ const ReusableImage: React.FC<PropsType> = (props) => {
 			alt={props.alt} 
       fill={props.fill}
       className={props.className}
+      onClick={props.onClick}
 		/>
   );
 };

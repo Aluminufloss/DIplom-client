@@ -22,14 +22,13 @@ export const TaskSectionInfoBar: React.FC<PropsType> = (props) => {
 
 const StyledTaskSectionInfoBar = styled.div`
   width: 100%;
-  max-width: 1000px;
 
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
 
-  padding: 16px 20px;
+  padding: 12px 16px;
 
   background-color: ${(props) => props.theme.colorValues.sidebarWhite};
 
@@ -38,7 +37,7 @@ const StyledTaskSectionInfoBar = styled.div`
 
   .info-bar {
     &__title {
-      ${(props) => props.theme.typography.fnTitle5}
+      ${(props) => props.theme.typography.fnTitle3}
       ${(props) => props.theme.typography.fnSemiBold};
       color: ${(props) => props.theme.colorValues.primary};
     }

@@ -29,6 +29,12 @@ type FormParamsType = {
 const AuthorizationForm: React.FC = () => {
   const [error, setError] = React.useState("");
 
+  const [passwordVisibility, setPasswordVisibility] = React.useState(false);
+
+  const firstPasswordIconPath = passwordVisibility
+    ? `${STATIC_URLS.SVG_ICONS}/visibility.svg`
+    : `${STATIC_URLS.SVG_ICONS}/visibility_off.svg`;
+
   const router = useRouter();
 
   const initialFormParams: FormParamsType = React.useMemo(() => {
@@ -50,6 +56,7 @@ const AuthorizationForm: React.FC = () => {
       const response = await AuthService.login({
         email: values.email,
         password: values.password,
+        shouldRememberMe: values.shouldRememberMe,
       });
 
       localStorage.setItem("accessToken", response.data.accessToken);
@@ -79,16 +86,23 @@ const AuthorizationForm: React.FC = () => {
             inputName="email"
             inputValue={values.email}
             inputType="email"
-            labelText="Email"
+            labelText="Адрес электронной почты"
             onChange={handleChange}
           />
           <InputWithValidation
             inputName="password"
             inputValue={values.password}
-            inputType="password"
-            labelText="Password"
+            inputType={passwordVisibility ? "text" : "password"}
+            labelText="Пароль"
             onChange={handleChange}
-          />
+          >
+            <ReusableImage
+              src={firstPasswordIconPath}
+              alt="password icon"
+              onClick={() => setPasswordVisibility((prev) => !prev)}
+              className="form__password-icon"
+            />
+          </InputWithValidation>
           <div className="form__actions-container">
             <RememberMeButton
               name="shouldRememberMe"
@@ -98,25 +112,22 @@ const AuthorizationForm: React.FC = () => {
             <LinkButton
               href={AppPaths.sendChangePasswordLink}
               className="form__forgot-password-btn"
-              title="Forgot password?"
+              title="Забыли пароль?"
             />
           </div>
           <PrimaryButton
             type="submit"
-            title="Log in"
+            title="Войти"
             isLoading={isSubmitting}
             className="form__login-btn"
           />
           {!!error.length && (
-            <ErrorString
-              text={error}
-              className="form__error-string"
-            />
+            <ErrorString text={error} className="form__error-string" />
           )}
           <ChangeFormLink
             type={FormTypes.login}
-            linkText="Sign up."
-            question="Don't have an account?"
+            linkText="Зарегистрируйтесь."
+            question="У вас нет аккаунта?"
             className="form__change-form-link"
           />
         </StyledContainer>
@@ -156,6 +167,12 @@ const StyledContainer = styled(Form)`
       width: 100%;
 
       margin-top: 16px;
+    }
+
+    &__password-icon {
+      position: absolute;
+      top: 10px;
+      right: 16px;
     }
 
     &__password-input {

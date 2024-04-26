@@ -18,7 +18,7 @@ const RememberMeButton: React.FC<PropsType> = (props) => {
         className="input"
         onChange={props.onChange}
       />
-      <span className={cn("text", props.textClassName)}>Remember me</span>
+      <span className={cn("text", props.textClassName)}>Запомнить меня</span>
     </StyledCheckBox>
   );
 };

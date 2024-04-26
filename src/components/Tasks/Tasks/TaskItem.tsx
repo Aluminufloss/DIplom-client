@@ -8,14 +8,9 @@ type PropsType = {
 };
 
 export const TaskItem: React.FC<PropsType> = (props) => {
-	const handleClick = () => {
-		const audio = new Audio('/sounds/task_complete_sound.mp3');
-		audio.play();
-	}
-
   return (
     <StyledTaskItem>
-      <input type="checkbox" className="task__checkbox" onClick={handleClick} />
+      <input type="checkbox" className="task__checkbox" />
       <p className="task__text">Tast input text test</p>
     </StyledTaskItem>
   );
@@ -23,9 +18,8 @@ export const TaskItem: React.FC<PropsType> = (props) => {
 
 const StyledTaskItem = styled.div`
   width: 100%;
-  max-width: 1000px;
 
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 
   display: flex;
   align-items: center;
@@ -66,7 +60,6 @@ const StyledTaskItem = styled.div`
     width: 100%;
     height: 100%;
 
-		border-radius: 50px;
     background-color:${props => props.theme.colorValues.primary};
 		
 		transition: all .1s ease;
@@ -82,8 +75,10 @@ const StyledTaskItem = styled.div`
       width: 24px;
       height: 24px;
 
-      border-radius: 50px;
-      border: 1px solid ${(props) => props.theme.colorValues.darkGrey};
+      overflow: hidden;
+
+      border-radius: 5px;
+      border: 2px solid ${(props) => props.theme.colorValues.darkGrey};
     }
 
     &__text {

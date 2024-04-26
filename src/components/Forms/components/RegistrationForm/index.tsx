@@ -18,6 +18,7 @@ import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import InputWithValidation from "../InputWithValidation";
 import ChangeFormLink from "../ChangeFormLink";
 import ErrorString from "../ErrorString";
+import ReusableImage from "@/components/UI/image";
 
 type FormParamsType = {
   email: string;
@@ -29,6 +30,17 @@ type FormParamsType = {
 const RegistrationForm: React.FC = () => {
   const [validateOnChange, setValidateOnChange] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [passwordFirstVisibility, setPasswordFirstVisibility] =
+    React.useState(false);
+  const [passwordSecondVisibility, setPasswordSecondVisibility] =
+    React.useState(false);
+
+  const firstPasswordIconPath = passwordFirstVisibility
+    ? `${STATIC_URLS.SVG_ICONS}/visibility.svg`
+    : `${STATIC_URLS.SVG_ICONS}/visibility_off.svg`;
+  const secondPasswordIconPath = passwordSecondVisibility
+    ? `${STATIC_URLS.SVG_ICONS}/visibility.svg`
+    : `${STATIC_URLS.SVG_ICONS}/visibility_off.svg`;
 
   const initialFormParams: FormParamsType = React.useMemo(() => {
     return {
@@ -77,7 +89,9 @@ const RegistrationForm: React.FC = () => {
             height={60}
             className="form__logo"
           />
-          <p className="form__title">Sign up to manage your deals right now.</p>
+          <p className="form__title">
+            Зарегиструйтесь, чтобы управлять своими делами прямо сейчас
+          </p>
           <InputWithValidation
             inputName="email"
             inputType="email"
@@ -86,7 +100,7 @@ const RegistrationForm: React.FC = () => {
             errorString={errors.email}
             isTouched={touched.email}
             onChange={handleChange}
-            labelText="Enter your email"
+            labelText="Введите свой адрес электронной почты"
           />
 
           <InputWithValidation
@@ -97,35 +111,49 @@ const RegistrationForm: React.FC = () => {
             errorString={errors.username}
             isTouched={touched.username}
             onChange={handleChange}
-            labelText="Enter your username"
+            labelText="Введите ваше имя"
           />
 
           <InputWithValidation
             inputName="password"
-            inputType="password"
+            inputType={passwordFirstVisibility ? "text" : "password"}
             inputValue={values.password}
             inputClassname="form__input"
             errorString={errors.password}
             isTouched={touched.password}
             onChange={handleChange}
-            labelText="Enter your password"
-          />
+            labelText="Введите  ваш пароль"
+          >
+            <ReusableImage
+              src={firstPasswordIconPath}
+              alt="password icon"
+              onClick={() => setPasswordFirstVisibility((prev) => !prev)}
+              className="form__password-icon"
+            />
+          </InputWithValidation>
 
           <InputWithValidation
             inputName="passwordAgain"
-            inputType="password"
+            inputType={passwordSecondVisibility ? "text" : "password"}
             inputValue={values.passwordAgain}
             inputClassname="form__input"
             errorString={errors.passwordAgain}
             isTouched={touched.passwordAgain}
             onChange={handleChange}
-            labelText="Confirm your password"
-          />
+            labelText="Подтвердите пароль"
+          >
+            <ReusableImage
+              src={secondPasswordIconPath}
+              alt="password icon"
+              onClick={() => setPasswordSecondVisibility((prev) => !prev)}
+              className="form__password-icon"
+            />
+          </InputWithValidation>
           {!!error.length && (
             <ErrorString text={error} className="form__error-string" />
           )}
           <PrimaryButton
-            title="Registration"
+            title="Регистрация"
             type="submit"
             onClick={() => setValidateOnChange(true)}
             isLoading={isSubmitting}
@@ -133,8 +161,8 @@ const RegistrationForm: React.FC = () => {
           />
           <ChangeFormLink
             type={FormTypes.registration}
-            linkText="Login"
-            question="Have an account?"
+            linkText="Войти"
+            question="Уже есть аккаунт?"
             className="form__link"
           />
         </StyledContainer>
@@ -163,12 +191,12 @@ const StyledContainer = styled(Form)`
   .form {
     &__title {
       ${(props) => props.theme.typography.fnSemiBold};
-      ${(props) => props.theme.typography.fnTitle2};
+      ${(props) => props.theme.typography.fnTitle1};
       color: ${(props) => props.theme.colorValues.darkGrey};
 
       text-align: center;
 
-      max-width: 300px;
+      max-width: 400px;
 
       margin-bottom: 16px;
     }
@@ -187,6 +215,12 @@ const StyledContainer = styled(Form)`
 
     &__error-string {
       margin-bottom: 6px;
+    }
+
+    &__password-icon {
+      position: absolute;
+      top: 10px;
+      right: 16px;
     }
   }
 

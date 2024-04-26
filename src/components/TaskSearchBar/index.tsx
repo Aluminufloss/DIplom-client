@@ -22,7 +22,7 @@ const TaskSearchBar: React.FC<PropsType> = (props) => {
       <input
         type="search"
         onBlur={() => setIsInputFocused(false)}
-        placeholder="Search your tasks..."
+        placeholder="Поиск задач..."
         className="input"
       />
     </StyledSearch>

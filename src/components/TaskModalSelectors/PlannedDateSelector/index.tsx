@@ -13,6 +13,7 @@ const PlannedDateSelector: React.FC<ParamsType> = (props) => {
       <span className="selector__title">Запланировать</span>
       <input
         type="text"
+        id="picker"
         placeholder="Выберите дату"
         readOnly
         className="selector__timepicker"
@@ -38,7 +39,7 @@ const StyledPlannedDateSelector = styled.div`
     &__timepicker {
       width: 100%;
       max-width: 240px;
-      height: 36px;
+
 
       border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
       border-radius: 5px;
