@@ -7,13 +7,19 @@ import { useRouter } from "next/navigation";
 import { AppPaths, STATIC_URLS } from "@/utils/constant";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 
-import { toggleTabbedSidebarVisibility } from "@/store/slices/TabbedSidebar";
+import { TabEnum } from "@/store/slices/TabbedSidebar/models";
+import { setSelectedTab, toggleTabbedSidebarVisibility } from "@/store/slices/TabbedSidebar";
 
 import ActionItem from "@/components/UI/actionItem";
 
-const ActionButtonsGroup: React.FC = (props) => {
+const ActionButtonsGroup: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const onClickHome = React.useCallback(() => {
+    dispatch(setSelectedTab(TabEnum.today));
+    router.push(AppPaths.tasksToday)
+  }, []);
 
   return (
     <StyledContainer>
@@ -23,7 +29,7 @@ const ActionButtonsGroup: React.FC = (props) => {
         imageAlt="menu icon"
       />
       <ActionItem
-        onClick={() => router.push(AppPaths.tasks)}
+        onClick={onClickHome}
         imageSrc={`${STATIC_URLS.SVG_ICONS}/home.svg`}
         imageAlt="home icon"
       />

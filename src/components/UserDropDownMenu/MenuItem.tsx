@@ -28,8 +28,8 @@ const MenuItem: React.FC<PropsType> = (props) => {
       <ReusableImage
         src={imagePath}
         alt="Dropdown menu item"
-        width={16}
-        height={16}
+        width={20}
+        height={20}
       />
       <p className="title">{props.title}</p>
     </StyledMenuItem>
@@ -48,17 +48,27 @@ const StyledMenuItem = styled.li`
 
   cursor: pointer;
 
+  user-select: none;
+
   &:hover {
     background-color: ${(props) => props.theme.colorValues.lightGrey};
   }
 
+  &:active {
+    .title {
+      transform: translateY(1px);
+    }
+  }
+
   .title {
     ${(props) => props.theme.typography.fnMedium};
-    ${(props) => props.theme.typography.fnLabel1};
+    ${(props) => props.theme.typography.fnLabel2};
 
     color: ${(props) => props.theme.colorValues.black};
 
-    margin-left: 5px;
+    margin-left: 8px;
+
+    transition: transform 0.1s linear;
   }
 `;
 

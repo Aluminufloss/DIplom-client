@@ -9,8 +9,27 @@ import AuthService from "@/api/services/AuthService";
 
 import MenuItem from "./MenuItem";
 
-const UserDropDownMenu: React.FC = () => {
+type PropsType = {
+  onChangeUsername: () => void;
+  onCloseMenu: () => void;
+}
+
+const UserDropDownMenu: React.FC<PropsType> = (props) => {
   const router = useRouter();
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        props.onCloseMenu?.();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const onLogout = React.useCallback(async () => {
     await AuthService.logout();
@@ -21,32 +40,26 @@ const UserDropDownMenu: React.FC = () => {
   }, [AuthService.logout]);
 
   return (
-    <StyledMenu>
+    <StyledMenu ref={menuRef}>
       <div className="menu__title-wrapper">
-        <p className="menu__title">User settings</p>
+        <p className="menu__title">Настройки</p>
       </div>
       <ul className="menu__list">
         <MenuItem
           type="username"
-          title="Change username"
-          onClick={() => {}}
-          className="menu__item"
-        />
-        <MenuItem
-          type="password"
-          title="Change password"
-          onClick={() => {}}
+          title="Поменять логин"
+          onClick={props.onChangeUsername}
           className="menu__item"
         />
         <MenuItem
           type="themeLight"
-          title="Light theme"
+          title="Смена темы"
           onClick={() => {}}
           className="menu__item"
         />
         <MenuItem
           type="logout"
-          title="Logout"
+          title="Выход"
           onClick={onLogout}
           className="menu__item"
         />
