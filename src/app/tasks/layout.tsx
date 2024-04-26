@@ -31,14 +31,13 @@ const TasksLayout = ({
 
 const StyledLayout = styled.div`
   position: relative;
+  overflow: hidden;
+
+  height: 100vh;
 
   .content {
     width: 100%;
     height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
     margin-top: 77px;
   }
