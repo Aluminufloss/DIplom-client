@@ -1,7 +1,8 @@
-import TaskSection from "../../../components/Tasks/Tasks/TaskSection";
+import getTodayTasks from "@/utils/getTodayTasks";
+import TodayTasksSection from "@/components/Tasks/Tasks/TodayTasksSection";
 
-export default async function TodayTaskPage() {
+export default async function TodayTasksPage() {
   return (
-    <TaskSection />
+    <TodayTasksSection getTasks={getTodayTasks}/>
   );
 }

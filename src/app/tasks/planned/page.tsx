@@ -1,7 +1,8 @@
-import TaskSection from "../../../components/Tasks/Tasks/TaskSection";
+import PlannedTasksSection from "@/components/Tasks/Tasks/PlannedTasksSection";
+import getPlannedTasks from "@/utils/getPlannedTasks";
 
-export default async function TodayTaskPage() {
+export default async function PlannedTasksPage() {
   return (
-    <TaskSection />
+    <PlannedTasksSection getTasks={getPlannedTasks}/>
   );
 }
