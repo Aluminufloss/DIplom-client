@@ -10,8 +10,13 @@ export const taskModal = createSlice({
       state.isModalVisible = action.payload;
     },
 
+    setModalType : (state, action) => {
+      state.modalParams.modalType = action.payload;
+    },
+
     setModalParams: (state, action) => {
       state.modalParams = action.payload;
+      state.isModalVisible = true;
     },
 
     setTaskPriority: (state, action) => {
@@ -35,6 +40,7 @@ export const {
   setModalParams,
   setTaskPriority,
   setRepeatDay,
+  setModalType,
 } = taskModal.actions;
 
 export default taskModal.reducer;

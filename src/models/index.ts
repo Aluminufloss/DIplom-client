@@ -20,3 +20,8 @@ export type UserResponseType = {
   data: IUser;
   accessToken?: string;
 }
+
+export type TasksServerResponseType = {
+  data: ITask[];
+  accessToken?: string;
+}

@@ -1,16 +1,12 @@
 "use server"
+
 import { API_URL } from "@/utils/constant";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 type ParamsType = {
   url: string;
   method: string;
-};
-
-type ResponseDataType = {
-  data: any;
-  accessToken?: string;
+  body?: any;
 };
 
 export const serverSideFetch = async <T>(options: ParamsType): Promise<undefined | T> => {

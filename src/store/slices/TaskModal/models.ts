@@ -33,7 +33,7 @@ export type SelectedCategoryType = {
 export type ModalParamsType = {
 	modalType: ModalType;
 	taskName: string;
-	taskDescription: string;
+	taskDescription?: string;
 	priority: PriorityType;
 	plannedDate?: Date;
 	repeatDays: RepeatDaysType;
