@@ -7,7 +7,7 @@ export interface ITask {
   status: TaskStatusType;
   priority: TaskPriorityType;
   plannedDate: Date;
-  repeatDays?: number[];
+  repeatDays: number[];
   description?: string;
   category?: string;
 }
