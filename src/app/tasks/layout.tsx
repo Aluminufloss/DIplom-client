@@ -31,7 +31,6 @@ const TasksLayout = ({
 
 const StyledLayout = styled.div`
   position: relative;
-  overflow: hidden;
 
   height: 100vh;
 

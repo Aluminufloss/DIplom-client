@@ -13,7 +13,7 @@ import { serverSideFetch } from "@/utils/serverSideFetch";
 import { setUserData } from "@/store/slices/User";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 
-const TasksTodayLayout = ({
+const TasksTemplate = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -54,10 +54,9 @@ const StyledLayout = styled.div<{ $isSidebarOpen: boolean }>`
   width: 100%;
   height: 100%;
 
-  transition: padding-left 0.5s ease;
-
   padding: 24px 128px 24px ${props => props.$isSidebarOpen ? "290px" : "128px"};
 
+  transition: padding-left 0.5s ease;
 `;
 
-export default TasksTodayLayout;
+export default TasksTemplate;
