@@ -9,9 +9,9 @@ import ActionButtonsGroup from "../ActionButtonsGroup";
 import AdditionalActionButtonsGroup from "../AdditionalActionButtonsGroup";
 import LogoLink from "@/components/UI/logoLink";
 
-const Header = React.forwardRef<HTMLHeadElement, {}>((props, ref) => {
+const Header: React.FC = () => {
   return (
-    <StyledHeader ref={ref}>
+    <StyledHeader>
       <ActionButtonsGroup />
       <TaskSearchBar />
       <LogoLink href={AppPaths.tasksToday} alt="App logo" type="big" />
@@ -19,7 +19,7 @@ const Header = React.forwardRef<HTMLHeadElement, {}>((props, ref) => {
       <UserBlock />
     </StyledHeader>
   );
-});
+};
 
 const StyledHeader = styled.header`
   width: 100%;
