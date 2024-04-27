@@ -114,8 +114,6 @@ const StyledView = styled.div<StyleProps>`
 
   padding: 24px 16px;
 
-  margin-top: 77px;
-
   position: fixed;
   left: -30%;
 
