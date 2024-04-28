@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Form, Formik } from "formik";
+import { NoSsr } from '@mui/base/NoSsr';
 
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
@@ -12,6 +13,8 @@ import Input from "../UI/input";
 import PrioritySelector from "../TaskModalSelectors/PrioritySelector";
 import RepeatSelector from "../TaskModalSelectors/RepeatSelector";
 import PlannedDateSelector from "../TaskModalSelectors/PlannedDateSelector";
+import ListSelector from "../TaskModalSelectors/ListSelector";
+import CategorySelector from "../TaskModalSelectors/CategorySelector";
 
 type ParamsType = {};
 
@@ -47,36 +50,40 @@ const TaskModal: React.FC<ParamsType> = () => {
                 className="modal__repeat"
                 selectedDays={modalInfo.modalParams.repeatDays.days}
               />
-              <PlannedDateSelector />
+              <PlannedDateSelector className="modal__planned" />
+              <ListSelector className="modal__list" />
+              <CategorySelector className="modal__category" />
             </div>
           </StyledModal>
         )}
       </Formik>
-      {modalInfo.isModalVisible && <StyledOverlay
-        onClick={() => dispatch(setModalVisibility(false))}
-      />}
+      {modalInfo.isModalVisible && (
+        <StyledOverlay onClick={() => dispatch(setModalVisibility(false))} />
+      )}
     </>
   );
 };
 
 const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
   position: absolute;
-  top: ${(props) => (props.$isModalVisible ? "5%" : "-100%")};
+  top: ${(props) => (props.$isModalVisible ? "5%" : "-200%")};
   right: 50%;
   transform: translateX(50%);
 
   width: 100%;
   max-width: 840px;
-  max-height: 85vh;
+  max-height: 90vh;
 
   z-index: 300;
 
   transition: all 0.5s ease;
 
-  overflow-y: scroll;
-  scrollbar-width: thin;
-
-  div::-webkit-scrollbar {
+  & {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll;
+  }
+  &::-webkit-scrollbar {
     display: none;
   }
 
@@ -93,7 +100,10 @@ const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
     &__input,
     &__priority,
     &__repeat,
-    &__date {
+    &__date,
+    &__list,
+    &__planned,
+    &__category {
       margin-bottom: 20px;
     }
 
@@ -138,8 +148,6 @@ const StyledOverlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 
   transition: opacity 1s ease;
-
-  overflow: hidden;
 `;
 
 export default TaskModal;
