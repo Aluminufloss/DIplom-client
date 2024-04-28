@@ -54,7 +54,7 @@ const StyledLayout = styled.div<{ $isSidebarOpen: boolean }>`
   width: 100%;
   height: 100%;
 
-  padding: 24px 128px 24px ${props => props.$isSidebarOpen ? "290px" : "128px"};
+  padding: 24px 128px 48px ${props => props.$isSidebarOpen ? "290px" : "128px"};
 
   transition: padding-left 0.5s ease;
 `;

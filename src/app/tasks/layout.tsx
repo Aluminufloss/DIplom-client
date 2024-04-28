@@ -35,10 +35,8 @@ const TasksLayout = ({
 const StyledLayout = styled.div`
   position: relative;
 
-  height: 100vh;
-
   .content {
-    width: 100%;
+    width: 100vw;
     height: 100%;
 
     margin-top: 77px;
