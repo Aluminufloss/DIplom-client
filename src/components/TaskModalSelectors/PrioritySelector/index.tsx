@@ -14,9 +14,14 @@ const PrioritySelector: React.FC<ParamsType> = (props) => {
   const dispatch = useAppDispatch();
 
   const modalPriorityTitle = React.useMemo(() => {
-    return (
-      props.currentPriority[0].toUpperCase() + props.currentPriority.slice(1)
-    );
+    switch (props.currentPriority) {
+      case "low":
+        return "Низкий";
+      case "medium":
+        return "Средний";
+      case "high":
+        return "Высокий";
+    }
   }, [props.currentPriority]);
 
   return (
