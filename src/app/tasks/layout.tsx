@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Provider } from "react-redux";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import TabbedSidebar from "@/components/SidebarModals/TabbedSidebar";
 import UserSidebar from "@/components/SidebarModals/UserSidebar";
 import TaskModal from "@/components/Modals/TaskModal";
+import Loading from "./loading";
 
 const TasksLayout = ({
   children,
@@ -22,8 +23,10 @@ const TasksLayout = ({
         <Header />
         <TabbedSidebar />
         <UserSidebar />
-        <TaskModal/>
-        <div className="content">{children}</div>
+        <TaskModal />
+        <Suspense fallback={<Loading />}>
+          <div className="content">{children}</div>
+        </Suspense>
       </StyledLayout>
     </Provider>
   );
