@@ -13,8 +13,8 @@ import { setTodayTasks } from "@/store/slices/Tasks";
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import getGrouppedTasks, {
-} from "./utils/getGrouppedTasks";
+import getGrouppedTasks from "./utils/getGrouppedTasks";
+import TasksSkeletonSection from "@/components/UI/skeletons/TasksSkeletonSection";
 
 type PropsType = {
   getTasks: () => Promise<TasksServerResponseType | undefined>;
@@ -24,6 +24,7 @@ export const TodayTasksSection: React.FC<PropsType> = (props) => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
+  const isLoading = useAppSelector((state) => state.tasks.isLoading);
   const todayTasks = useAppSelector((state) => state.tasks.todayTasks);
   const grouppedTasks = getGrouppedTasks(todayTasks);
 
@@ -40,28 +41,32 @@ export const TodayTasksSection: React.FC<PropsType> = (props) => {
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.today} />
 
-      {!!grouppedTasks?.active.length &&
-        grouppedTasks.active.map((task) => {
-          return <TaskItem key={task.taskId} task={task} />;
-        })}
-
-      <AddTaskButton />
-
-      {!!grouppedTasks?.completed.length && (
+      {isLoading ? (
+        <TasksSkeletonSection />
+      ) : (
         <>
-          <div className="group-separator">Завершённые задачи</div>
-          {grouppedTasks.completed.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
-      )}
-
-      {!!grouppedTasks?.expired.length && (
-        <>
-          <div className="group-separator">Просроченные задачи</div>
-          {grouppedTasks.expired.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
+          {!!grouppedTasks?.active.length &&
+            grouppedTasks.active.map((task) => {
+              return <TaskItem key={task.taskId} task={task} />;
+            })}
+          <AddTaskButton />
+          {!!grouppedTasks?.completed.length && (
+            <>
+              <div className="group-separator">Завершённые задачи</div>
+              {grouppedTasks.completed.map((task) => {
+                return <TaskItem key={task.taskId} task={task} />;
+              })}
+            </>
+          )}
+              
+          {!!grouppedTasks?.expired.length && (
+            <>
+              <div className="group-separator">Просроченные задачи</div>
+              {grouppedTasks.expired.map((task) => {
+                return <TaskItem key={task.taskId} task={task} />;
+              })}
+            </>
+          )}
         </>
       )}
     </StyledTaskSection>
