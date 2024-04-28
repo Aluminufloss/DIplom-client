@@ -24,8 +24,8 @@ const StyledDaysList = styled.ul`
   width: 100%;
 
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 24px;
 
   padding-top: 16px;
 
