@@ -20,6 +20,9 @@ export enum AppRoutes {
   login = 'login',
   registration = 'registration',
   tasksToday = 'tasks/today',
+  tasksAll = 'tasks/all',
+  tasksPlanned = 'tasks/planned',
+  tasksAnalytics = 'tasks/analytics',
   sendChangePasswordLink = 'changePassword',
 }
 
@@ -28,9 +31,9 @@ export enum AppPaths {
   registration = `${CLIENT_URL}/${AppRoutes.registration}`,
   sendChangePasswordLink = `${CLIENT_URL}/${AppRoutes.sendChangePasswordLink}`,
   tasksToday = `${CLIENT_URL}/${AppRoutes.tasksToday}`,
-  tasksPlanned = `${CLIENT_URL}/tasks/planned`,
-  tasksAnalytics = `${CLIENT_URL}/tasks/analytics`,
-  tasksAll = `${CLIENT_URL}/tasks/all`,
+  tasksPlanned = `${CLIENT_URL}/${AppRoutes.tasksPlanned}`,
+  tasksAnalytics = `${CLIENT_URL}/${AppRoutes.tasksAnalytics}`,
+  tasksAll = `${CLIENT_URL}/${AppRoutes.tasksAll}`,
 }
 
 export enum ApiPaths {
