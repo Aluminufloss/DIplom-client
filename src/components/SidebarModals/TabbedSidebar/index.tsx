@@ -1,20 +1,18 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import { AppPaths, STATIC_URLS } from "@/utils/constant";
+import { STATIC_URLS } from "@/utils/constant";
 import { getTodayDay } from "@/utils/getTodayDay";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
-import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
-import { setSelectedTab } from "@/store/slices/TabbedSidebar";
+import useTabbedNavigation from "@/utils/hooks/useTabbedNavigation";
 import { TabEnum } from "@/store/slices/TabbedSidebar/models";
 
 import TabItem from "@/components/UI/tabItem";
-import AddNewListButton from "./AddNewListButton";
 import AnalyticsIcon from "./AnalyticsIcon";
 import TasksIcon from "./TasksIcon";
 import PlannedIcon from "./PlannedIcon";
 import CalendarIcon from "./CalendarIcon";
-import { useRouter } from "next/navigation";
+import ListSection from "./ListSection";
 
 type PropsType = {
   className?: string;
@@ -22,31 +20,13 @@ type PropsType = {
 
 const TabbedSidebar: React.FC<PropsType> = (props) => {
   const modalState = useAppSelector((state) => state.tabbedSidebar);
-
-  const dispatch = useAppDispatch();
+  const { handleNavigation, handleSelectTab } = useTabbedNavigation();
 
   const today = getTodayDay();
 
-  const router = useRouter();
-
-  const handleNavigation = (currentTab: TabEnum) => {
-    dispatch(setSelectedTab(currentTab));
-
-    switch (currentTab) {
-      case TabEnum.today:
-        router.push(AppPaths.tasksToday);
-        break;
-      case TabEnum.planned:
-        router.push(AppPaths.tasksPlanned);
-        break;
-      case TabEnum.analytics:
-        router.push(AppPaths.tasksAnalytics);
-        break;
-      case TabEnum.tasks:
-        router.push(AppPaths.tasksAll);
-        break;
-    }
-  };
+  React.useEffect(() => {
+    handleSelectTab();
+  }, []);
 
   return (
     <StyledView
@@ -61,7 +41,7 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
           isActiveTab={modalState.currentTab === TabEnum.today}
           onCLick={() => handleNavigation(TabEnum.today)}
         >
-          <CalendarIcon fill="red" />
+          <CalendarIcon fill="#fff" />
         </TabItem>
         <div className="date-wrapper">
           <span className="tab-item__today--day">{today}</span>
@@ -75,7 +55,9 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         isActiveTab={modalState.currentTab === TabEnum.planned}
         onCLick={() => handleNavigation(TabEnum.planned)}
       >
-        <PlannedIcon />
+        <PlannedIcon
+          color={modalState.currentTab === TabEnum.planned ? "#fff" : "#000"}
+        />
       </TabItem>
       <TabItem
         iconPath={`${STATIC_URLS.SVG_ICONS}/analytics.svg`}
@@ -98,7 +80,7 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         <TasksIcon />
       </TabItem>
       <div className="separator" />
-      <AddNewListButton />
+      <ListSection />
     </StyledView>
   );
 };
@@ -116,6 +98,7 @@ const StyledView = styled.div<StyleProps>`
 
   position: fixed;
   left: -30%;
+  top: 77px;
 
   z-index: 50;
 
