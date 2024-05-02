@@ -4,18 +4,18 @@ import styled from "styled-components";
 import { STATIC_URLS } from "@/utils/constant";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 
-import { setModalVisibility } from "@/store/slices/TaskModal";
+import { setModalType, setModalVisibility } from "@/store/slices/TaskModal";
 
 import ReusableImage from "@/components/UI/image";
 
-type PropsType = {
-};
-
-export const AddTaskButton: React.FC<PropsType> = (props) => {
+export const AddTaskButton: React.FC = () => {
   const dispatch = useAppDispatch();
   
   return (
-    <StyledTaskItem onClick={() => dispatch(setModalVisibility(true))}>
+    <StyledTaskItem onClick={() => {
+      dispatch(setModalType('create'));
+      dispatch(setModalVisibility(true))
+    }}>
       <ReusableImage
         width={24}
         height={24}
