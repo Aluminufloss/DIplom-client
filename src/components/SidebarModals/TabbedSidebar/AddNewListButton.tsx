@@ -11,16 +11,24 @@ type PropsType = {
 };
 
 const AddNewListButton: React.FC<PropsType> = (props) => {
+  const handleAddGroup = (ev: React.MouseEvent) => {
+    ev.stopPropagation();
+  };
+
   return (
     <StyledButton className={props.className} onClick={props.setInputVisible}>
-      <div className="button__new-list">
+      <div className="button__new-list" title="Создать новый список">
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
           alt="plus icon"
         />
         <span className="button__new-list--text">Новый список</span>
       </div>
-      <div className="button__new-list--group">
+      <div
+        className="button__new-list--group"
+        title="Создать новую группу"
+        onClick={handleAddGroup}
+      >
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/group.svg`}
           alt="Создать новую группу"
@@ -51,6 +59,8 @@ const StyledButton = styled.div`
 
     cursor: pointer;
 
+    transition: background-color 0.3s ease;
+
     &--text {
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
@@ -66,7 +76,7 @@ const StyledButton = styled.div`
       flex-direction: row;
       align-items: center;
 
-      padding: 5px 8px;
+      padding: 5px 6px;
 
       border-radius: 5px;
 
