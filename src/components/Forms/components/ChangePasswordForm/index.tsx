@@ -68,9 +68,9 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
               height={60}
             />
 
-            <span className="form__title">Password change</span>
+            <span className="form__title">Смена пароля</span>
 
-            <p className="form__description">Enter new password</p>
+            <p className="form__description">Введите новый пароль</p>
 
             <InputWithValidation
               inputName="password"
@@ -79,7 +79,7 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
               inputClassname="form__input"
               errorString={errors.password}
               isTouched={touched.password}
-              labelText="Enter your new password"
+              labelText="Введите пароль"
               shouldShowPasswordText={isPasswordsVisible}
               onChange={handleChange}
             />
@@ -91,7 +91,7 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
               inputClassname="form__input"
               errorString={errors.passwordAgain}
               isTouched={touched.passwordAgain}
-              labelText="Enter your password again"
+              labelText="Введите пароль ещё раз"
               shouldShowPasswordText={isPasswordsVisible}
               onChange={handleChange}
             />
@@ -102,12 +102,12 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
                 className="form__show-passwords--checkbox"
                 onClick={() => setIsPasswordsVisible((prev) => !prev)}
               />
-              <span className="form__show-passwords--text">Show passwords</span>
+              <span className="form__show-passwords--text">Показать пароли</span>
             </div>
 
             <PrimaryButton
               type="submit"
-              title="Change password"
+              title="Сменить пароль"
               onClick={() => handleFormSubmit(values)}
               isLoading={isSubmitting}
               className="form__login-btn"

@@ -36,7 +36,7 @@ const ConfirmationMessageModal: React.FC<PropsType> = (props) => {
       />
       <p className="form__message">{props.message}</p>
       <PrimaryButton
-        title="Go back to login"
+        title="Вернуться на страницу входа"
         onClick={() =>router.push(AppPaths.login)}
         className="form__goback-btn"
       />
