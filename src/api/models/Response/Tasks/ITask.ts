@@ -1,13 +1,14 @@
 import { TaskPriorityType, TaskStatusType } from "@/models";
+import { SelectesdDayType } from "@/store/slices/TaskModal/models";
 
 export interface ITask {
-  taskId: string;
-  listId: string;
+  taskId?: string;
+  listId?: string;
   title: string;
   status: TaskStatusType;
   priority: TaskPriorityType;
   plannedDate: Date;
-  repeatDays: number[];
+  repeatDays: SelectesdDayType[];
   description?: string;
   category?: string;
 }
