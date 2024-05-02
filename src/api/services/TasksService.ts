@@ -23,9 +23,9 @@ export default class TasksService {
   }
 
   public static async updateTask(
-    updatedTaskData: ITask
-  ): Promise<AxiosResponse<TasksResponseType>> {
-    return await $api.patch<TasksResponseType>("/update/task", { updatedTaskData });
+    taskData: ITask
+  ): Promise<AxiosResponse<ITask>> {
+    return await $api.post<ITask>("/update/task", { taskData });
   }
 
   public static async deleteTask(
@@ -38,8 +38,8 @@ export default class TasksService {
 
   public static async createTask(
     taskData: ITask
-  ): Promise<AxiosResponse<TasksResponseType>> {
-    return await $api.post<TasksResponseType>("/create/task", { taskData });
+  ): Promise<AxiosResponse<ITask>> {
+    return await $api.post<ITask>("/create/task", { taskData });
   }
 
   public static async changeTaskStatus(
