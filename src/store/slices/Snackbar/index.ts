@@ -12,11 +12,13 @@ export const snackbarInfo = createSlice({
       state.isOpen = true;
       state.message = action.payload.message;
       state.title = action.payload.title;
+      state.type = action.payload.type;
     },
     closeSnackbar: (state) => {
       state.isOpen = false;
       state.message = "";
       state.title = "";
+      state.type = "success";
     }
   }
 });
