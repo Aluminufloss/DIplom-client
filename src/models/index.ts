@@ -9,7 +9,7 @@ export type TasksListType = {
 	listId: string;
 	tasks: ITask[],
 	title: string,
-	groupId: string;
+	groupId?: string;
 }
 
 export type GroupType = {
