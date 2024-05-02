@@ -1,3 +1,5 @@
+import { ITask } from "@/api/models/Response/Tasks/ITask";
+
 export type TaskModalStoreType = {
 	isModalVisible: boolean;
 	modalParams: ModalParamsType;
@@ -32,11 +34,5 @@ export type SelectedCategoryType = {
 
 export type ModalParamsType = {
 	modalType: ModalType;
-	taskName: string;
-	taskDescription?: string;
-	priority: PriorityType;
-	plannedDate?: Date;
-	repeatDays: RepeatDaysType;
-	selectedList?: SelectedListType;
-	selectedCategory?: SelectedCategoryType;
+  taskInfo: ITask;
 }

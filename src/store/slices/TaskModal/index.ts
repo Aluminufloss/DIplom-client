@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { taskModalInitState } from "./initialState";
 import { SelectesdDayType } from "./models";
+import { createTask } from "../Tasks/thunks";
 
 export const taskModal = createSlice({
   name: "taskModal",
@@ -20,11 +21,11 @@ export const taskModal = createSlice({
     },
 
     setTaskPriority: (state, action) => {
-      state.modalParams.priority = action.payload;
+      state.modalParams.taskInfo.priority = action.payload;
     },
 
     setRepeatDay: (state, action: PayloadAction<SelectesdDayType>) => {
-      state.modalParams.repeatDays.days = state.modalParams.repeatDays.days.map(
+      state.modalParams.taskInfo.repeatDays = state.modalParams.taskInfo.repeatDays.map(
         (item) => {
           return item.day === action.payload.day
             ? { ...item, isSelected: !item.isSelected }
@@ -32,6 +33,12 @@ export const taskModal = createSlice({
         }
       );
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(createTask.pending, (state) => {
+      state.modalParams = taskModalInitState.modalParams;
+      state.isModalVisible = false;
+    })
   },
 });
 
