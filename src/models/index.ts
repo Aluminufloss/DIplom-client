@@ -14,6 +14,7 @@ export type TasksListType = {
 
 export type GroupType = {
 	id: string;
+	name: string;
 	lists: TasksListType[],
 	userId: string;
 }
