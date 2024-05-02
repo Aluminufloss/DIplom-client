@@ -7,6 +7,8 @@ import Toggler from "@/components/UI/Toggler";
 import RepeatDaysList from "./RepeatDaysList";
 
 type ParamsType = {
+  name: string;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   selectedDays: SelectesdDayType[];
   className?: string;
 };
@@ -19,13 +21,14 @@ const RepeatSelector: React.FC<ParamsType> = (props) => {
   }, []);
 
   return (
-    <StyledRepeatSelector className={props.className}>
+    <StyledRepeatSelector className={props.className} id={props.name}>
       <div className="toggler__wrapper">
         <span className="toggler__title">Повторить задачу</span>
         <Toggler isActive={isActive} onClick={onSelect} className="toggler" />
       </div>
       {isActive && (
         <RepeatDaysList
+          setFieldValue={props.setFieldValue}
           className="repeat__list"
           selectedDays={props.selectedDays}
         />
