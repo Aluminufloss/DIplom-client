@@ -6,12 +6,13 @@ import { STATIC_URLS } from "@/utils/constant";
 import ReusableImage from "@/components/UI/image";
 
 type PropsType = {
+  setInputVisible: () => void;
   className?: string;
 };
 
 const AddNewListButton: React.FC<PropsType> = (props) => {
   return (
-    <StyledButton className={props.className}>
+    <StyledButton className={props.className} onClick={props.setInputVisible}>
       <div className="button__new-list">
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
@@ -37,6 +38,8 @@ const StyledButton = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  margin-bottom: 5px;
+
   .button__new-list {
     display: flex;
     flex-direction: row;
@@ -54,6 +57,8 @@ const StyledButton = styled.div`
       color: ${(props) => props.theme.colorValues.black};
 
       margin-left: 5px;
+
+      transform: translateY(1px);
     }
 
     &--group {
