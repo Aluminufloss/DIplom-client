@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 
-type PropsType = {
+type PropsType<T = any> = {
   width?: number;
   height?: number;
   src: string;
   alt: string;
   fill?: boolean;
   className?: string;
-  onClick?: () => void;
+  onClick?: (arg: T) => void;
 };
 
 const ReusableImage: React.FC<PropsType> = (props) => {
