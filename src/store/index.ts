@@ -7,6 +7,7 @@ import userInfo from "./slices/User";
 import tasks from "./slices/Tasks";
 import lists from "./slices/Lists";
 import snackbar from "./slices/Snackbar";
+import groups from "./slices/Groups";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     taskModal,
     snackbar,
     userInfo,
+    groups,
     lists,
     tasks,
   },
