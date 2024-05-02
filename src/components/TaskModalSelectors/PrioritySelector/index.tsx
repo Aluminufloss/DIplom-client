@@ -2,17 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import cn from "classnames";
 
-import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
-import { setTaskPriority } from "@/store/slices/TaskModal";
-
 type ParamsType = {
+  name: string;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   currentPriority: "low" | "medium" | "high";
   className?: string;
 };
 
 const PrioritySelector: React.FC<ParamsType> = (props) => {
-  const dispatch = useAppDispatch();
-
   const modalPriorityTitle = React.useMemo(() => {
     switch (props.currentPriority) {
       case "low":
@@ -24,8 +21,12 @@ const PrioritySelector: React.FC<ParamsType> = (props) => {
     }
   }, [props.currentPriority]);
 
+  const handlePriorityChange = (priority: "low" | "medium" | "high") => {
+    props.setFieldValue(props.name, priority);
+  };
+
   return (
-    <StyledPrioritySelector className={props.className}>
+    <StyledPrioritySelector className={props.className} id={props.name}>
       <span className="title">Выберите приоритет задачи</span>
       <div className="priority__wrapper">
         <span className="priority__title">{modalPriorityTitle}</span>
@@ -34,21 +35,21 @@ const PrioritySelector: React.FC<ParamsType> = (props) => {
             "priority__item",
             props.currentPriority === "low" && "priority__low"
           )}
-          onClick={() => dispatch(setTaskPriority("low"))}
+          onClick={() => handlePriorityChange("low")}
         />
         <div
           className={cn(
             "priority__item",
             props.currentPriority === "medium" && "priority__medium"
           )}
-          onClick={() => dispatch(setTaskPriority("medium"))}
+          onClick={() => handlePriorityChange("medium")}
         />
         <div
           className={cn(
             "priority__item",
             props.currentPriority === "high" && "priority__high"
           )}
-          onClick={() => dispatch(setTaskPriority("high"))}
+          onClick={() => handlePriorityChange("high")}
         />
       </div>
     </StyledPrioritySelector>
