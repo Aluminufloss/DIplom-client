@@ -5,6 +5,7 @@ import DeleteListButton from "./DeleteListButton";
 import { TasksListType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { deleteList } from "@/store/slices/Lists/thunks";
+import { openSnackbar } from "@/store/slices/Snackbar";
 
 type PropsType = {
   lists: TasksListType[];
@@ -25,7 +26,15 @@ const Lists: React.FC<PropsType> = (props) => {
   };
 
   const handleDeleteList = React.useCallback(() => {
-    dispatch(deleteList(currentListId));
+    dispatch(deleteList(currentListId))
+      .unwrap()
+      .catch((err) => {
+        dispatch(openSnackbar({
+          title: "Ошибка при удалении списка",
+          message: err.message,
+          type: 'error'
+        }))
+      });
     setIsDeleteListButtonVisible(false);
   }, [currentListId]);
 
