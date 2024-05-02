@@ -40,6 +40,7 @@ const StyledMenuItem = styled.li`
   display: flex;
   align-items: center;
 
+  width: 180px;
   max-width: 360px;
 
   padding: 10px 12px;
