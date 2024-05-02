@@ -5,6 +5,7 @@ import userSidebar from "./slices/UserSidebar";
 import taskModal from "./slices/TaskModal";
 import userInfo from "./slices/User";
 import tasks from "./slices/Tasks";
+import lists from "./slices/Lists";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     userSidebar,
     taskModal,
     userInfo,
+    lists,
     tasks
   },
 });

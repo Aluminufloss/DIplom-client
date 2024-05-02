@@ -5,8 +5,9 @@ export type TaskStatusType = "active" | "completed" | "expired";
 export type TaskPriorityType = "low" | "medium" | "high";
 
 export type TasksListType = { 
-	id: string;
+	listId: string;
 	tasks: ITask[],
+	title: string,
 	groupId: string;
 }
 
@@ -24,4 +25,9 @@ export type UserResponseType = {
 export type TasksServerResponseType = {
   data: ITask[];
   accessToken?: string;
+}
+
+export type ListsServerResponseType = {
+	data: TasksListType[];
+	accessToken?: string;
 }
