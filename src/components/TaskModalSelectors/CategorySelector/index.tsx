@@ -17,7 +17,7 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
 
   return (
     <StyledListSelector className={props.className}>
-      <span className="selector__title">Выбери категорию</span>
+      <span className="selector__title">Выберите категорию</span>
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
