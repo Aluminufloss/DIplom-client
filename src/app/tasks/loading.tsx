@@ -2,22 +2,22 @@
 
 import { Discuss } from "react-loader-spinner";
 
+const OVERLAY_STYLES = {
+  width: "100%",
+  height: "100vh",
+
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  backgroundColor: "rgba(0, 0, 0, 0.05)",
+
+  borderRadius: "8px",
+}
+
 const Loader: React.FC = () => {
-  const overlayStyles = {
-    width: "100%",
-    height: "100%",
-
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-
-    borderRadius: "8px",
-  }
-
   return (
-    <div style={overlayStyles}>
+    <div style={OVERLAY_STYLES}>
       <Discuss
         height="90"
         width="90"
