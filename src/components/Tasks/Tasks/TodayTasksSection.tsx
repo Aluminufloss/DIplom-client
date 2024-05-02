@@ -4,20 +4,21 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { TasksServerResponseType } from "@/models";
+import { ListsServerResponseType, TasksServerResponseType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import getGrouppedTasks from "./utils/getGrouppedTasks";
 
 import { setTodayTasks } from "@/store/slices/Tasks";
+import { setLists } from "@/store/slices/Lists";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import getGrouppedTasks from "./utils/getGrouppedTasks";
-import TasksSkeletonSection from "@/components/UI/skeletons/TasksSkeletonSection";
 
 type PropsType = {
   getTasks: () => Promise<TasksServerResponseType | undefined>;
+  getUserLists: () => Promise<ListsServerResponseType | undefined>;
 };
 
 export const TodayTasksSection: React.FC<PropsType> = (props) => {
@@ -32,8 +33,13 @@ export const TodayTasksSection: React.FC<PropsType> = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      const response = await props.getTasks();
-      dispatch(setTodayTasks(response?.data));
+      const [responseTask, responseList] = await Promise.all([
+        props.getTasks(),
+        props.getUserLists(),
+      ]);
+
+      dispatch(setTodayTasks(responseTask?.data));
+      dispatch(setLists(responseList?.data));
     })();
   }, []);
 
@@ -41,32 +47,26 @@ export const TodayTasksSection: React.FC<PropsType> = (props) => {
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.today} />
 
-      {isLoading ? (
-        <TasksSkeletonSection />
-      ) : (
+      {!!grouppedTasks?.active.length &&
+        grouppedTasks.active.map((task) => {
+          return <TaskItem key={task.taskId} task={task} />;
+        })}
+      <AddTaskButton />
+      {!!grouppedTasks?.completed.length && (
         <>
-          {!!grouppedTasks?.active.length &&
-            grouppedTasks.active.map((task) => {
-              return <TaskItem key={task.taskId} task={task} />;
-            })}
-          <AddTaskButton />
-          {!!grouppedTasks?.completed.length && (
-            <>
-              <div className="group-separator">Завершённые задачи</div>
-              {grouppedTasks.completed.map((task) => {
-                return <TaskItem key={task.taskId} task={task} />;
-              })}
-            </>
-          )}
-              
-          {!!grouppedTasks?.expired.length && (
-            <>
-              <div className="group-separator">Просроченные задачи</div>
-              {grouppedTasks.expired.map((task) => {
-                return <TaskItem key={task.taskId} task={task} />;
-              })}
-            </>
-          )}
+          <div className="group-separator">Завершённые задачи</div>
+          {grouppedTasks.completed.map((task) => {
+            return <TaskItem key={task.taskId} task={task} />;
+          })}
+        </>
+      )}
+
+      {!!grouppedTasks?.expired.length && (
+        <>
+          <div className="group-separator">Просроченные задачи</div>
+          {grouppedTasks.expired.map((task) => {
+            return <TaskItem key={task.taskId} task={task} />;
+          })}
         </>
       )}
     </StyledTaskSection>
@@ -75,7 +75,7 @@ export const TodayTasksSection: React.FC<PropsType> = (props) => {
 
 const StyledTaskSection = styled.div<{ $isViewVisible: boolean }>`
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
   .date {
     width: 300px;
