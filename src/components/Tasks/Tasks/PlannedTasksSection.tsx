@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { TasksServerResponseType } from "@/models";
+import { ListsServerResponseType, TasksListType, TasksServerResponseType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 
@@ -15,9 +15,11 @@ import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import getGrouppedTasks, {
 } from "./utils/getGrouppedTasks";
+import { setLists } from "@/store/slices/Lists";
 
 type PropsType = {
   getTasks: () => Promise<TasksServerResponseType | undefined>;
+  getUserLists: () => Promise<ListsServerResponseType | undefined>;
 };
 
 export const PlannedTasksSection: React.FC<PropsType> = (props) => {
@@ -31,14 +33,19 @@ export const PlannedTasksSection: React.FC<PropsType> = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      const response = await props.getTasks();
-      dispatch(setPlannedTasks(response?.data));
+      const [responseTask, responseList] = await Promise.all([
+        props.getTasks(),
+        props.getUserLists(),
+      ]);
+
+      dispatch(setPlannedTasks(responseTask?.data));
+      dispatch(setLists(responseList?.data));
     })();
   }, []);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
-      <TaskSectionInfoBar sectionType={SectionEnum.today} />
+      <TaskSectionInfoBar sectionType={SectionEnum.planned} />
 
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {
@@ -70,7 +77,7 @@ export const PlannedTasksSection: React.FC<PropsType> = (props) => {
 
 const StyledTaskSection = styled.div<{ $isViewVisible: boolean }>`
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
   .date {
     width: 300px;
