@@ -10,6 +10,7 @@ import LoaderWithOverlay from "@/components/UI/LoaderWIthOverlay";
 import ReusableImage from "@/components/UI/image";
 import AddNewListButton from "../AddNewListButton";
 import Lists from "../Lists";
+import { openSnackbar } from "@/store/slices/Snackbar";
 
 const ListSection: React.FC = () => {
   const listsInfo = useAppSelector((state) => state.lists);
@@ -23,13 +24,37 @@ const ListSection: React.FC = () => {
     setInputValue(event.target.value);
   };
 
-  const handleSaveList = () => {
+  const handleSaveList = React.useCallback(() => {
     if (inputValue) {
-      dispatch(addList(inputValue));
+      const listAlreadyExists = listsInfo.lists.some(
+        (list) => list.title === inputValue
+      );
+
+      if (listAlreadyExists) {
+        dispatch(
+          openSnackbar({
+            title: "Ошибка",
+            message: "Список с таким названием уже существует",
+            type: "error",
+          })
+        );
+      } else {
+        dispatch(addList(inputValue));
+      }
     }
+
     setIsInputVisible(false);
     setInputValue("");
-  };
+  }, [inputValue, listsInfo.lists]);
+
+  const handleClickOnEnter = React.useCallback(
+    (ev: React.KeyboardEvent<HTMLInputElement>) => {
+      if (ev.key === "Enter") {
+        handleSaveList();
+      }
+    },
+    [handleSaveList]
+  );
 
   const onSetInputVisible = React.useCallback(() => {
     setIsInputVisible(true);
@@ -49,13 +74,14 @@ const ListSection: React.FC = () => {
             type="text"
             value={inputValue}
             onChange={handleInputChange}
-            autoFocus
             onBlur={handleSaveList}
+            onKeyDown={handleClickOnEnter}
             className="input"
+            autoFocus
           />
         </div>
       )}
-      <Lists lists={listsInfo.lists}/>
+      <Lists lists={listsInfo.lists} />
       <LoaderWithOverlay isOpen={listsInfo.isLoading} />
     </StyledListSection>
   );
