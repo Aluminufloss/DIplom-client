@@ -6,10 +6,11 @@ import styled from "styled-components";
 
 import { store } from "@/store";
 
-import Header from "../../components/Header";
 import TabbedSidebar from "@/components/SidebarModals/TabbedSidebar";
 import UserSidebar from "@/components/SidebarModals/UserSidebar";
 import TaskModal from "@/components/Modals/TaskModal";
+import SnackBar from "@/components/UI/snackbar";
+import Header from "../../components/Header";
 import Loading from "./loading";
 
 const TasksLayout = ({
@@ -27,6 +28,7 @@ const TasksLayout = ({
         <Suspense fallback={<Loading />}>
           <div className="content">{children}</div>
         </Suspense>
+        <SnackBar />
       </StyledLayout>
     </Provider>
   );
