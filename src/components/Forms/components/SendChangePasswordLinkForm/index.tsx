@@ -18,11 +18,9 @@ const SendChangePasswordLinkForm: React.FC = () => {
   const [isSuccess, setIsSuccess] = React.useState(true);
 
   const confirmationMessage = isSuccess
-    ? `We've successfully sent you a link on email.
-       Check it and change your password.
-       Press button to go back on login page`
-    : `Something went wrong with sending your change password link,
-       try it later. Press button to go back on login page`;
+    ? `Письмо для смены пароля было успешно отправлено на вашу почту.
+       Нажнимет кнопку для возрата на страницу входа`
+    : `Что-то пошло не так с отправкой вашего письма, попробуйте сделать это позже. Нажмите кнопку для возвращения на страницу входа`;
 
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     React.useState(false);
@@ -33,13 +31,12 @@ const SendChangePasswordLinkForm: React.FC = () => {
         if (!values.email) {
           return;
         }
-        
+
         await AuthService.sendChangePasswordLink(values.email);
 
         setIsSuccess(true);
         setIsConfirmationModalVisible(true);
       } catch (err) {
-        console.log("err", err)
         setIsSuccess(false);
         setIsConfirmationModalVisible(true);
       }
@@ -60,11 +57,11 @@ const SendChangePasswordLinkForm: React.FC = () => {
                 height={60}
               />
 
-              <span className="form__title">Password change</span>
+              <span className="form__title">Смена пароля</span>
 
               <p className="form__text">
-                Enter your email and we’ll send you a link with which you can
-                change your password.
+                Введите свой адресс электронной почты и мы отправим вам ссылку
+                для смены пароля.
               </p>
 
               <Input
@@ -73,7 +70,7 @@ const SendChangePasswordLinkForm: React.FC = () => {
                 value={values.email}
                 className="form__input"
                 onChange={handleChange}
-                placeholder="Enter your email"
+                placeholder="Ввведите свой адрес электронной почты"
               />
 
               <PrimaryButton
