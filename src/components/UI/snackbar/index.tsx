@@ -40,7 +40,7 @@ const SnackBar: React.FC = () => {
   return (
     <React.Fragment>
       <StyledSnackbar
-        autoHideDuration={2000}
+        autoHideDuration={3000}
         open={snackbarInfo.isOpen}
         onClose={handleClose}
         exited={!snackbarInfo.isOpen}
@@ -62,14 +62,25 @@ const SnackBar: React.FC = () => {
               ref={nodeRef}
               className="content"
             >
-              <CheckRoundedIcon
-                sx={{
-                  color: "success.main",
-                  flexShrink: 0,
-                  width: "16px",
-                  height: "16px",
-                }}
-              />
+              {snackbarInfo.type === "success" ? (
+                <CheckRoundedIcon
+                  sx={{
+                    color: "success.main",
+                    flexShrink: 0,
+                    width: "20px",
+                    height: "20px",
+                  }}
+                />
+              ) : (
+                <CloseIcon
+                  sx={{
+                    color: "error.main",
+                    flexShrink: 0,
+                    width: "20px",
+                    height: "20px",
+                  }}
+                />
+              )}
               <div className="snackbar-message">
                 <p className="snackbar-title">{snackbarInfo.title}</p>
                 <p className="snackbar-description">{snackbarInfo.message}</p>
@@ -92,7 +103,7 @@ const StyledSnackbar = styled(Snackbar)`
   display: flex;
   bottom: 16px;
   right: 16px;
-  max-width: 400px;
+  max-width: 450px;
   min-width: 300px;
 
   .content {
