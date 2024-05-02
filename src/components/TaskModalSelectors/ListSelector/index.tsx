@@ -1,23 +1,43 @@
-"use client"
+"use client";
 
 import React from "react";
 import styled from "styled-components";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import { useAppSelector } from "@/utils/hooks/useAppSelector";
 
 type ParamsType = {
   className?: string;
 };
 
-const filter = createFilterOptions<FilmOptionType>();
+type ListOptionType = {
+  title: string;
+  inputValue?: string;
+};
+
+const filter = createFilterOptions<ListOptionType>();
 
 const ListSelector: React.FC<ParamsType> = (props) => {
   const [value, setValue] = React.useState<FilmOptionType | null>(null);
+  const listsInfo = useAppSelector((state) => state.lists.lists);
+  const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
+
+  React.useEffect(() => {
+    (async () => {
+      const listsNames = listsInfo.map((list) => {
+        return {
+          title: list.title,
+        };
+      });
+
+      setListsNames(listsNames);
+    })();
+  }, [listsInfo]);
 
   return (
     <StyledListSelector className={props.className}>
-      <span className="selector__title">Выбери список</span>
+      <span className="selector__title">Выберите список</span>
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
@@ -53,7 +73,7 @@ const ListSelector: React.FC<ParamsType> = (props) => {
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={top100Films}
+        options={listsNames}
         getOptionLabel={(option) => {
           if (typeof option === "string") {
             return option;
@@ -77,7 +97,6 @@ const ListSelector: React.FC<ParamsType> = (props) => {
 interface FilmOptionType {
   inputValue?: string;
   title: string;
-  year?: number;
 }
 
 const StyledListSelector = styled.div`
@@ -91,15 +110,13 @@ const StyledListSelector = styled.div`
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
     }
-
-    
   }
 `;
 
-const top100Films: readonly FilmOptionType[] = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-];
+// const top100Films: readonly FilmOptionType[] = [
+//   { title: "The Shawshank Redemption" },
+//   { title: "The Godfather" },
+//   { title: "The Godfather: Part II" },
+// ];
 
 export default ListSelector;
