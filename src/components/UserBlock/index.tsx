@@ -35,7 +35,7 @@ const UserBlock: React.FC = () => {
 
   return (
     <StyledUserButton>
-      <div className="input__container">
+      {/* <div className="input__container">
         <input
           ref={inputRef}
           type="text"
@@ -50,7 +50,8 @@ const UserBlock: React.FC = () => {
           alt="Save icon"
           className="input__save-icon"
         />
-      </div>
+      </div> */}
+      <p className="titles">{userInfo.username ?? userInfo.email}</p>
       <div
         className="image__wrapper"
         onClick={() => setIsDropdownMenuVisible((prev) => !prev)}
