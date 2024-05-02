@@ -1,5 +1,6 @@
 export enum SectionEnum {
-	today = "Today",
-	planned = "Planned",
-	tasks = "Tasks",
+	today = "Сегодня",
+	planned = "Запланированные",
+	tasks = "Все задачи",
+	list = "Список",
 }

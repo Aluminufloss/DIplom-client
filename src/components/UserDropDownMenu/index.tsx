@@ -77,6 +77,8 @@ const StyledMenu = styled.div`
   top: 150%;
   right: 0;
 
+  width: 180px;
+
   border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
 	box-shadow: rgba(192, 194, 195, 0.3) 0px 8px 24px;
 
