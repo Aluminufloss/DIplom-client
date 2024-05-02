@@ -1,30 +1,37 @@
 import $api from "@/axios";
 import { AxiosResponse } from "axios";
 
+type UpdateGroupNameParamsType = {
+  groupId: string;
+  name: string;
+};
+
+type GroupListActionsParamsType = {
+  groupId: string;
+  listId: string;
+};
+
 export class GroupService {
   static async deleteGroup(groupId: string): Promise<AxiosResponse<string>> {
     return await $api.post("/delete/group", { groupId });
   }
 
   static async addListToGroup(
-    groupId: string,
-    listId: string
+    options: GroupListActionsParamsType
   ): Promise<AxiosResponse<string>> {
-    return await $api.post("/addList/group", { groupId, listId });
+    return await $api.post("/addList/group", { options });
   }
 
   static async removeListFromGroup(
-    groupId: string,
-    listId: string
+    options: GroupListActionsParamsType
   ): Promise<AxiosResponse<string>> {
-    return await $api.post("/removeList/group", { groupId, listId });
+    return await $api.post("/removeList/group", { options });
   }
 
   static async updateGroupName(
-    groupId: string,
-    name: string
+    options: UpdateGroupNameParamsType
   ): Promise<AxiosResponse<string>> {
-    return await $api.post("/updateName/group", { groupId, name });
+    return await $api.post("/updateName/group", { options });
   }
 
   static async createGroup(name: string): Promise<AxiosResponse<string>> {
