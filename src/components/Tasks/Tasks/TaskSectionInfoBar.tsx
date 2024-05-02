@@ -7,6 +7,7 @@ import { format } from "date-fns/format";
 
 type PropsType = {
   sectionType: SectionEnum;
+  listName?: string;
 };
 
 export const TaskSectionInfoBar: React.FC<PropsType> = (props) => {
@@ -15,6 +16,7 @@ export const TaskSectionInfoBar: React.FC<PropsType> = (props) => {
   return (
     <StyledTaskSectionInfoBar>
       <p className="info-bar__title">{props.sectionType}</p>
+      {props.listName && <span className="info-bar__list">{props.listName}</span>}
       <span className="info-bar__date">{todayDate}</span>
     </StyledTaskSectionInfoBar>
   );
@@ -47,7 +49,17 @@ const StyledTaskSectionInfoBar = styled.div`
       ${(props) => props.theme.typography.fnMedium};
       color: ${(props) => props.theme.colorValues.grey};
 
-			margin-left: 5px;
+			margin-left: 8px;
+    }
+
+    &__list {
+      ${(props) => props.theme.typography.fnTitle3}
+      ${(props) => props.theme.typography.fnMedium};
+      color: ${(props) => props.theme.colorValues.grey};
+
+      line-height: 30px;
+
+      margin-left: 8px;
     }
   }
 `;

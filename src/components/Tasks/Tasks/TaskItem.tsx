@@ -1,14 +1,15 @@
-"use client";
+"use client"
 
 import React from "react";
 import styled from "styled-components";
-import { format } from "date-fns/format";
-
+import { format } from "date-fns";
 
 import { isDatesEqual } from "@/utils/dateUtils";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { ITask } from "@/api/models/Response/Tasks/ITask";
 import { changeTaskStatus } from "@/store/slices/Tasks/thunks";
+import { ModalParamsType } from "@/store/slices/TaskModal/models";
+import { setModalParams } from "@/store/slices/TaskModal";
 
 type PropsType = {
   task: ITask;
@@ -17,51 +18,48 @@ type PropsType = {
 export const TaskItem: React.FC<PropsType> = (props) => {
   const dispatch = useAppDispatch();
 
-  const handleChangeTaskStatus = React.useCallback(() => {
+  const handleChangeTaskStatus = React.useCallback((ev: React.MouseEvent) => {
+    ev.stopPropagation();
+
     const changedTaskStatus =
       props.task.status === "active" ? "completed" : "active";
+
+    console.log("task", props.task)
     dispatch(
       changeTaskStatus({ taskId: props.task.taskId, status: changedTaskStatus })
     );
-  }, [props.task.taskId, props.task.status]);
+  }, [props.task]);
 
   const handleOpenTaskModal = React.useCallback(() => {
-    // const modalParams: ModalParamsType = {
-    //   modalType: "edit",
-    //   taskName: props.task.title,
-    //   taskDescription: props.task.description,
-    //   priority: props.task.priority,
-    //   plannedDate: props.task.plannedDate,
-    //   repeatDays: props.task.repeatDays,
-    //   selectedList: SelectedListType;
-    //   selectedCategory?: SelectedCategoryType;
-    // }
-    // dispatch(setModalParams());
-  }, []);
+    const modalParams: ModalParamsType = {
+      modalType: "edit",
+      taskInfo: props.task,
+    };
+
+    dispatch(setModalParams(modalParams));
+  }, [props.task]);
 
   const isToday = isDatesEqual(props.task.plannedDate, new Date());
 
   return (
-    <>
-      <StyledTaskItem onClick={handleOpenTaskModal} id="datepicker">
-        <input
-          onClick={handleChangeTaskStatus}
-          type="checkbox"
-          className="task__checkbox"
-          checked={props.task.status === "completed"}
-          readOnly
-        />
-        <p className="task__text">{props.task.title}</p>
-        {!isToday && (
-          <>
-            <span className="task__separator">|</span>
-            <p className="task__date">
-              {format(props.task.plannedDate, "dd.MM.yyyy")}
-            </p>
-          </>
-        )}
-      </StyledTaskItem>
-    </>
+    <StyledTaskItem onClick={handleOpenTaskModal} id="datepicker">
+      <input
+        onClick={handleChangeTaskStatus}
+        type="checkbox"
+        className="task__checkbox"
+        checked={props.task.status === "completed"}
+        readOnly
+      />
+      <p className="task__text">{props.task.title}</p>
+      {!isToday && (
+        <>
+          <span className="task__separator">|</span>
+          <p className="task__date">
+            {format(props.task.plannedDate, "dd.MM.yyyy")}
+          </p>
+        </>
+      )}
+    </StyledTaskItem>
   );
 };
 
