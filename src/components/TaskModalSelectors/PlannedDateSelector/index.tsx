@@ -11,17 +11,28 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "dayjs/locale/ru";
 
 type ParamsType = {
+  name: string;
+  value?: Date;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   className?: string;
 };
 
 const PlannedDateSelector: React.FC<ParamsType> = (props) => {
+  const datepickerValue = dayjs(props.value);
+
+  const handleDateChange = (newValue: dayjs.Dayjs | null) => {
+    const formattedDate = newValue ? newValue.toDate() : null;
+    props.setFieldValue(props.name, formattedDate);
+  };
+
   return (
-    <StyledPlannedDateSelector className={props.className}>
+    <StyledPlannedDateSelector id={props.name} className={props.className}>
       <span className="selector__title">Запланировать</span>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
         <DatePicker
           defaultValue={dayjs(new Date())}
-          className="ti"
+          onChange={handleDateChange}
+          value={datepickerValue}
           disablePast
         />
       </LocalizationProvider>
@@ -35,10 +46,6 @@ const StyledPlannedDateSelector = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  .ti {
-    padding: 0;
-  }
 
   .selector {
     &__title {
