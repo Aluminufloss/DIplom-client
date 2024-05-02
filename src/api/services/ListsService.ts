@@ -11,11 +11,15 @@ export default class ListsService {
     return await $api.post("/delete/list", { listId });
   }
 
-  static async getTasksByListId(listId: string): Promise<AxiosResponse<TasksListType>> {
+  static async getTasksByListId(
+    listId: string
+  ): Promise<AxiosResponse<TasksListType>> {
     return await $api.post("/getTasksByListId/list", { listId });
   }
 
-  static async getAllListsNames(listsId: string[]): Promise<AxiosResponse<string[]>> {
+  static async getAllListsNames(
+    listsId: string[]
+  ): Promise<AxiosResponse<string[]>> {
     return await $api.post("/getAll/listsName", { listsId });
   }
 }
