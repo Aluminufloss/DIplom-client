@@ -1,58 +1,122 @@
+"use client";
+
 import React from "react";
 import styled from "styled-components";
 import { Form, Formik } from "formik";
-import { NoSsr } from '@mui/base/NoSsr';
+import axios from "axios";
 
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 
 import { setModalVisibility } from "@/store/slices/TaskModal";
+import { ModalParamsType } from "@/store/slices/TaskModal/models";
 
-import ModalHeader from "../ModalHeader";
 import Input from "../UI/input";
+import ModalHeader from "../ModalHeader";
 import PrioritySelector from "../TaskModalSelectors/PrioritySelector";
 import RepeatSelector from "../TaskModalSelectors/RepeatSelector";
 import PlannedDateSelector from "../TaskModalSelectors/PlannedDateSelector";
 import ListSelector from "../TaskModalSelectors/ListSelector";
 import CategorySelector from "../TaskModalSelectors/CategorySelector";
+import { createTask, deleteTask, updateTask } from "@/store/slices/Tasks/thunks";
+import PrimaryButton from "../UI/buttons/PrimaryButton";
 
-type ParamsType = {};
-
-const TaskModal: React.FC<ParamsType> = () => {
+const TaskModal: React.FC = () => {
+  const [error, setError] = React.useState("");
   const modalInfo = useAppSelector((state) => state.taskModal);
 
   const dispatch = useAppDispatch();
 
+  React.useEffect(() => {
+    if (modalInfo.isModalVisible) {
+      document.body.style.position = "fixed";
+      return;
+    }
+
+    document.body.style.position = "relative";
+  }, [modalInfo.isModalVisible]);
+
+  const handleModalSubmit = React.useCallback(
+    async (values: ModalParamsType) => {
+      try {
+        setError("");
+
+        if (values.modalType === "create") {
+          console.log("create")
+          dispatch(createTask(values.taskInfo));
+          return;
+        }
+
+        console.log("edit")
+
+        dispatch(updateTask(values.taskInfo));
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response && err.response.data) {
+          setError(err.response.data.message);
+        } else {
+          console.warn("An error occurred:", err);
+        }
+      }
+    },
+    []
+  );
+
   return (
     <>
-      <Formik initialValues={modalInfo.modalParams} onSubmit={() => {}}>
-        {({ values, handleChange }) => (
+      <Formik
+        enableReinitialize
+        initialValues={modalInfo.modalParams}
+        onSubmit={handleModalSubmit}
+      >
+        {({ values, handleChange, setFieldValue }) => (
           <StyledModal $isModalVisible={modalInfo.isModalVisible}>
             <ModalHeader modalType={modalInfo.modalParams.modalType} />
             <div className="modal__content">
               <Input
-                value={values.taskName}
+                value={values.taskInfo.title}
                 onChange={handleChange}
-                name="taskName"
+                name="taskInfo.title"
                 placeholder="Введите название задачи"
                 className="modal__input"
               />
               <textarea
+                name="taskInfo.description"
                 placeholder="Добавьте описание задачи"
-                name="taskDescription"
+                value={values.taskInfo.description}
+                onChange={handleChange}
                 className="modal__textarea"
               />
               <PrioritySelector
+                name="taskInfo.priority"
+                setFieldValue={setFieldValue}
                 className="modal__priority"
-                currentPriority={modalInfo.modalParams.priority}
+                currentPriority={values.taskInfo.priority}
               />
               <RepeatSelector
+                name="taskInfo.repeatDays"
+                setFieldValue={setFieldValue}
                 className="modal__repeat"
-                selectedDays={modalInfo.modalParams.repeatDays.days}
+                selectedDays={values.taskInfo.repeatDays}
               />
-              <PlannedDateSelector className="modal__planned" />
+              <PlannedDateSelector
+                name="taskInfo.plannedDate"
+                value={values.taskInfo.plannedDate}
+                setFieldValue={setFieldValue}
+                className="modal__planned"
+              />
               <ListSelector className="modal__list" />
               <CategorySelector className="modal__category" />
+              {modalInfo.modalParams.modalType === "edit" && (
+                <PrimaryButton
+                  type="submit"
+                  className="modal__button"
+                  onClick={() => {
+                    dispatch(deleteTask(values.taskInfo.taskId))
+                    dispatch(setModalVisibility(false))
+                  }}
+                  title="Удалить задачу"
+                />
+              )}
             </div>
           </StyledModal>
         )}
@@ -66,7 +130,7 @@ const TaskModal: React.FC<ParamsType> = () => {
 
 const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
   position: absolute;
-  top: ${(props) => (props.$isModalVisible ? "5%" : "-200%")};
+  top: ${(props) => (props.$isModalVisible ? "5%" : "-100vh")};
   right: 50%;
   transform: translateX(50%);
 
@@ -131,17 +195,21 @@ const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
         color: ${(props) => props.theme.colorValues.darkGrey};
       }
     }
+
+    &__button {
+      margin: 40px auto 0;
+    }
   }
 `;
 
 const StyledOverlay = styled.div`
   position: absolute;
 
-  top: -77px;
+  top: 0;
   left: 0;
 
   width: 100vw;
-  height: 120vh;
+  height: 100vh;
 
   z-index: 200;
 
