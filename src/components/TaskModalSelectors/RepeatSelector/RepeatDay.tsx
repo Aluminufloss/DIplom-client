@@ -2,22 +2,19 @@ import React from "react";
 import styled from "styled-components";
 
 import { SelectesdDayType } from "@/store/slices/TaskModal/models";
-import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
-import { setRepeatDay } from "@/store/slices/TaskModal";
 
-type ParamsType = {
+type RepeatDayProps = {
   day: SelectesdDayType;
+  onToggleDay: (day: SelectesdDayType) => void;
 };
 
-const RepeatDay: React.FC<ParamsType> = (props) => {
-  const dispatch = useAppDispatch();
-
+const RepeatDay: React.FC<RepeatDayProps> = ({ day, onToggleDay }) => {
   return (
     <StyledDay
-      $isSelected={props.day.isSelected}
-      onClick={() => dispatch(setRepeatDay(props.day))}
+      $isSelected={day.isSelected}
+      onClick={() => onToggleDay(day)} 
     >
-      {props.day.day}
+      {day.day}
     </StyledDay>
   );
 };

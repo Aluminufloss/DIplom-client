@@ -2,19 +2,26 @@ import React from "react";
 import styled from "styled-components";
 
 import { SelectesdDayType } from "@/store/slices/TaskModal/models";
-
 import RepeatDay from "./RepeatDay";
 
-type ParamsType = {
+type RepeatDaysListProps = {
   selectedDays: SelectesdDayType[];
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   className?: string;
 };
 
-const RepeatDaysList: React.FC<ParamsType> = (props) => {
+const RepeatDaysList: React.FC<RepeatDaysListProps> = ({ selectedDays, setFieldValue, className }) => {
+  const handleToggleDay = (day: SelectesdDayType) => {
+    const updatedDays = selectedDays.map(d =>
+      d.day === day.day ? { ...d, isSelected: !d.isSelected } : d
+    );
+    setFieldValue("taskInfo.repeatDays", updatedDays);  // Update Formik state
+  };
+
   return (
-    <StyledDaysList className={props.className}>
-      {props.selectedDays.map((day) => (
-        <RepeatDay day={day} key={day.day} />
+    <StyledDaysList className={className}>
+      {selectedDays.map((day) => (
+        <RepeatDay day={day} key={day.day} onToggleDay={handleToggleDay} />
       ))}
     </StyledDaysList>
   );
