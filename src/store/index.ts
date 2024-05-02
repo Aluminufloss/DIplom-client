@@ -6,15 +6,17 @@ import taskModal from "./slices/TaskModal";
 import userInfo from "./slices/User";
 import tasks from "./slices/Tasks";
 import lists from "./slices/Lists";
+import snackbar from "./slices/Snackbar";
 
 export const store = configureStore({
   reducer: {
     tabbedSidebar,
     userSidebar,
     taskModal,
+    snackbar,
     userInfo,
     lists,
-    tasks
+    tasks,
   },
 });
 

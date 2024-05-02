@@ -7,10 +7,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Snackbar } from "@mui/base/Snackbar";
 import { styled } from "@mui/system";
 
-type PropsType = {
-  title: string;
-  description: string;
-};
+import { useAppSelector } from "@/utils/hooks/useAppSelector";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import { closeSnackbar } from "@/store/slices/Snackbar";
 
 const positioningStyles = {
   entering: "translateX(0)",
@@ -20,48 +19,37 @@ const positioningStyles = {
   unmounted: "translateX(500px)",
 };
 
-const SnackBar: React.FC<PropsType> = (props) => {
-  const [open, setOpen] = React.useState(false);
-  const [exited, setExited] = React.useState(true);
+const SnackBar: React.FC = () => {
+  const snackbarInfo = useAppSelector((state) => state.snackbar);
   const nodeRef = React.useRef(null);
+
+  const dispatch = useAppDispatch();
 
   const handleClose = (_: any, reason?: SnackbarCloseReason) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setOpen(false);
-  };
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleOnEnter = () => {
-    setExited(false);
+    dispatch(closeSnackbar());
   };
 
   const handleOnExited = () => {
-    setExited(true);
+    dispatch(closeSnackbar());
   };
 
   return (
     <React.Fragment>
-      <button type="button" onClick={handleClick}>
-        Open snackbar
-      </button>
       <StyledSnackbar
         autoHideDuration={2000}
-        open={open}
+        open={snackbarInfo.isOpen}
         onClose={handleClose}
-        exited={exited}
+        exited={!snackbarInfo.isOpen}
       >
         <Transition
           timeout={{ enter: 400, exit: 400 }}
-          in={open}
+          in={snackbarInfo.isOpen}
           appear
           unmountOnExit
-          onEnter={handleOnEnter}
           onExited={handleOnExited}
           nodeRef={nodeRef}
         >
@@ -83,8 +71,8 @@ const SnackBar: React.FC<PropsType> = (props) => {
                 }}
               />
               <div className="snackbar-message">
-                <p className="snackbar-title">{props.title}</p>
-                <p className="snackbar-description">{props.description}</p>
+                <p className="snackbar-title">{snackbarInfo.title}</p>
+                <p className="snackbar-description">{snackbarInfo.message}</p>
               </div>
               <CloseIcon
                 onClick={handleClose}
@@ -117,7 +105,7 @@ const StyledSnackbar = styled(Snackbar)`
     background-color: #fff;
 
     border-radius: 8px;
-    border: 1px solid #DFDFDF;
+    border: 1px solid #dfdfdf;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 8px;
 
     padding: 16px;
