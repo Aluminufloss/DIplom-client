@@ -1,5 +1,6 @@
 import { IUser } from "@/api/models/Response/Auth/IUser";
 import { ITask } from "@/api/models/Response/Tasks/ITask";
+import { AsyncThunk } from "@reduxjs/toolkit";
 
 export type TaskStatusType = "active" | "completed" | "expired";
 export type TaskPriorityType = "low" | "medium" | "high";
@@ -31,3 +32,9 @@ export type ListsServerResponseType = {
 	data: TasksListType[];
 	accessToken?: string;
 }
+
+type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>
+
+export type PendingAction = ReturnType<GenericAsyncThunk['pending']>
+export type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>
+export type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>

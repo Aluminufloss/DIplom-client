@@ -2,6 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { listsInitialState } from "./initialState";
 
 import { addList, deleteList } from "./thunks";
+import {
+  isFulfilledAction,
+  isPendingAction,
+  isRejectedAction,
+} from "@/utils/checkReduxActions";
 
 export const listsInfo = createSlice({
   name: "listsInfo",
@@ -9,34 +14,24 @@ export const listsInfo = createSlice({
   reducers: {
     setLists: (state, action) => {
       state.lists = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(addList.pending, (state) => {
-      state.isLoading = true;
-    });
     builder.addCase(addList.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload);
       state.lists.unshift(action.payload);
-      state.isLoading = false;
     });
-    builder.addCase(addList.rejected, (state) => {
-      state.isLoading = false;
+    builder.addCase(deleteList.fulfilled, (state, action) => {
+      state.lists = state.lists.filter(
+        (item) => item.listId !== action.meta.arg
+      );
     });
-
-    builder.addCase(deleteList.rejected, (state) => {
-      state.isLoading = false;
-    });
-
-    builder.addCase(deleteList.pending, (state, action) => {
-      state.lists = state.lists.filter((item) => item.listId !== action.meta.arg);
+    builder.addMatcher(isPendingAction, (state) => {
       state.isLoading = true;
     });
-
-    builder.addCase(deleteList.fulfilled, (state) => {
+    builder.addMatcher(isFulfilledAction || isRejectedAction, (state) => {
       state.isLoading = false;
     });
-  }
+  },
 });
 
 export const { setLists } = listsInfo.actions;
