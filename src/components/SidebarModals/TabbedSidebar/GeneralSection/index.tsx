@@ -1,20 +1,25 @@
 import React from "react";
 import styled from "styled-components";
+
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { STATIC_URLS } from "@/utils/constant";
 
 import { addList } from "@/store/slices/Lists/thunks";
+import { addGroup } from "@/store/slices/Groups/thunks";
+import { openSnackbar } from "@/store/slices/Snackbar";
 
 import LoaderWithOverlay from "@/components/UI/LoaderWIthOverlay";
 import ReusableImage from "@/components/UI/image";
 import AddNewListButton from "../AddNewListButton";
+import CreateInput from "../CreateInput";
 import Lists from "../Lists";
-import { openSnackbar } from "@/store/slices/Snackbar";
 
-const ListSection: React.FC = () => {
+const GeneralSection: React.FC = () => {
   const listsInfo = useAppSelector((state) => state.lists);
+  const groupsInfo = useAppSelector((state) => state.groups);
 
+  const [savingMode, setSavingMode] = React.useState<string>("");
   const [inputValue, setInputValue] = React.useState("");
   const [isInputVisible, setIsInputVisible] = React.useState(false);
 
@@ -24,45 +29,54 @@ const ListSection: React.FC = () => {
     setInputValue(event.target.value);
   };
 
-  const handleSaveList = React.useCallback(() => {
+  const handleSave = React.useCallback(() => {
     if (inputValue) {
-      const listAlreadyExists = listsInfo.lists.some(
-        (list) => list.title === inputValue
-      );
+      const hasItem =
+        savingMode === "list"
+          ? listsInfo.lists.some((list) => list.title === inputValue)
+          : groupsInfo.groups.some((group) => group.name === inputValue);
 
-      if (listAlreadyExists) {
+      if (hasItem) {
         dispatch(
           openSnackbar({
             title: "Ошибка",
-            message: "Список с таким названием уже существует",
+            message:
+              savingMode === "list"
+                ? "Список с таким названием уже существует"
+                : "Группа с таким названием уже существует",
             type: "error",
           })
         );
       } else {
-        dispatch(addList(inputValue));
+        if (savingMode === "list") {
+          dispatch(addList(inputValue));
+        } else {
+          dispatch(addGroup(inputValue));
+        }
       }
     }
 
     setIsInputVisible(false);
     setInputValue("");
-  }, [inputValue, listsInfo.lists]);
+  }, [inputValue, listsInfo.lists, groupsInfo.groups, savingMode]);
 
   const handleClickOnEnter = React.useCallback(
     (ev: React.KeyboardEvent<HTMLInputElement>) => {
       if (ev.key === "Enter") {
-        handleSaveList();
+        handleSave();
       }
     },
-    [handleSaveList]
+    [handleSave]
   );
 
-  const onSetInputVisible = React.useCallback(() => {
+  const onSetInputVisible = React.useCallback((savingMode: "list" | "group") => {
     setIsInputVisible(true);
+    setSavingMode(savingMode);
   }, []);
 
   return (
-    <StyledListSection>
-      <AddNewListButton setInputVisible={onSetInputVisible} />
+    <StyledGeneralSection>
+      <AddNewListButton onSetInputVisible={onSetInputVisible} />
       {isInputVisible && (
         <div className="input__wrapper">
           <ReusableImage
@@ -70,24 +84,22 @@ const ListSection: React.FC = () => {
             alt="List icon"
             className="input__icon"
           />
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            onBlur={handleSaveList}
-            onKeyDown={handleClickOnEnter}
+          <CreateInput
             className="input"
-            autoFocus
+            inputValue={inputValue}
+            handleChange={handleInputChange}
+            handleBlur={handleSave}
+            handleKeyDown={handleClickOnEnter}
           />
         </div>
       )}
       <Lists lists={listsInfo.lists} />
       <LoaderWithOverlay isOpen={listsInfo.isLoading} />
-    </StyledListSection>
+    </StyledGeneralSection>
   );
 };
 
-const StyledListSection = styled.div`
+const StyledGeneralSection = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -98,10 +110,6 @@ const StyledListSection = styled.div`
 
   .input {
     margin-left: 5px;
-
-    width: 100%;
-
-    background-color: ${(props) => props.theme.colorValues.sidebarWhite};
 
     &__wrapper {
       width: 100%;
@@ -124,4 +132,4 @@ const StyledListSection = styled.div`
   }
 `;
 
-export default ListSection;
+export default GeneralSection;

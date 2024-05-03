@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import ListItem from "./ListItem";
-import DeleteListButton from "./DeleteListButton";
+
 import { TasksListType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { deleteList } from "@/store/slices/Lists/thunks";
 import { openSnackbar } from "@/store/slices/Snackbar";
+
+import ListItem from "../Lists/ListItem";
+import DeleteListButton from "../DeleteListButton";
 
 type PropsType = {
   lists: TasksListType[];
