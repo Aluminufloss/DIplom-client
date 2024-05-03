@@ -8,11 +8,11 @@ import useTabbedNavigation from "@/utils/hooks/useTabbedNavigation";
 import { TabEnum } from "@/store/slices/TabbedSidebar/models";
 
 import TabItem from "@/components/UI/tabItem";
-import AnalyticsIcon from "./AnalyticsIcon";
-import TasksIcon from "./TasksIcon";
-import PlannedIcon from "./PlannedIcon";
-import CalendarIcon from "./CalendarIcon";
-import ListSection from "./ListSection";
+import AnalyticsIcon from "../../UI/icons/AnalyticsIcon";
+import TasksIcon from "../../UI/icons/TasksIcon";
+import PlannedIcon from "../../UI/icons/PlannedIcon";
+import CalendarIcon from "../../UI/icons/CalendarIcon";
+import GeneralSection from "./GeneralSection";
 
 type PropsType = {
   className?: string;
@@ -80,7 +80,7 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         <TasksIcon />
       </TabItem>
       <div className="separator" />
-      <ListSection />
+      <GeneralSection />
     </StyledView>
   );
 };

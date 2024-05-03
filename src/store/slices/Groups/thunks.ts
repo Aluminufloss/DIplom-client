@@ -5,7 +5,7 @@ import { GroupService } from "@/api/services/GroupService";
 
 import { ErrorPayload, ServerErrorMessage } from "../Lists/models";
 
-export const createGroup = createAsyncThunk(
+export const addGroup = createAsyncThunk(
   "lists/addList",
   async (name: string, { rejectWithValue }) => {
     try {

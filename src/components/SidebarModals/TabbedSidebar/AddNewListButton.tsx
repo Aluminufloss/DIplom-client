@@ -6,17 +6,18 @@ import { STATIC_URLS } from "@/utils/constant";
 import ReusableImage from "@/components/UI/image";
 
 type PropsType = {
-  setInputVisible: () => void;
+  onSetInputVisible: (savingMode: "list" | "group") => void;
   className?: string;
 };
 
 const AddNewListButton: React.FC<PropsType> = (props) => {
-  const handleAddGroup = (ev: React.MouseEvent) => {
+  const handleAddGroup = React.useCallback((ev: React.MouseEvent) => {
     ev.stopPropagation();
-  };
+    props.onSetInputVisible("group");
+  }, [props.onSetInputVisible]);
 
   return (
-    <StyledButton className={props.className} onClick={props.setInputVisible}>
+    <StyledButton className={props.className} onClick={() => props.onSetInputVisible("list")}>
       <div className="button__new-list" title="Создать новый список">
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
@@ -32,6 +33,7 @@ const AddNewListButton: React.FC<PropsType> = (props) => {
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/group.svg`}
           alt="Создать новую группу"
+          onClick={handleAddGroup}
         />
       </div>
     </StyledButton>
