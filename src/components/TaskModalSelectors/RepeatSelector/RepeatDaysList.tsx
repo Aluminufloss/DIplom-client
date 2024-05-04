@@ -10,12 +10,17 @@ type RepeatDaysListProps = {
   className?: string;
 };
 
-const RepeatDaysList: React.FC<RepeatDaysListProps> = ({ selectedDays, setFieldValue, className }) => {
+const RepeatDaysList: React.FC<RepeatDaysListProps> = ({
+  selectedDays,
+  setFieldValue,
+  className,
+}) => {
   const handleToggleDay = (day: SelectesdDayType) => {
-    const updatedDays = selectedDays.map(d =>
+    const updatedDays = selectedDays.map((d) =>
       d.day === day.day ? { ...d, isSelected: !d.isSelected } : d
     );
-    setFieldValue("taskInfo.repeatDays", updatedDays);  // Update Formik state
+
+    setFieldValue("taskInfo.repeatDays", updatedDays);
   };
 
   return (
@@ -28,15 +33,10 @@ const RepeatDaysList: React.FC<RepeatDaysListProps> = ({ selectedDays, setFieldV
 };
 
 const StyledDaysList = styled.ul`
-  width: 100%;
-
-  display: flex;
+   display: flex;
   align-items: center;
-  gap: 24px;
-
-  padding-top: 16px;
-
-  border-top: 1px solid ${(props) => props.theme.colorValues.grey};
+  justify-content: flex-end;
+  gap: 18px;
 `;
 
 export default RepeatDaysList;

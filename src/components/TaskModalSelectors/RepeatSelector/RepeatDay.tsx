@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { SelectesdDayType } from "@/store/slices/TaskModal/models";
+import { SelectesdDayType, TranslatedDays } from "@/store/slices/TaskModal/models";
 
 type RepeatDayProps = {
   day: SelectesdDayType;
@@ -9,12 +9,14 @@ type RepeatDayProps = {
 };
 
 const RepeatDay: React.FC<RepeatDayProps> = ({ day, onToggleDay }) => {
+  const translatedDay: string = TranslatedDays[day.day as keyof typeof TranslatedDays];
+  
   return (
     <StyledDay
       $isSelected={day.isSelected}
       onClick={() => onToggleDay(day)} 
     >
-      {day.day}
+      {translatedDay}
     </StyledDay>
   );
 };
