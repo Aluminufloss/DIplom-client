@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import getUserLists from "@/utils/getUserLists";
 
 import ListTaskSection from "@/components/Tasks/Tasks/LIstTaskSection";
+import { getUserGroups } from "@/utils/getUserGroups";
 
 export default async function ListPage({
   params,
@@ -23,5 +24,13 @@ export default async function ListPage({
     notFound();
   }
 
-  return <ListTaskSection listById={listById} lists={userLists} />;
+  const { groups, lists } = await getUserGroups(userLists);
+
+  return (
+    <ListTaskSection
+      lists={userLists}
+      listId={listById.listId}
+      listName={listById.title}
+    />
+  );
 }
