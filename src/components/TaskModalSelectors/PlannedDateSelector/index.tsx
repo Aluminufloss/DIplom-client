@@ -2,13 +2,15 @@
 
 import React from "react";
 import styled from "styled-components";
+import "dayjs/locale/ru";
 import dayjs from "dayjs";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { STATIC_URLS } from "@/utils/constant";
 
-import "dayjs/locale/ru";
+import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
   name: string;
@@ -27,13 +29,21 @@ const PlannedDateSelector: React.FC<ParamsType> = (props) => {
 
   return (
     <StyledPlannedDateSelector id={props.name} className={props.className}>
-      <span className="selector__title">Запланировать</span>
+      <div className="selector__main-title">
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/clock.svg`}
+          alt="Planned icon"
+          className="selector__icon"
+        />
+        <span className="selector__title">Запланировать</span>
+      </div>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
         <DatePicker
           defaultValue={dayjs(new Date())}
           onChange={handleDateChange}
           value={datepickerValue}
           disablePast
+          className="selector__datepicker"
         />
       </LocalizationProvider>
     </StyledPlannedDateSelector>
@@ -48,8 +58,41 @@ const StyledPlannedDateSelector = styled.div`
   justify-content: space-between;
 
   .selector {
+    &__main-title {
+      display: flex;
+      align-items: center;
+    }
+
+    &__datepicker {
+      width: 100%;
+      max-width: 300px;
+
+      & .Mui-focused {
+        & fieldset {
+          border-color: ${(props) => props.theme.colorValues.primary};
+        }
+      }
+
+      & div {
+        border-radius: 5px;
+      }
+
+      & input {
+        padding: 12px 16px;
+
+        &::selection {
+          color: ${(props) => props.theme.colorValues.white};
+          background-color: ${(props) => props.theme.colorValues.primary};
+        }
+      }
+    }
+
+    &__icon {
+      margin-right: 12px;
+    }
+
     &__title {
-      color: ${(props) => props.theme.colorValues.darkGrey};
+      color: ${(props) => props.theme.colorValues.black};
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
     }
