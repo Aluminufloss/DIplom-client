@@ -22,6 +22,16 @@ export const DaysOfWeek: string[] = [
   "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
 ];
 
+export const TranslatedDays = {
+	Mon: "Пн",
+	Tue: "Вт",
+	Wed: "Ср",
+	Thu: "Чт",
+	Fri: "Пт",
+	Sat: "Сб",
+	Sun: "Вс",
+}
+
 export type SelectedListType = {
 	id: string;
 	name: string;
