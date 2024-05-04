@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useParams, useRouter } from "next/navigation";
 
 import { TasksListType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import { AppPaths } from "@/utils/constant";
 import { deleteList } from "@/store/slices/Lists/thunks";
 import { openSnackbar } from "@/store/slices/Snackbar";
 
@@ -10,7 +12,7 @@ import ListItem from "../Lists/ListItem";
 import DeleteListButton from "../DeleteListButton";
 
 type PropsType = {
-  lists: TasksListType[];
+  lists?: TasksListType[];
 };
 
 const Lists: React.FC<PropsType> = (props) => {
@@ -18,6 +20,9 @@ const Lists: React.FC<PropsType> = (props) => {
   const [isDeleteListButtonVisible, setIsDeleteListButtonVisible] =
     React.useState(false);
   const [deleteButtonPosition, setDeleteButtonPosition] = React.useState(0);
+
+  const url = useParams() as { slug: string };
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
 
@@ -31,23 +36,29 @@ const Lists: React.FC<PropsType> = (props) => {
     dispatch(deleteList(currentListId))
       .unwrap()
       .catch((err) => {
-        dispatch(openSnackbar({
-          title: "Ошибка при удалении списка",
-          message: err.message,
-          type: 'error'
-        }))
+        dispatch(
+          openSnackbar({
+            title: "Ошибка при удалении списка",
+            message: err.message,
+            type: "error",
+          })
+        );
       });
     setIsDeleteListButtonVisible(false);
-  }, [currentListId]);
+
+    if (currentListId === url.slug) {
+      router.push(AppPaths.tasksToday);
+    }
+  }, [currentListId, url.slug]);
 
   return (
     <StyledLists>
       {!!props.lists &&
-        props.lists.map((list) => (
+        props.lists?.map((list) => (
           <ListItem
             key={list.listId}
             title={list.title}
-            isActiveTab={false}
+            isActiveTab={url.slug === list.listId}
             listId={list.listId}
             onClick={handleShowModal}
           />
