@@ -1,58 +1,61 @@
 import React from "react";
 import styled from "styled-components";
-import { TasksListType } from "@/models";
+
+import { GroupType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
-import { deleteList } from "@/store/slices/Lists/thunks";
+import { deleteGroup } from "@/store/slices/Groups/thunks";
 import { openSnackbar } from "@/store/slices/Snackbar";
 
+import DeleteListButton from "../DeleteListButton";
+import GroupItem from "./GroupItem";
+
 type PropsType = {
-  lists: TasksListType[];
+  groups?: GroupType[];
 };
 
-const Lists: React.FC<PropsType> = (props) => {
-  const [currentListId, setCurrentListId] = React.useState("");
-  const [isDeleteListButtonVisible, setIsDeleteListButtonVisible] =
-    React.useState(false);
+const Groups: React.FC<PropsType> = (props) => {
+  const [currentGroupId, setCurrentGroupId] = React.useState("");
+  const [isDeleteListButtonVisible, setIsDeleteListButtonVisible] = React.useState(false);
   const [deleteButtonPosition, setDeleteButtonPosition] = React.useState(0);
 
   const dispatch = useAppDispatch();
 
-  const handleShowModal = (buttonPosition: number, listId: string) => {
+  const handleShowModal = (buttonPosition: number, groupId: string) => {
     setIsDeleteListButtonVisible(true);
     setDeleteButtonPosition(buttonPosition || 0);
-    setCurrentListId(listId);
+    setCurrentGroupId(groupId);
   };
 
-  const handleDeleteList = React.useCallback(() => {
-    dispatch(deleteList(currentListId))
+  const handleDeleteGroup = React.useCallback(() => {
+    dispatch(deleteGroup(currentGroupId))
       .unwrap()
       .catch((err) => {
-        dispatch(openSnackbar({
-          title: "Ошибка при удалении списка",
-          message: err.message,
-          type: 'error'
-        }))
+        dispatch(
+          openSnackbar({
+            title: "Ошибка при удалении группы",
+            message: err.message,
+            type: "error",
+          })
+        );
       });
     setIsDeleteListButtonVisible(false);
-  }, [currentListId]);
+  }, [currentGroupId]);
 
   return (
     <StyledLists>
-      {!!props.lists &&
-        props.lists.map((list) => (
-          <ListItem
-            key={list.listId}
-            title={list.title}
-            isActiveTab={false}
-            listId={list.listId}
-            onClick={handleShowModal}
-          />
-        ))}
+      {props.groups?.map((group) => (
+        <GroupItem
+          key={group.id}
+          groupId={group.id}
+          title={group.name}
+          onClick={handleShowModal}
+        />
+      ))}
       <DeleteListButton
         isVisible={isDeleteListButtonVisible}
         deleteButtonPosition={deleteButtonPosition}
         handleHideButton={() => setIsDeleteListButtonVisible(false)}
-        handleDeleteList={handleDeleteList}
+        handleDeleteList={handleDeleteGroup}
       />
     </StyledLists>
   );
@@ -60,17 +63,6 @@ const Lists: React.FC<PropsType> = (props) => {
 
 const StyledLists = styled.ul`
   position: relative;
-  height: 100%;
-  overflow-y: scroll;
-
-  & {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    overflow-y: scroll;
-  }
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
-export default Lists;
+export default Groups;
