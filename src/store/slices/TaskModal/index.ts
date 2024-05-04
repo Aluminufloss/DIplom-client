@@ -24,6 +24,11 @@ export const taskModal = createSlice({
       state.modalParams.taskInfo.priority = action.payload;
     },
 
+    resetModalState: (state) => {
+      state.modalParams = taskModalInitState.modalParams;
+      state.isModalVisible = false;
+    },
+
     setRepeatDay: (state, action: PayloadAction<SelectesdDayType>) => {
       state.modalParams.taskInfo.repeatDays = state.modalParams.taskInfo.repeatDays.map(
         (item) => {
@@ -43,11 +48,13 @@ export const taskModal = createSlice({
 });
 
 export const {
+
+  resetModalState,
   setModalVisibility,
   setModalParams,
   setTaskPriority,
   setRepeatDay,
-  setModalType,
+  setModalType
 } = taskModal.actions;
 
 export default taskModal.reducer;
