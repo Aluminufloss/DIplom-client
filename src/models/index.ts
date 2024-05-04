@@ -16,7 +16,7 @@ export type GroupType = {
 	id: string;
 	name: string;
 	lists: TasksListType[],
-	userId: string;
+	userId?: string;
 }
 
 export type UserResponseType = {
