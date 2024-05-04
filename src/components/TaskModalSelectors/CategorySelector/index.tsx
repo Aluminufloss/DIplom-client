@@ -1,10 +1,13 @@
-"use client"
+"use client";
 
 import React from "react";
 import styled from "styled-components";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import { STATIC_URLS } from "@/utils/constant";
+
+import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
   className?: string;
@@ -17,7 +20,14 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
 
   return (
     <StyledListSelector className={props.className}>
-      <span className="selector__title">Выберите категорию</span>
+      <div className="selector__main-title">
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/category.svg`}
+          alt="Category icon"
+          className="selector__icon"
+        />
+        <span className="selector__title">Выберите категорию</span>
+      </div>
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
@@ -66,8 +76,13 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
         sx={{ width: 300 }}
         freeSolo
+        className="selector__autocomplete"
         renderInput={(params) => (
-          <TextField {...params} label="Созданные категории" />
+          <TextField
+            {...params}
+            label="Созданные категории"
+            className="selector__input"
+          />
         )}
       />
     </StyledListSelector>
@@ -85,12 +100,49 @@ const StyledListSelector = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  & label {
+    top: -6px;
+
+    &.Mui-focused {
+      color: ${(props) => props.theme.colorValues.primary};
+      top: 0;
+    }
+  }
+
   .selector {
+    &__autocomplete {
+      width: 100%;
+      max-width: 300px;
+
+      & .Mui-focused {
+        & fieldset {
+          border-color: ${(props) => props.theme.colorValues.primary};
+        }
+      }
+
+      .MuiOutlinedInput-root {
+        padding: 12px 16px 0;
+      }
+
+      .MuiAutocomplete-input {
+        padding: 0 0 12px;
+      }
+    }
+
+    &__main-title {
+      display: flex;
+      align-items: center;
+    }
+
+    &__icon {
+      margin-right: 12px;
+    }
+
     &__title {
-      color: ${(props) => props.theme.colorValues.darkGrey};
+      color: ${(props) => props.theme.colorValues.black};
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
-    } 
+    }
   }
 `;
 

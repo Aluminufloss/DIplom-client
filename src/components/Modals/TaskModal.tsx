@@ -42,19 +42,16 @@ const TaskModal: React.FC = () => {
         setError("");
 
         if (values.modalType === "create") {
-          console.log("create")
           dispatch(createTask(values.taskInfo));
           return;
         }
-
-        console.log("edit")
 
         dispatch(updateTask(values.taskInfo));
       } catch (err) {
         if (axios.isAxiosError(err) && err.response && err.response.data) {
           setError(err.response.data.message);
         } else {
-          console.warn("An error occurred:", err);
+          console.warn("Возникал ошибкка:", err);
         }
       }
     },
@@ -169,6 +166,10 @@ const StyledModal = styled(Form)<{ $isModalVisible: boolean }>`
     &__planned,
     &__category {
       margin-bottom: 20px;
+    }
+
+    &__input {
+      ${(props) => props.theme.typography.fnLabel2};
     }
 
     &__textarea {
