@@ -6,6 +6,9 @@ import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
+import { STATIC_URLS } from "@/utils/constant";
+
+import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
   className?: string;
@@ -37,7 +40,16 @@ const ListSelector: React.FC<ParamsType> = (props) => {
 
   return (
     <StyledListSelector className={props.className}>
-      <span className="selector__title">Выберите список</span>
+      <div className="selector__main-title">
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/list.svg`}
+          alt="List icon"
+          className="selector__icon"
+          width={36}
+          height={36}
+        />
+        <span className="selector__title">Выберите список</span>
+      </div>
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
@@ -63,7 +75,7 @@ const ListSelector: React.FC<ParamsType> = (props) => {
           if (inputValue !== "" && !isExisting) {
             filtered.push({
               inputValue,
-              title: `Add "${inputValue}"`,
+              title: `Списка "${inputValue}" не существует`,
             });
           }
 
@@ -84,10 +96,14 @@ const ListSelector: React.FC<ParamsType> = (props) => {
           return option.title;
         }}
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
-        sx={{ width: 300 }}
+        className="selector__autocomplete"
         freeSolo
         renderInput={(params) => (
-          <TextField {...params} label="Созданные списки" />
+          <TextField
+            {...params}
+            label="Созданные списки"
+            className="selector__input"
+          />
         )}
       />
     </StyledListSelector>
@@ -104,19 +120,53 @@ const StyledListSelector = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  & label {
+    top: -6px;
+
+    &.Mui-focused {
+      color: ${(props) => props.theme.colorValues.primary};
+      top: 0;
+    }
+  }
+
   .selector {
+    &__autocomplete {
+      width: 100%;
+      max-width: 300px;
+
+      & .Mui-focused {
+        & fieldset {
+          border-color: ${(props) => props.theme.colorValues.primary};
+        }
+      }
+
+      .MuiOutlinedInput-root {
+        padding: 12px 16px 0;
+      }
+
+      .MuiAutocomplete-input {
+        padding: 0 0 12px;
+      }
+    }
+
+    &__main-title {
+      display: flex;
+      align-items: center;
+    }
+
+    &__icon {
+      padding-right: 10px;
+      margin-right: 2px;
+
+      transform: translateY(1px);
+    }
+
     &__title {
-      color: ${(props) => props.theme.colorValues.darkGrey};
+      color: ${(props) => props.theme.colorValues.black};
       ${(props) => props.theme.typography.fnTitle1};
       ${(props) => props.theme.typography.fnMedium};
     }
   }
 `;
-
-// const top100Films: readonly FilmOptionType[] = [
-//   { title: "The Shawshank Redemption" },
-//   { title: "The Godfather" },
-//   { title: "The Godfather: Part II" },
-// ];
 
 export default ListSelector;
