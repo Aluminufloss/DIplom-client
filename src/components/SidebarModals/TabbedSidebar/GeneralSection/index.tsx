@@ -14,6 +14,7 @@ import ReusableImage from "@/components/UI/image";
 import AddNewListButton from "../AddNewListButton";
 import CreateInput from "../CreateInput";
 import Lists from "../Lists";
+import Groups from "../Groups";
 
 const GeneralSection: React.FC = () => {
   const listsInfo = useAppSelector((state) => state.lists);
@@ -30,6 +31,7 @@ const GeneralSection: React.FC = () => {
   };
 
   const handleSave = React.useCallback(() => {
+    console.log("saving", savingMode)
     if (inputValue) {
       const hasItem =
         savingMode === "list"
@@ -69,10 +71,13 @@ const GeneralSection: React.FC = () => {
     [handleSave]
   );
 
-  const onSetInputVisible = React.useCallback((savingMode: "list" | "group") => {
-    setIsInputVisible(true);
-    setSavingMode(savingMode);
-  }, []);
+  const onSetInputVisible = React.useCallback(
+    (savingMode: "list" | "group") => {
+      setIsInputVisible(true);
+      setSavingMode(savingMode);
+    },
+    []
+  );
 
   return (
     <StyledGeneralSection>
@@ -80,8 +85,12 @@ const GeneralSection: React.FC = () => {
       {isInputVisible && (
         <div className="input__wrapper">
           <ReusableImage
-            src={`${STATIC_URLS.SVG_ICONS}/list.svg`}
-            alt="List icon"
+            src={
+              savingMode === "list"
+                ? `${STATIC_URLS.SVG_ICONS}/list.svg`
+                : `${STATIC_URLS.SVG_ICONS}/group.svg`
+            }
+            alt={savingMode === "list" ? "list icon" : "group icon"}
             className="input__icon"
           />
           <CreateInput
@@ -93,6 +102,7 @@ const GeneralSection: React.FC = () => {
           />
         </div>
       )}
+      <Groups groups={groupsInfo.groups} />
       <Lists lists={listsInfo.lists} />
       <LoaderWithOverlay isOpen={listsInfo.isLoading} />
     </StyledGeneralSection>
@@ -107,6 +117,17 @@ const StyledGeneralSection = styled.div`
   width: 100%;
   height: 100%;
   max-height: 60%;
+
+  overflow-y: scroll;
+
+  & {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll;
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .input {
     margin-left: 5px;
