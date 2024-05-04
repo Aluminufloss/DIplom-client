@@ -1,11 +1,13 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import { STATIC_URLS } from "@/utils/constant";
 import { getTodayDay } from "@/utils/getTodayDay";
+import { AppPaths, STATIC_URLS } from "@/utils/constant";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import useTabbedNavigation from "@/utils/hooks/useTabbedNavigation";
 import { TabEnum } from "@/store/slices/TabbedSidebar/models";
+import { setSelectedTab } from "@/store/slices/TabbedSidebar";
 
 import TabItem from "@/components/UI/tabItem";
 import AnalyticsIcon from "../../UI/icons/AnalyticsIcon";
@@ -20,7 +22,9 @@ type PropsType = {
 
 const TabbedSidebar: React.FC<PropsType> = (props) => {
   const modalState = useAppSelector((state) => state.tabbedSidebar);
-  const { handleNavigation, handleSelectTab } = useTabbedNavigation();
+  const { handleSelectTab } = useTabbedNavigation();
+
+  const dispatch = useAppDispatch();
 
   const today = getTodayDay();
 
@@ -39,7 +43,8 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
           type="categories"
           itemText="Сегодня"
           isActiveTab={modalState.currentTab === TabEnum.today}
-          onCLick={() => handleNavigation(TabEnum.today)}
+          onCLick={() => dispatch(setSelectedTab(TabEnum.today))}
+          href={AppPaths.tasksToday}
         >
           <CalendarIcon fill="#fff" />
         </TabItem>
@@ -53,7 +58,8 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         itemText="Запланированные"
         className="tab-item"
         isActiveTab={modalState.currentTab === TabEnum.planned}
-        onCLick={() => handleNavigation(TabEnum.planned)}
+        onCLick={() => dispatch(setSelectedTab(TabEnum.planned))}
+        href={AppPaths.tasksPlanned}
       >
         <PlannedIcon
           color={modalState.currentTab === TabEnum.planned ? "#fff" : "#000"}
@@ -65,7 +71,8 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         itemText="Аналитика"
         className="tab-item"
         isActiveTab={modalState.currentTab === TabEnum.analytics}
-        onCLick={() => handleNavigation(TabEnum.analytics)}
+        onCLick={() => dispatch(setSelectedTab(TabEnum.analytics))}
+        href={AppPaths.tasksAnalytics}
       >
         <AnalyticsIcon />
       </TabItem>
@@ -75,7 +82,8 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         itemText="Все задачи"
         className="tab-item"
         isActiveTab={modalState.currentTab === TabEnum.tasks}
-        onCLick={() => handleNavigation(TabEnum.tasks)}
+        onCLick={() => dispatch(setSelectedTab(TabEnum.tasks))}
+        href={AppPaths.tasksAll}
       >
         <TasksIcon />
       </TabItem>

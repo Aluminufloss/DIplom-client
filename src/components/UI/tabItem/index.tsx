@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import styled, { css } from "styled-components";
 
@@ -7,6 +8,7 @@ type PropsType = {
   itemText: string;
   isActiveTab: boolean;
   children?: React.ReactNode;
+  href: string;
   onCLick?: () => void;
   className?: string;
 };
@@ -17,6 +19,7 @@ const TabItem: React.FC<PropsType> = (props) => {
       type={props.type}
       className={props.className}
       $isActiveTab={props.isActiveTab}
+      href={props.href}
       onClick={props.onCLick}
     >
       <div className="tab-item__icon">
@@ -32,7 +35,7 @@ type StyleType = {
   $isActiveTab: boolean;
 };
 
-const StyledTabItem = styled.div<StyleType>`
+const StyledTabItem = styled(Link)<StyleType>`
   width: 100%;
 
   display: flex;
