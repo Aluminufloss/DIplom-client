@@ -4,23 +4,20 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { ListsServerResponseType } from "@/models";
+import { TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import { setLists } from "@/store/slices/Lists";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import getGrouppedTasks, {
-} from "./utils/getGrouppedTasks";
-import { setLists } from "@/store/slices/Lists";
-import { ITask } from "@/api/models/Response/Tasks/ITask";
-import ListsService from "@/api/services/ListsService";
-import { useParams } from "next/navigation";
+import getGrouppedTasks from "./utils/getGrouppedTasks";
 
 type PropsType = {
-  listId?: string;
-  getUserLists: () => Promise<ListsServerResponseType | undefined>;
+  listId: string;
+  listName: string;
+  lists: TasksListType[];
 };
 
 export const ListTaskSection: React.FC<PropsType> = (props) => {
@@ -28,30 +25,25 @@ export const ListTaskSection: React.FC<PropsType> = (props) => {
     (state) => state.tabbedSidebar.isViewVisible
   );
 
-  const [listName, setListName] = React.useState<string>("List");
-
-  const [listTasks, setListTasks] = React.useState<ITask[]>([]);
-
-  const grouppedTasks = getGrouppedTasks(listTasks);
-
-  const listId = useParams().slug[0];
+  const listTasks = useAppSelector((state) =>
+    state.lists.lists.find((item) => item.listId === props.listId)
+  );
+  const grouppedTasks = getGrouppedTasks(listTasks?.tasks);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     (async () => {
-      const response = await props.getUserLists();
-
-      dispatch(setLists(response?.data));
-
-      const tasks = await ListsService.getTasksByListId(listId);
-      setListTasks(tasks.data.tasks);
+      dispatch(setLists(props.lists));
     })();
-  }, [listId]);
+  }, [props.lists]);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
-      <TaskSectionInfoBar sectionType={SectionEnum.list} listName={listName}/>
+      <TaskSectionInfoBar
+        sectionType={SectionEnum.list}
+        listName={props.listName}
+      />
 
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {

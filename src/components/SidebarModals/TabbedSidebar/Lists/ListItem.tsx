@@ -73,7 +73,7 @@ const StyledListItem = styled.li<{ $isActiveTab: boolean }>`
 
   padding: 5px 8px;
 
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 
   cursor: pointer;
 
