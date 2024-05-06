@@ -4,7 +4,10 @@ import styled from "styled-components";
 
 type PropsType = {
   title: string;
-  type?: "submit" | "reset" | undefined;
+  type?: "submit" | "reset" | "button";
+  color?: string;
+  hoverColor?: string;
+  textColor?: string;
   className?: string;
   isLoading?: boolean;
   onClick?: () => void;
@@ -16,27 +19,31 @@ const PrimaryButton: React.FC<PropsType> = (props) => {
       onClick={props.onClick}
       type={props.type}
       disabled={props.isLoading}
+      color={props.color}
+      $hoverColor={props.hoverColor}
+      $textColor={props.textColor}
       className={props.className}
     >
       {!props.isLoading ? (
         props.title
       ) : (
-        <ClipLoader 
-          size={16} 
-          color="#ffffff" 
-          className="loader" 
-        />
+        <ClipLoader size={16} color="#ffffff" className="loader" />
       )}
     </StyledButton>
   );
 };
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{
+  color?: string;
+  $hoverColor?: string;
+  $textColor?: string;
+}>`
   ${(props) => props.theme.typography.fnMedium};
   ${(props) => props.theme.typography.fnLabel2};
 
-  background-color: ${(props) => props.theme.colorValues.primary};
-  color: ${(props) => props.theme.colorValues.white};
+  background-color: ${(props) =>
+    props.color || props.theme.colorValues.primary};
+  color: ${(props) => props.$textColor || props.theme.colorValues.white};
 
   display: flex;
   justify-content: center;
@@ -54,11 +61,13 @@ const StyledButton = styled.button`
   transition: all 0.1s linear;
 
   &:hover {
-    background-color: ${(props) => props.theme.colorValues.orangeSecondary};
+    background-color: ${(props) =>
+      props.$hoverColor || props.theme.colorValues.orangeSecondary};
   }
 
   &:active {
-    background-color: ${(props) => props.theme.colorValues.orangeSecondary};
+    background-color: ${(props) =>
+      props.$hoverColor || props.theme.colorValues.orangeSecondary};
     transform: translateY(1px) scale(0.98);
   }
 `;

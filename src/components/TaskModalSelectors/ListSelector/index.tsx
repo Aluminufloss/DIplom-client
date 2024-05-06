@@ -121,10 +121,13 @@ const StyledListSelector = styled.div`
   align-items: center;
 
   & label {
-    top: -6px;
+    top: -4px;
 
     &.Mui-focused {
-      color: ${(props) => props.theme.colorValues.primary};
+      color: ${(props) => props.theme.colorValues.black};
+      
+      font-size: 16px;
+
       top: 0;
     }
   }
