@@ -63,7 +63,7 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={top100Films}
+        options={[]}
         getOptionLabel={(option) => {
           if (typeof option === "string") {
             return option;
@@ -101,10 +101,10 @@ const StyledListSelector = styled.div`
   align-items: center;
 
   & label {
-    top: -6px;
+    top: -4px;
 
     &.Mui-focused {
-      color: ${(props) => props.theme.colorValues.primary};
+      color: ${(props) => props.theme.colorValues.black};
       top: 0;
     }
   }
@@ -145,11 +145,5 @@ const StyledListSelector = styled.div`
     }
   }
 `;
-
-const top100Films: readonly FilmOptionType[] = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-];
 
 export default CategorySelector;
