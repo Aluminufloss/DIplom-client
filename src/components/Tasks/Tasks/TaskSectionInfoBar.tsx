@@ -2,8 +2,11 @@
 
 import React from "react";
 import styled from "styled-components";
-import { SectionEnum } from "./models";
 import { format } from "date-fns/format";
+
+import { SectionEnum } from "./models";
+
+import FiltersBlock from "@/components/FiltersBlock";
 
 type PropsType = {
   sectionType: SectionEnum;
@@ -18,6 +21,7 @@ export const TaskSectionInfoBar: React.FC<PropsType> = (props) => {
       <p className="info-bar__title">{props.sectionType}</p>
       {props.listName && <span className="info-bar__list">{props.listName}</span>}
       <span className="info-bar__date">{todayDate}</span>
+      <FiltersBlock className="info-bar__filters"/>
     </StyledTaskSectionInfoBar>
   );
 };
@@ -28,7 +32,7 @@ const StyledTaskSectionInfoBar = styled.div`
   margin-bottom: 20px;
 
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 
   padding: 12px 16px;
 
@@ -60,6 +64,10 @@ const StyledTaskSectionInfoBar = styled.div`
       line-height: 30px;
 
       margin-left: 8px;
+    }
+
+    &__filters {
+      margin-left: auto;
     }
   }
 `;
