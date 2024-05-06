@@ -1,16 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
-
-import { setModalVisibility } from "@/store/slices/TaskModal";
-import { ModalType } from "@/store/slices/TaskModal/models";
+import { ModalParamsType, ModalType } from "@/store/slices/TaskModal/models";
 
 import SaveChangesButton from "./SaveChangesButton";
 import CancelChangesButton from "./CancelChangesButton";
+import { ITask } from "@/api/models/Response/Tasks/ITask";
 
 type PropsType = {
+  modalParams: ModalParamsType;
   modalType: ModalType;
+  handleSaveChanges: (values: ModalParamsType) => void;
+  handleCloseModal: (taskInfo: ITask) => void;
 };
 
 const ModalHeader: React.FC<PropsType> = (props) => {
@@ -20,13 +21,13 @@ const ModalHeader: React.FC<PropsType> = (props) => {
       : "Редактирование задачи";
   }, [props.modalType]);
 
-  const dispatch = useAppDispatch();
-
   return (
     <StyledHeader>
-      <CancelChangesButton onCancelChanges={() => dispatch(setModalVisibility(false))}/>
+      <CancelChangesButton
+        onCancelChanges={() => props.handleCloseModal(props.modalParams.taskInfo)}
+      />
       <p className="title">{modalTitle}</p>
-      <SaveChangesButton onSaveChanges={() => dispatch(setModalVisibility(false))}/>
+      <SaveChangesButton onSaveChanges={() => props.handleSaveChanges(props.modalParams)} />
     </StyledHeader>
   );
 };

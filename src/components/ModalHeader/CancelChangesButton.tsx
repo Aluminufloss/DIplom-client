@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import ReusableImage from "../UI/image";
+
 import { STATIC_URLS } from "@/utils/constant";
+
+import ReusableImage from "../UI/image";
 
 type PropsType = {
   onCancelChanges: () => void;
@@ -8,7 +10,7 @@ type PropsType = {
 
 const CancelChangesButton: React.FC<PropsType> = (props) => {
   return (
-    <StyledButton onClick={props.onCancelChanges}>
+    <StyledButton onClick={props.onCancelChanges} type="button">
       <ReusableImage
         src={`${STATIC_URLS.SVG_ICONS}/arrow.svg`}
         width={32}
