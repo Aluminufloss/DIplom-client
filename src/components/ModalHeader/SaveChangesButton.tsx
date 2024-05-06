@@ -5,7 +5,7 @@ type PropsType = {
 };
 
 const SaveChangesButton: React.FC<PropsType> = (props) => {
-  return <StyledButton onClick={props.onSaveChanges}>Сохранить</StyledButton>;
+  return <StyledButton onClick={props.onSaveChanges} type="button">Сохранить</StyledButton>;
 };
 
 const StyledButton = styled.button`
