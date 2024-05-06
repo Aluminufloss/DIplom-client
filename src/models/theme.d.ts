@@ -11,8 +11,10 @@ interface ThemeColors {
   strokeGrey: string;
   hoverGrey: string;
   green: string;
+  greenHover: string;
   redMain: string;
   redSecondary: string;
+  redHover: string;
   blue: string;
   yellow: string;
   primary: string;

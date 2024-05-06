@@ -26,8 +26,10 @@ export const colors: ThemeColors = {
   yellow: "#FFF44F",
   redMain: "#F85640",
   redSecondary: "#FF2400",
+  redHover: "#F30000",
   error: "#F30000",
   green: "#46BD84",
+  greenHover: "#00B96B",
   blue: "#08A0F7",
   overlayColor: "rgba(50, 50, 50, 0.7)",
 };
