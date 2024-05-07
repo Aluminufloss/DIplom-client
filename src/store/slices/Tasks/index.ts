@@ -42,7 +42,7 @@ const Tasks = createSlice({
         const task = action.payload;
         const plannedDate = task.plannedDate;
   
-        if (isDatesEqual(plannedDate, new Date())) {
+        if (isDatesEqual(new Date(plannedDate), new Date())) {
           state.todayTasks = [task, ...state.todayTasks];
         } else {
           state.plannedTasks.unshift(task);
@@ -78,10 +78,13 @@ const Tasks = createSlice({
           item.taskId === updatedTask.taskId ? updatedTask : item
         );
       });
+      builder.addMatcher(isFulfilledAction, (state) => {
+        state.isLoading = false;
+      });
       builder.addMatcher(isPendingAction, (state) => {
         state.isLoading = true;
       });
-      builder.addMatcher(isFulfilledAction || isRejectedAction, (state) => {
+      builder.addMatcher(isRejectedAction, (state) => {
         state.isLoading = false;
       });
   },

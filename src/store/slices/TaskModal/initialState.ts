@@ -9,7 +9,7 @@ export const taskModalInitState: TaskModalStoreType = {
       title: "",
       description: "",
       repeatDays: getInitialSelectedDays(),
-      plannedDate: new Date(),
+      plannedDate: new Date().toISOString(),
       status: "active",
       priority: "low",
       listId: "",

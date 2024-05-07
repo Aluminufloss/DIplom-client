@@ -7,6 +7,7 @@ import {
   isPendingAction,
   isRejectedAction,
 } from "@/utils/checkReduxActions";
+import { createTask } from "../Tasks/thunks";
 
 export const listsInfo = createSlice({
   name: "listsInfo",
@@ -25,6 +26,7 @@ export const listsInfo = createSlice({
         (item) => item.listId !== action.meta.arg
       );
     });
+    builder.addCase(createTask.rejected, () => {});
     builder.addMatcher(isPendingAction, (state) => {
       state.isLoading = true;
     });

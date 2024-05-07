@@ -3,7 +3,6 @@
 import React from "react";
 import styled, { useTheme } from "styled-components";
 import { Form, Formik } from "formik";
-import axios from "axios";
 
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
@@ -31,7 +30,6 @@ import PrimaryButton from "../UI/buttons/PrimaryButton";
 import TaskModalActionButtons from "../TaskModalActionButtons";
 
 const TaskModal: React.FC = () => {
-  const theme = useTheme();
   const modalInfo = useAppSelector((state) => state.taskModal);
   const [isActionsModalVisible, setIsActionsModalVisible] =
     React.useState(false);
@@ -42,6 +40,8 @@ const TaskModal: React.FC = () => {
   const initialParamsRef = React.useRef<ModalParamsType | null>(null);
 
   const dispatch = useAppDispatch();
+
+  const theme = useTheme();
 
   React.useEffect(() => {
     if (modalInfo.isModalVisible) {
@@ -57,48 +57,54 @@ const TaskModal: React.FC = () => {
 
   const handleModalSubmit = React.useCallback(
     async (values: ModalParamsType) => {
-      try {
-        if (values.modalType === "create") {
-          if (!values.taskInfo.title.length) {
-            dispatch(
-              openSnackbar({
-                title: "Ошибка",
-                message: "Название задачи не может быть пустым",
-                type: "error",
-              })
-            );
-
-            return;
-          }
-
-          dispatch(createTask(values.taskInfo));
-        } else {
-          dispatch(updateTask(values.taskInfo));
-        }
-
-        dispatch(
-          openSnackbar({
-            title: "Успешно",
-            message:
-              values.modalType === "create"
-                ? "Задача успешо создана"
-                : "Задача успешно обновлена",
-            type: "success",
-          })
-        );
-      } catch (err) {
-        if (axios.isAxiosError(err) && err.response && err.response.data) {
+      if (values.modalType === "create") {
+        if (!values.taskInfo.title.length) {
           dispatch(
             openSnackbar({
               title: "Ошибка",
-              message: err.response.data.message,
+              message: "Название задачи не может быть пустым",
               type: "error",
             })
           );
-        } else {
-          console.warn("Возникал ошибкка:", err);
+
+          return;
         }
+
+        dispatch(createTask(values.taskInfo))
+          .unwrap()
+          .catch((err) => {
+            dispatch(
+              openSnackbar({
+                title: "Ошибка",
+                message: err.message,
+                type: "error",
+              })
+            );
+          });
+      } else {
+        dispatch(updateTask(values.taskInfo))
+          .unwrap()
+          .catch((err) => {
+            dispatch(
+              openSnackbar({
+                title: "Ошибка",
+                message: err.message,
+                type: "error",
+              })
+            );
+          });
       }
+
+      dispatch(
+        openSnackbar({
+          title: "Успешно",
+          message:
+            values.modalType === "create"
+              ? "Задача успешо создана"
+              : "Задача успешно обновлена",
+          type: "success",
+        })
+      );
     },
     []
   );
@@ -141,6 +147,27 @@ const TaskModal: React.FC = () => {
     dispatch(resetModalState());
     setIsActionsModalVisible(false);
   }, []);
+
+  const handleDeleteTask = React.useCallback(() => {
+    dispatch(deleteTask(modalInfo.modalParams.taskInfo.taskId)).unwrap().catch((err) => {
+      dispatch(
+        openSnackbar({
+          title: "Ошибка",
+          message: err.message,
+          type: "error",
+        })
+      );
+    });
+    
+    dispatch(
+      openSnackbar({
+        title: "Успешно",
+        message: "Задача успешно удалена",
+        type: "success",
+      })
+    );
+    dispatch(resetModalState());
+  }, [modalInfo.modalParams.taskInfo.taskId]);
 
   return (
     <>
@@ -212,9 +239,7 @@ const TaskModal: React.FC = () => {
               <TaskModalActionButtons
                 actionType={actionsModalType}
                 cancelAction={() => setIsActionsModalVisible(false)}
-                deleteAction={() =>
-                  dispatch(deleteTask(values.taskInfo.taskId))
-                }
+                deleteAction={handleDeleteTask}
                 exitAction={() => {
                   onExitAction();
                   handleReset();

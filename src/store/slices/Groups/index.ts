@@ -4,7 +4,7 @@ import { GroupType } from "@/models";
 
 import { GroupInitialState } from "./initialState";
 import { isFulfilledAction, isPendingAction, isRejectedAction } from "@/utils/checkReduxActions";
-import { addGroup } from "./thunks";
+import { createTask } from "../Tasks/thunks";
 
 export const groupsInfo = createSlice({
   name: "groupsInfo",
@@ -24,9 +24,7 @@ export const groupsInfo = createSlice({
     },
   },
   extraReducers: (builder) => {
-
-
-
+    builder.addCase(createTask.rejected, () => {});
     builder.addMatcher(isPendingAction, (state) => {
       state.isLoading = true;
     });
