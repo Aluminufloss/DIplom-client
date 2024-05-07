@@ -8,12 +8,14 @@ import tasks from "./slices/Tasks";
 import lists from "./slices/Lists";
 import snackbar from "./slices/Snackbar";
 import groups from "./slices/Groups";
+import appState from "./slices/AppState";
 
 export const store = configureStore({
   reducer: {
     tabbedSidebar,
     userSidebar,
     taskModal,
+    appState,
     snackbar,
     userInfo,
     groups,

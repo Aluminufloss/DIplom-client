@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { SelectesdDayType } from "@/store/slices/TaskModal/models";
-import { STATIC_URLS } from "@/utils/constant";
+import { STATIC_URLS, initialRepeatDays } from "@/utils/constant";
 
 import Toggler from "@/components/UI/Toggler";
 import RepeatDaysList from "./RepeatDaysList";
@@ -19,8 +19,12 @@ const RepeatSelector: React.FC<ParamsType> = (props) => {
   const [isActive, setIsActive] = React.useState(false);
 
   const onSelect = React.useCallback(() => {
+    if (isActive) {
+      props.setFieldValue("taskInfo.repeatDays", initialRepeatDays);
+    }
+
     setIsActive((prev) => !prev);
-  }, []);
+  }, [isActive, initialRepeatDays]);
 
   return (
     <StyledRepeatSelector className={props.className} id={props.name}>

@@ -1,3 +1,5 @@
+import { SelectesdDayType } from "@/store/slices/TaskModal/models";
+
 export const STATIC_BASE_URL = ``;
 
 export const API_URL = 'http://localhost:5000';
@@ -41,3 +43,13 @@ export enum AppPaths {
 export enum ApiPaths {
   me = `${API_URL}/me`,
 }
+
+export const initialRepeatDays: SelectesdDayType[] = [
+  { day: "Mon", isSelected: false },
+  { day: "Tue", isSelected: false },
+  { day: "Wed", isSelected: false },
+  { day: "Thu", isSelected: false },
+  { day: "Fri", isSelected: false },
+  { day: "Sat", isSelected: false },
+  { day: "Sun", isSelected: false },
+];
