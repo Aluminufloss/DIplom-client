@@ -15,8 +15,12 @@ import ReusableImage from "@/components/UI/image";
 type ParamsType = {
   name: string;
   shouldDisablePast?: boolean;
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
-  value?: Date;
+  setFieldValue: (
+    field: string,
+    value: string,
+    shouldValidate?: boolean
+  ) => void;
+  value?: string;
   className?: string;
 };
 
@@ -24,8 +28,10 @@ const PlannedDateSelector: React.FC<ParamsType> = (props) => {
   const datepickerValue = dayjs(props.value);
 
   const handleDateChange = (newValue: dayjs.Dayjs | null) => {
-    const formattedDate = newValue ? newValue.toDate() : null;
-    props.setFieldValue(props.name, formattedDate);
+    props.setFieldValue(
+      props.name,
+      newValue?.toISOString() ?? new Date().toLocaleDateString()
+    );
   };
 
   return (

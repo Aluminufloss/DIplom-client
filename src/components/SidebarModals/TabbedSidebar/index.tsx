@@ -61,9 +61,7 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         onCLick={() => dispatch(setSelectedTab(TabEnum.planned))}
         href={AppPaths.tasksPlanned}
       >
-        <PlannedIcon
-          color={modalState.currentTab === TabEnum.planned ? "#fff" : "#000"}
-        />
+        <PlannedIcon />
       </TabItem>
       <TabItem
         iconPath={`${STATIC_URLS.SVG_ICONS}/analytics.svg`}

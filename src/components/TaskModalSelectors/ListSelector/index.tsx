@@ -158,6 +158,9 @@ const StyledListSelector = styled.div`
     }
 
     &__icon {
+      width: auto;
+      height: auto;
+
       padding-right: 10px;
       margin-right: 2px;
 

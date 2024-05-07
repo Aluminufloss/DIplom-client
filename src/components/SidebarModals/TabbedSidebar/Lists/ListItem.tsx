@@ -36,6 +36,8 @@ const ListItem: React.FC<PropsType> = (props) => {
       <ReusableImage
         src={`${STATIC_URLS.SVG_ICONS}/list.svg`}
         alt="List icon"
+        width={24}
+        height={24}
         className="icon"
       />
       <p className="title">
