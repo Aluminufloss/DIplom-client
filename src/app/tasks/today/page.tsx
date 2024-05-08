@@ -1,9 +1,15 @@
-import getTodayTasks from "@/utils/getTodayTasks";
+import getTodayPageData from "@/utils/getTodayPageData";
+
 import TodayTasksSection from "@/components/Tasks/Tasks/TodayTasksSection";
-import getUserLists from "@/utils/getUserLists";
 
 export default async function TodayTasksPage() {
+  const todayPageData = await getTodayPageData();
+
   return (
-    <TodayTasksSection getTasks={getTodayTasks} getUserLists={getUserLists}/>
+    <TodayTasksSection
+      tasks={todayPageData?.tasks}
+      lists={todayPageData?.lists}
+      accessToken={todayPageData?.accessToken}
+    />
   );
 }

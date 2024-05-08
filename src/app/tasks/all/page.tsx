@@ -1,9 +1,15 @@
+import getAllTasksPageData from "@/utils/getAllTasksPageData";
+
 import AllTasksSection from "@/components/Tasks/Tasks/AllTasksSection";
-import getAllTasks from "@/utils/getAllTasks";
-import getUserLists from "@/utils/getUserLists";
 
 export default async function AllTasksPage() {
+  const allTasksPageData = await getAllTasksPageData();
+
   return (
-    <AllTasksSection getTasks={getAllTasks} getUserLists={getUserLists} />
+    <AllTasksSection
+      tasks={allTasksPageData?.tasks}
+      lists={allTasksPageData?.lists}
+      accessToken={allTasksPageData?.accessToken}
+    />
   );
 }

@@ -1,9 +1,15 @@
+import getPlannedPageData from "@/utils/getPlannedPageData";
+
 import PlannedTasksSection from "@/components/Tasks/Tasks/PlannedTasksSection";
-import getPlannedTasks from "@/utils/getPlannedTasks";
-import getUserLists from "@/utils/getUserLists";
 
 export default async function PlannedTasksPage() {
+  const plannedPageData = await getPlannedPageData();
+
   return (
-    <PlannedTasksSection getTasks={getPlannedTasks} getUserLists={getUserLists}/>
+    <PlannedTasksSection
+      tasks={plannedPageData?.tasks}
+      lists={plannedPageData?.lists}
+      accessToken={plannedPageData?.accessToken}
+    />
   );
 }
