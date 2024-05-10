@@ -8,8 +8,9 @@ const FiltersModal: React.FC<PropsType> = (props) => {
   return (
     <StyledFiltersModal $isModalVisible={props.isModalVisible}>
       <li className="filters__item">По дате</li>
-      <li className="filters__item">По категории</li>
       <li className="filters__item">По алфавиту</li>
+      <li className="filters__item">По Приоритету</li>
+      <li className="filters__item">По категории</li>
     </StyledFiltersModal>
   )
 };
