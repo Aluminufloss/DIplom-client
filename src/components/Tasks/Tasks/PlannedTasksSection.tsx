@@ -4,22 +4,24 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { ListsServerResponseType, TasksListType, TasksServerResponseType } from "@/models";
+import { TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import getGrouppedTasks from "./utils/getGrouppedTasks";
 
+import { setLists } from "@/store/slices/Lists";
 import { setPlannedTasks } from "@/store/slices/Tasks";
+
+import { ITask } from "@/api/models/Response/Tasks/ITask";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import getGrouppedTasks, {
-} from "./utils/getGrouppedTasks";
-import { setLists } from "@/store/slices/Lists";
 
 type PropsType = {
-  getTasks: () => Promise<TasksServerResponseType | undefined>;
-  getUserLists: () => Promise<ListsServerResponseType | undefined>;
+  tasks?: ITask[];
+  lists?: TasksListType[];
+  accessToken?: string;
 };
 
 export const PlannedTasksSection: React.FC<PropsType> = (props) => {
@@ -27,21 +29,21 @@ export const PlannedTasksSection: React.FC<PropsType> = (props) => {
     (state) => state.tabbedSidebar.isViewVisible
   );
   const plannedTasks = useAppSelector((state) => state.tasks.plannedTasks);
-  const grouppedTasks = getGrouppedTasks(plannedTasks);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     (async () => {
-      const [responseTask, responseList] = await Promise.all([
-        props.getTasks(),
-        props.getUserLists(),
-      ]);
+      dispatch(setPlannedTasks(props.tasks));
+      dispatch(setLists(props.lists));
 
-      dispatch(setPlannedTasks(responseTask?.data));
-      dispatch(setLists(responseList?.data));
+      if (props.accessToken) {
+        localStorage.setItem("accessToken", props.accessToken);
+      }
     })();
-  }, []);
+  }, [props]);
+
+  const grouppedTasks = getGrouppedTasks(plannedTasks);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>

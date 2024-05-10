@@ -41,11 +41,15 @@ export const taskModal = createSlice({
   extraReducers(builder) {
     const handleFulfilled = (state: TaskModalStoreType) => {
       state.modalParams = taskModalInitState.modalParams;
+    };
+
+    const handlePending = (state: TaskModalStoreType) => {
       state.isModalVisible = false;
     };
 
     builder
       .addCase(createTask.fulfilled, handleFulfilled)
+      .addCase(createTask.pending, handlePending)
       .addCase(updateTask.fulfilled, handleFulfilled)
       .addCase(deleteTask.fulfilled, handleFulfilled);
   },

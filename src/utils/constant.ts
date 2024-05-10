@@ -53,3 +53,21 @@ export const initialRepeatDays: SelectesdDayType[] = [
   { day: "Sat", isSelected: false },
   { day: "Sun", isSelected: false },
 ];
+
+export const Categories = [
+  "Personal",
+  "Work",
+  "Study",
+  "Home",
+  "Travelling",
+  "Other",
+];
+
+export const TranslatedCategories = [
+  "Личное",
+  "Работа",
+  "Учеба",
+  "Дом",
+  "Путешествия",
+  "Другое",
+];

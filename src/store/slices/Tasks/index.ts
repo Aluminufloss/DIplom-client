@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { TasksInitialState } from "./initialState";
 import { changeTaskStatus, createTask, deleteTask, updateTask } from "./thunks";
 import { isDatesEqual } from "@/utils/dateUtils";
-import { isFulfilledAction, isPendingAction, isRejectedAction } from "@/utils/checkReduxActions";
+import {
+  isFulfilledAction,
+  isPendingAction,
+  isRejectedAction,
+} from "@/utils/checkReduxActions";
 
 const Tasks = createSlice({
   name: "tasks",
@@ -37,18 +41,22 @@ const Tasks = createSlice({
           }
           return item;
         });
-      })
-      builder.addCase(createTask.fulfilled, (state, action) => {
+      });
+    builder
+      .addCase(createTask.fulfilled, (state, action) => {
         const task = action.payload;
-        const plannedDate = task.plannedDate;
-  
-        if (isDatesEqual(new Date(plannedDate), new Date())) {
-          state.todayTasks = [task, ...state.todayTasks];
-        } else {
-          state.plannedTasks.unshift(task);
+
+        if (!task.listId?.length) {
+          const plannedDate = task.plannedDate;
+
+          if (isDatesEqual(new Date(plannedDate), new Date())) {
+            state.todayTasks = [task, ...state.todayTasks];
+          } else {
+            state.plannedTasks.unshift(task);
+          }
+
+          state.allTasks = [task, ...state.allTasks];
         }
-  
-        state.allTasks = [task, ...state.allTasks];
       })
       .addCase(deleteTask.pending, (state, action) => {
         state.allTasks = state.allTasks.filter(
@@ -78,15 +86,15 @@ const Tasks = createSlice({
           item.taskId === updatedTask.taskId ? updatedTask : item
         );
       });
-      builder.addMatcher(isFulfilledAction, (state) => {
-        state.isLoading = false;
-      });
-      builder.addMatcher(isPendingAction, (state) => {
-        state.isLoading = true;
-      });
-      builder.addMatcher(isRejectedAction, (state) => {
-        state.isLoading = false;
-      });
+    builder.addMatcher(isFulfilledAction, (state) => {
+      state.isLoading = false;
+    });
+    builder.addMatcher(isPendingAction, (state) => {
+      state.isLoading = true;
+    });
+    builder.addMatcher(isRejectedAction, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 

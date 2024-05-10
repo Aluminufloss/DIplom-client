@@ -4,22 +4,24 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { ListsServerResponseType, TasksServerResponseType } from "@/models";
+import { TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import getGrouppedTasks from "./utils/getGrouppedTasks";
 
 import { setAllTasks } from "@/store/slices/Tasks";
+import { setLists } from "@/store/slices/Lists";
+
+import { ITask } from "@/api/models/Response/Tasks/ITask";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import getGrouppedTasks, {
-} from "./utils/getGrouppedTasks";
-import { setLists } from "@/store/slices/Lists";
 
 type PropsType = {
-  getTasks: () => Promise<TasksServerResponseType | undefined>;
-  getUserLists: () => Promise<ListsServerResponseType | undefined>;
+  tasks?: ITask[];
+  lists?: TasksListType[];
+  accessToken?: string;
 };
 
 export const AllTasksSection: React.FC<PropsType> = (props) => {
@@ -33,15 +35,14 @@ export const AllTasksSection: React.FC<PropsType> = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      const [responseTask, responseList] = await Promise.all([
-        props.getTasks(),
-        props.getUserLists(),
-      ]);
+      dispatch(setAllTasks(props.tasks));
+      dispatch(setLists(props.lists));
 
-      dispatch(setAllTasks(responseTask?.data));
-      dispatch(setLists(responseList?.data));
+      if (props.accessToken) {
+        localStorage.setItem("accessToken", props.accessToken);
+      }
     })();
-  }, []);
+  }, [props]);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
