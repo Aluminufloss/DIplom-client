@@ -1,3 +1,5 @@
+"use server";
+
 import { GroupType, TasksListType } from "@/models";
 import { serverSideFetch } from "./serverSideFetch";
 import { API_URL } from "./constant";
@@ -10,39 +12,59 @@ type ReturnType = {
 };
 
 export const getUserGroups = async (
-  lists: TasksListType[]
+  lists?: TasksListType[]
 ): Promise<ReturnType> => {
+  "use server";
+
   const groups: Group = {};
   const resultGroups: GroupType[] = [];
-  const listsWithoutGroups:TasksListType[] = [];
+  let listsWithoutGroups: TasksListType[] = [];
 
-  lists.forEach((list) => {
-    if (!list.groupId) {
-      listsWithoutGroups.push(list);
-      return;
-    }
-
-    if (!groups[list.groupId]) {
-      groups[list.groupId] = [list];
-    } else {
-      groups[list.groupId].push(list);
-    }
+  const groupsFromServer = await serverSideFetch<{ data: GroupType[] }>({
+    url: `${API_URL}/getGroups/group`,
+    method: "POST",
   });
 
-  for (const groupId of Object.keys(groups)) {
-    const groupName = await serverSideFetch<string>({
-      url: `${API_URL}/getGroupName/group`,
-      method: "POST",
-      body: { groupId },
+  const groupsWithoutLists = groupsFromServer?.data.filter(
+    (group) => group.lists.length === 0
+  );
+
+  if (!!lists?.length) {
+    lists.forEach((list) => {
+      if (!list.groupId) {
+        if (!listsWithoutGroups) {
+          listsWithoutGroups = [];
+        }
+        listsWithoutGroups.push(list);
+        return;
+      }
+
+      if (!groups[list.groupId]) {
+        groups[list.groupId] = [list];
+      } else {
+        groups[list.groupId].push(list);
+      }
     });
 
-    const newGroup: GroupType = {
-      id: groupId,
-      name: groupName ?? "Группа",
-      lists: groups[groupId],
-    };
+    for (const groupId of Object.keys(groups)) {
+      const groupName = await serverSideFetch<string>({
+        url: `${API_URL}/getGroupName/group`,
+        method: "POST",
+        body: { groupId },
+      });
 
-    resultGroups.push(newGroup);
+      const newGroup: GroupType = {
+        id: groupId,
+        name: groupName ?? "Группа",
+        lists: groups[groupId],
+      };
+
+      resultGroups.push(newGroup);
+    }
+  }
+
+  if (!!groupsWithoutLists) {
+    resultGroups.push(...groupsWithoutLists);
   }
 
   return { groups: resultGroups, lists: listsWithoutGroups };
