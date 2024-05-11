@@ -1,54 +1,56 @@
-"use client";
-
 import React from "react";
 import styled from "styled-components";
-
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { useAppSelector } from "@/utils/hooks/useAppSelector";
-import { STATIC_URLS } from "@/utils/constant";
-
+import {
+  Categories,
+  STATIC_URLS,
+  TranslatedCategories,
+} from "@/utils/constant";
 import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
+  setFieldValue: (
+    field: string,
+    value: string,
+    shouldValidate?: boolean
+  ) => void;
+  value?: string;
   className?: string;
 };
 
-type ListOptionType = {
+type CategoryOptionType = {
   title: string;
+  value: string;
   inputValue?: string;
 };
 
-const filter = createFilterOptions<ListOptionType>();
+const filter = createFilterOptions<CategoryOptionType>();
 
-const ListSelector: React.FC<ParamsType> = (props) => {
-  const [value, setValue] = React.useState<FilmOptionType | null>(null);
-  const listsInfo = useAppSelector((state) => state.lists.lists);
-  const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
+const CategorySelector: React.FC<ParamsType> = (props) => {
+  const [value, setValue] = React.useState<CategoryOptionType | null>({
+    title: props.value || "",
+    value: props.value || "",
+  });
 
   React.useEffect(() => {
-    (async () => {
-      const listsNames = listsInfo.map((list) => {
-        return {
-          title: list.title,
-        };
-      });
-
-      setListsNames(listsNames);
-    })();
-  }, [listsInfo]);
+    setValue({
+      title: props.value || "",
+      value: props.value || "",
+    });
+  }, [props.value]);
 
   return (
-    <StyledListSelector className={props.className}>
+    <StyledCategorySelector className={props.className}>
       <div className="selector__main-title">
         <ReusableImage
-          src={`${STATIC_URLS.SVG_ICONS}/list.svg`}
-          alt="List icon"
+          src={`${STATIC_URLS.SVG_ICONS}/category.svg`}
+          alt="Category icon"
           className="selector__icon"
           width={36}
           height={36}
         />
-        <span className="selector__title">Выберите список</span>
+        <span className="selector__title">Выберите категорию</span>
       </div>
       <Autocomplete
         value={value}
@@ -56,13 +58,16 @@ const ListSelector: React.FC<ParamsType> = (props) => {
           if (typeof newValue === "string") {
             setValue({
               title: newValue,
+              value: newValue,
             });
           } else if (newValue && newValue.inputValue) {
             setValue({
               title: newValue.inputValue,
+              value: newValue.inputValue,
             });
           } else {
             setValue(newValue);
+            props.setFieldValue("taskInfo.category", newValue?.value || "");
           }
         }}
         filterOptions={(options, params) => {
@@ -75,7 +80,8 @@ const ListSelector: React.FC<ParamsType> = (props) => {
           if (inputValue !== "" && !isExisting) {
             filtered.push({
               inputValue,
-              title: `Списка "${inputValue}" не существует`,
+              title: `Категории "${inputValue}" не существует`,
+              value: inputValue,
             });
           }
 
@@ -85,37 +91,27 @@ const ListSelector: React.FC<ParamsType> = (props) => {
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={listsNames}
-        getOptionLabel={(option) => {
-          if (typeof option === "string") {
-            return option;
-          }
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          return option.title;
-        }}
+        options={Categories.map((category, index) => ({
+          title: TranslatedCategories[index],
+          value: category,
+        }))}
+        getOptionLabel={(option) => option.title}
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
         className="selector__autocomplete"
         freeSolo
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Созданные списки"
+            label="Созданные категории"
             className="selector__input"
           />
         )}
       />
-    </StyledListSelector>
+    </StyledCategorySelector>
   );
 };
 
-interface FilmOptionType {
-  inputValue?: string;
-  title: string;
-}
-
-const StyledListSelector = styled.div`
+const StyledCategorySelector = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -125,7 +121,7 @@ const StyledListSelector = styled.div`
 
     &.Mui-focused {
       color: ${(props) => props.theme.colorValues.black};
-      
+
       font-size: 16px;
 
       top: 0;
@@ -175,4 +171,4 @@ const StyledListSelector = styled.div`
   }
 `;
 
-export default ListSelector;
+export default CategorySelector;

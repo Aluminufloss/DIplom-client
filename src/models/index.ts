@@ -22,6 +22,7 @@ export type GroupType = {
 export type UserResponseType = {
   data: IUser;
   accessToken?: string;
+	refreshToken?: string;
 }
 
 export type TasksServerResponseType = {
