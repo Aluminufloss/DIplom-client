@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 import ReusableImage from "@/components/UI/image";
 import { STATIC_URLS } from "@/utils/constant";
-import { useAppSelector } from "@/utils/hooks/useAppSelector";
-
 import Lists from "../Lists";
+import { TasksListType } from "@/models";
 
 type PropsType = {
   groupId: string;
   title: string;
+  lists: TasksListType[];
   className?: string;
   onClick: (buttonPosition: number, groupId: string) => void;
 };
@@ -17,8 +17,6 @@ type PropsType = {
 const ITEM_HEIGHT = 34;
 
 const GroupItem: React.FC<PropsType> = (props) => {
-  const groupInfo = useAppSelector((state) => state.groups.groups);
-  const lists = groupInfo.find((group) => group.id === props.groupId)?.lists;
   const itemRef = React.useRef<HTMLLIElement>(null);
 
   const handleDeleteGroup = React.useCallback((event: React.MouseEvent) => {
@@ -27,8 +25,12 @@ const GroupItem: React.FC<PropsType> = (props) => {
     event.stopPropagation();
   }, []);
 
+  const handleAddListToGroup = React.useCallback(() => {
+    
+  }, [props.groupId]);
+
   return (
-    <>
+    <div className="wrapper">
       <StyledGroupItem className={props.className} ref={itemRef}>
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/group.svg`}
@@ -36,17 +38,27 @@ const GroupItem: React.FC<PropsType> = (props) => {
           className="icon"
         />
         <p className="title">{props.title}</p>
-        <ReusableImage
-          width={20}
-          height={20}
-          src={`${STATIC_URLS.SVG_ICONS}/delete.svg`}
-          alt="Delete icon"
-          onClick={handleDeleteGroup}
-          className="icon__delete"
-        />
+        <div className="group__actions">
+          <ReusableImage
+            width={20}
+            height={20}
+            src={`${STATIC_URLS.SVG_ICONS}/delete.svg`}
+            alt="Delete icon"
+            onClick={handleDeleteGroup}
+            className="icon__delete"
+          />
+          <ReusableImage
+            width={20}
+            height={20}
+            src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
+            alt="Add list icon"
+            onClick={handleAddListToGroup}
+            className="icon__plus"
+          />
+        </div>
       </StyledGroupItem>
-      <Lists lists={lists} />
-    </>
+      <Lists lists={props.lists} />
+    </div>
   );
 };
 
@@ -70,8 +82,22 @@ const StyledGroupItem = styled.li`
 
   cursor: pointer;
 
+  .wrapper {
+    height: 100%;
+  }
+
   .icon {
     transform: translateY(1px);
+
+    &__plus {
+      position: absolute;
+      right: 32px;
+      top: 7px;
+
+      opacity: 0;
+
+      transition: opacity 0.3s ease;
+    }
 
     &__delete {
       position: absolute;
@@ -79,8 +105,6 @@ const StyledGroupItem = styled.li`
       top: 7px;
 
       opacity: 0;
-
-      margin-left: 5px;
 
       transition: opacity 0.3s ease;
     }
@@ -96,13 +120,13 @@ const StyledGroupItem = styled.li`
     white-space: nowrap;
 
     margin-left: 5px;
-    margin-right: 32px;
+    margin-right: 52px;
   }
 
   &:hover {
     background-color: ${(props) => props.theme.colorValues.lightGrey};
 
-    .icon__delete {
+    .icon__delete, .icon__plus {
       opacity: 1;
     }
   }

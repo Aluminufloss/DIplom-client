@@ -3,10 +3,11 @@ import styled from "styled-components";
 
 type PropsType = {
   deleteButtonPosition: number;
-  isVisible?: boolean;
-  className?: string;
+  title?: string;
   handleHideButton: (value: React.SetStateAction<boolean>) => void;
   handleDeleteList: () => void;
+  isVisible?: boolean;
+  className?: string;
 };
 
 const DeleteListButton: React.FC<PropsType> = (props) => {
@@ -16,7 +17,7 @@ const DeleteListButton: React.FC<PropsType> = (props) => {
       $isVisible={props.isVisible}
       $deleteButtonPosition={props.deleteButtonPosition}
     >
-      <p className="description">Удалить этот список?</p>
+      <p className="description">{props.title || "Удалить этот список?"}</p>
       <div className="button__group">
         <button
           className="button__group-item button__group-item--delete"
