@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { TasksListType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { AppPaths } from "@/utils/constant";
+import cn from "classnames";
+
 import { deleteList } from "@/store/slices/Lists/thunks";
 import { openSnackbar } from "@/store/slices/Snackbar";
 
@@ -12,7 +14,9 @@ import ListItem from "../Lists/ListItem";
 import DeleteListButton from "../DeleteListButton";
 
 type PropsType = {
+  isInsideGroup?: boolean;
   lists?: TasksListType[];
+  className?: string;
 };
 
 const Lists: React.FC<PropsType> = (props) => {
@@ -52,17 +56,19 @@ const Lists: React.FC<PropsType> = (props) => {
   }, [currentListId, url.slug]);
 
   return (
-    <StyledLists>
-      {!!props.lists &&
-        props.lists?.map((list) => (
-          <ListItem
-            key={list.listId}
-            title={list.title}
-            isActiveTab={url.slug === list.listId}
-            listId={list.listId}
-            onClick={handleShowModal}
-          />
-        ))}
+    <StyledLists className={cn(props.className, props.isInsideGroup && "list__inside-group")}>
+      {!!props.lists?.length &&
+        props.lists.map((list) => {
+          return (
+            <ListItem
+              key={list.listId}
+              title={list.title}
+              isActiveTab={url.slug === list.listId}
+              listId={list.listId}
+              onClick={handleShowModal}
+            />
+          );
+        })}
       <DeleteListButton
         isVisible={isDeleteListButtonVisible}
         deleteButtonPosition={deleteButtonPosition}
@@ -85,6 +91,10 @@ const StyledLists = styled.ul`
   }
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  .list__inside-group {
+    
   }
 `;
 

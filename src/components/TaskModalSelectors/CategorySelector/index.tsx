@@ -1,30 +1,44 @@
-"use client";
-
 import React from "react";
 import styled from "styled-components";
-
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { STATIC_URLS } from "@/utils/constant";
-
+import {
+  Categories,
+  STATIC_URLS,
+  TranslatedCategories,
+} from "@/utils/constant";
 import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
+  setFieldValue: (
+    field: string,
+    value: string,
+    shouldValidate?: boolean
+  ) => void;
+  value?: string;
   className?: string;
 };
 
-const filter = createFilterOptions<FilmOptionType>();
+type CategoryOptionType = {
+  title: string;
+  value: string; 
+  inputValue?: string;
+};
+
+const filter = createFilterOptions<CategoryOptionType>();
 
 const CategorySelector: React.FC<ParamsType> = (props) => {
-  const [value, setValue] = React.useState<FilmOptionType | null>(null);
+  const [value, setValue] = React.useState<CategoryOptionType | null>(null);
 
   return (
-    <StyledListSelector className={props.className}>
+    <StyledCategorySelector className={props.className}>
       <div className="selector__main-title">
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/category.svg`}
           alt="Category icon"
           className="selector__icon"
+          width={36}
+          height={36}
         />
         <span className="selector__title">Выберите категорию</span>
       </div>
@@ -34,13 +48,16 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
           if (typeof newValue === "string") {
             setValue({
               title: newValue,
+              value: newValue,
             });
           } else if (newValue && newValue.inputValue) {
             setValue({
               title: newValue.inputValue,
+              value: newValue.inputValue,
             });
           } else {
             setValue(newValue);
+            props.setFieldValue("taskInfo.category", newValue?.value || "");
           }
         }}
         filterOptions={(options, params) => {
@@ -53,7 +70,8 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
           if (inputValue !== "" && !isExisting) {
             filtered.push({
               inputValue,
-              title: `Add "${inputValue}"`,
+              title: `Категории "${inputValue}" не существует`,
+              value: inputValue,
             });
           }
 
@@ -63,20 +81,14 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={[]}
-        getOptionLabel={(option) => {
-          if (typeof option === "string") {
-            return option;
-          }
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          return option.title;
-        }}
+        options={Categories.map((category, index) => ({
+          title: TranslatedCategories[index],
+          value: category, 
+        }))}
+        getOptionLabel={(option) => option.title}
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
-        sx={{ width: 300 }}
-        freeSolo
         className="selector__autocomplete"
+        freeSolo
         renderInput={(params) => (
           <TextField
             {...params}
@@ -85,17 +97,11 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
           />
         )}
       />
-    </StyledListSelector>
+    </StyledCategorySelector>
   );
-};
-
-interface FilmOptionType {
-  inputValue?: string;
-  title: string;
-  year?: number;
 }
 
-const StyledListSelector = styled.div`
+const StyledCategorySelector = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -105,6 +111,9 @@ const StyledListSelector = styled.div`
 
     &.Mui-focused {
       color: ${(props) => props.theme.colorValues.black};
+
+      font-size: 16px;
+
       top: 0;
     }
   }
@@ -135,7 +144,13 @@ const StyledListSelector = styled.div`
     }
 
     &__icon {
-      margin-right: 12px;
+      width: auto;
+      height: auto;
+
+      padding-right: 10px;
+      margin-right: 2px;
+
+      transform: translateY(1px);
     }
 
     &__title {

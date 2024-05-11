@@ -42,9 +42,10 @@ const Groups: React.FC<PropsType> = (props) => {
   }, [currentGroupId]);
 
   return (
-    <StyledLists>
+    <StyledGroups>
       {props.groups?.map((group) => (
         <GroupItem
+          lists={group.lists}
           key={group.id}
           groupId={group.id}
           title={group.name}
@@ -52,16 +53,17 @@ const Groups: React.FC<PropsType> = (props) => {
         />
       ))}
       <DeleteListButton
+        title="Удалить эту  группу?"
         isVisible={isDeleteListButtonVisible}
         deleteButtonPosition={deleteButtonPosition}
         handleHideButton={() => setIsDeleteListButtonVisible(false)}
         handleDeleteList={handleDeleteGroup}
       />
-    </StyledLists>
+    </StyledGroups>
   );
 };
 
-const StyledLists = styled.ul`
+const StyledGroups = styled.ul`
   position: relative;
 `;
 
