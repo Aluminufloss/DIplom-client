@@ -105,6 +105,8 @@ const TaskModal: React.FC = () => {
           type: "success",
         })
       );
+
+      setIsActionsModalVisible(false);
     },
     []
   );
@@ -149,16 +151,18 @@ const TaskModal: React.FC = () => {
   }, []);
 
   const handleDeleteTask = React.useCallback(() => {
-    dispatch(deleteTask(modalInfo.modalParams.taskInfo.taskId)).unwrap().catch((err) => {
-      dispatch(
-        openSnackbar({
-          title: "Ошибка",
-          message: err.message,
-          type: "error",
-        })
-      );
-    });
-    
+    dispatch(deleteTask(modalInfo.modalParams.taskInfo.taskId))
+      .unwrap()
+      .catch((err) => {
+        dispatch(
+          openSnackbar({
+            title: "Ошибка",
+            message: err.message,
+            type: "error",
+          })
+        );
+      });
+
     dispatch(
       openSnackbar({
         title: "Успешно",
@@ -166,7 +170,7 @@ const TaskModal: React.FC = () => {
         type: "success",
       })
     );
-    dispatch(resetModalState());
+    setIsActionsModalVisible(false);
   }, [modalInfo.modalParams.taskInfo.taskId]);
 
   return (
@@ -212,6 +216,7 @@ const TaskModal: React.FC = () => {
                 <RepeatSelector
                   name="taskInfo.repeatDays"
                   setFieldValue={setFieldValue}
+                  modalType={values.modalType}
                   className="modal__repeat"
                   selectedDays={values.taskInfo.repeatDays}
                 />
@@ -222,8 +227,16 @@ const TaskModal: React.FC = () => {
                   shouldDisablePast={values.modalType === "create"}
                   className="modal__planned"
                 />
-                <ListSelector className="modal__list" />
-                <CategorySelector className="modal__category" />
+                <ListSelector
+                  className="modal__list"
+                  setFieldValue={setFieldValue}
+                  value={values.taskInfo.listId}
+                />
+                <CategorySelector
+                  setFieldValue={setFieldValue}
+                  value={values.taskInfo.category}
+                  className="modal__category"
+                />
                 {modalInfo.modalParams.modalType === "edit" && (
                   <PrimaryButton
                     type="button"
