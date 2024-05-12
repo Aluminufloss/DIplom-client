@@ -1,6 +1,7 @@
+import { NextResponse } from "next/server";
+
 import getAllTasks from "@/utils/getAllTasks";
 import getUserLists from "@/utils/getUserLists";
-import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const requestHeaders = request.headers.getSetCookie();
@@ -10,18 +11,19 @@ export async function GET(request: Request) {
   const [todayTasks, userLists] = await Promise.all([
     getAllTasks({
       accessToken,
-      refreshToken,
+      refreshToken
     }),
     getUserLists({
       accessToken,
-      refreshToken,
+      refreshToken
     }),
   ]);
 
   return NextResponse.json(
     {
-      tasks: todayTasks?.data,
-      lists: userLists?.data,
+      tasks: todayTasks,
+      lists: userLists,
+      refreshToken,
       accessToken,
     },
     {
