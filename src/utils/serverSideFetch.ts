@@ -1,4 +1,4 @@
-"use server"
+"use server-only";
 
 import { API_URL } from "@/utils/constant";
 import { cookies } from "next/headers";
@@ -6,18 +6,33 @@ import { cookies } from "next/headers";
 type ParamsType = {
   url: string;
   method: string;
-  body?: any;
+  credentials?: RequestCredentials;
+  headers?: HeadersInit;
+  body?: {
+    accessToken?: string;
+    refreshToken?: string;
+  };
 };
 
-export const serverSideFetch = async <T>(options: ParamsType): Promise<undefined | T> => {
-  "use server"
+type ResponseError = {
+  error: string;
+} & {
+  status: number;
+};
+
+export async function serverSideFetch<T>(
+  options: ParamsType
+): Promise<(Response & T) | (Response & ResponseError) | undefined> {
+  "use server";
   try {
-    const accessToken = cookies().get('accessToken')?.value;
-    const refreshToken = cookies().get('refreshToken')?.value;
+    const accessToken =
+      cookies().get("accessToken")?.value ?? options.body?.accessToken;
+    const refreshToken =
+      cookies().get("refreshToken")?.value ?? options.body?.refreshToken;
 
     const response = await fetch(options.url, {
       headers: {
-        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+        Authorization: accessToken ? `Bearer ${accessToken}` : "",
         Accept: "application/json",
       },
       method: options.method,
@@ -26,7 +41,10 @@ export const serverSideFetch = async <T>(options: ParamsType): Promise<undefined
 
     if (response.status === 401) {
       if (!refreshToken) {
-        return;
+        return Response.json(
+          { error: "Unauthorized" },
+          { status: 401 }
+        ) as Response & ResponseError;
       }
 
       const refreshResponse = await fetch(`${API_URL}/refresh`, {
@@ -40,9 +58,6 @@ export const serverSideFetch = async <T>(options: ParamsType): Promise<undefined
 
       if (refreshResponse.ok) {
         const { accessToken, refreshToken } = await refreshResponse.json();
-
-        cookies().set("accessToken", accessToken);
-        cookies().set("refreshToken", refreshToken);
 
         const requestHeaders = {
           ...response.headers,
@@ -58,14 +73,20 @@ export const serverSideFetch = async <T>(options: ParamsType): Promise<undefined
 
         const data = await originalRequestResponse.json();
 
-        return { data, accessToken } as T;
+        return Response.json({ data, accessToken, refreshToken }) as Response &
+          T;
+      } else {
+        return Response.json(
+          { error: "Unauthorized" },
+          { status: 401 }
+        ) as Response & ResponseError;
       }
     }
 
     const data = await response.json();
 
-    return { data, accessToken } as T;
+    return Response.json({ data, accessToken, refreshToken }) as Response & T;
   } catch (err) {
     console.warn(err);
   }
-};
+}

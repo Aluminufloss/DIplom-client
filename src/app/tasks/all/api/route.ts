@@ -1,7 +1,6 @@
-import { NextResponse } from "next/server";
-
 import getAllTasks from "@/utils/getAllTasks";
 import getUserLists from "@/utils/getUserLists";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const requestHeaders = request.headers.getSetCookie();

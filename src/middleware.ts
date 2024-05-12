@@ -21,8 +21,14 @@ export async function middleware() {
   if (userResponse?.status === 401) { 
     return NextResponse.redirect(`${CLIENT_URL}/login`); 
   } 
-
+ 
   const response = NextResponse.next(); 
+  
+  const userData = await userResponse?.json(); 
+ 
+  response.cookies.set('accessToken', userData.accessToken); 
+  response.cookies.set('refreshToken', userData.refreshToken); 
+  response.cookies.set('user', JSON.stringify(userData.data)); 
   
   return response; 
 } 
