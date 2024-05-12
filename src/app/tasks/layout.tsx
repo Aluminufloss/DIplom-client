@@ -43,6 +43,7 @@ const StyledLayout = styled.div`
     height: 100%;
 
     margin-top: 77px;
+    margin-bottom: 20px;
   }
 `;
 

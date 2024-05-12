@@ -1,4 +1,5 @@
 import getAllTasks from "@/utils/getAllTasks";
+import getTodayTasks from "@/utils/getTodayTasks";
 import getUserLists from "@/utils/getUserLists";
 import { NextResponse } from "next/server";
 
@@ -7,8 +8,8 @@ export async function GET(request: Request) {
   const accessToken = requestHeaders[0].split("=")[1].split(";")[0];
   const refreshToken = requestHeaders[1].split("=")[1].split(";")[0];
 
-  const [allTasks, userLists] = await Promise.all([
-    getAllTasks({
+  const [todayTasks, userLists] = await Promise.all([
+    getTodayTasks({
       accessToken,
       refreshToken
     }),
@@ -20,7 +21,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json(
     {
-      tasks: allTasks,
+      tasks: todayTasks,
       lists: userLists,
       refreshToken,
       accessToken,
