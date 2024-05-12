@@ -45,8 +45,8 @@ export default class TasksService {
   public static async changeTaskStatus(
     taskId: string,
     status: TaskStatusType
-  ): Promise<AxiosResponse<TasksResponseType>> {
-    return await $api.post<TasksResponseType>(`/changeStatus/task`, {
+  ): Promise<AxiosResponse<ITask>> {
+    return await $api.post<ITask>(`/changeStatus/task`, {
       taskId,
       status,
     });

@@ -8,7 +8,8 @@ type UpdateGroupNameParamsType = {
 
 type GroupListActionsParamsType = {
   groupId: string;
-  listId: string;
+  listId?: string;
+  listName?: string;
 };
 
 export class GroupService {
