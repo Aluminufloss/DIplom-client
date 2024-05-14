@@ -46,7 +46,7 @@ const SnackBar: React.FC = () => {
         exited={!snackbarInfo.isOpen}
       >
         <Transition
-          timeout={{ enter: 400, exit: 400 }}
+          timeout={{ enter: 1000, exit: 400 }}
           in={snackbarInfo.isOpen}
           appear
           unmountOnExit

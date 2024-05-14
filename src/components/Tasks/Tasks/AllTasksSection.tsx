@@ -23,12 +23,14 @@ export const AllTasksSection: React.FC = async () => {
 
   const allTasks = useAppSelector((state) => state.tasks.allTasks);
   const grouppedTasks = getGrouppedTasks(allTasks);
-  
+
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     (async () => {
-      const allTasksPageResponse = await fetch("http://localhost:3000/tasks/all/api");
+      const allTasksPageResponse = await fetch(
+        "http://localhost:3000/tasks/all/api"
+      );
 
       const allTasksPageData = await allTasksPageResponse.json();
 
@@ -44,13 +46,19 @@ export const AllTasksSection: React.FC = async () => {
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.tasks} />
+      <AddTaskButton />
 
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {
           return <TaskItem key={task.taskId} task={task} />;
         })}
 
-      <AddTaskButton />
+      {!!grouppedTasks?.planned.length && (
+        <TaskSection
+          sectionTitle="Запланированные задачи"
+          tasks={grouppedTasks.planned}
+        />
+      )}
 
       {!!grouppedTasks?.completed.length && (
         <TaskSection

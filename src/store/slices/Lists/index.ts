@@ -7,7 +7,7 @@ import {
   isPendingAction,
   isRejectedAction,
 } from "@/utils/checkReduxActions";
-import { createTask } from "../Tasks/thunks";
+import { createTask, deleteTask } from "../Tasks/thunks";
 
 export const listsInfo = createSlice({
   name: "listsInfo",
@@ -25,6 +25,17 @@ export const listsInfo = createSlice({
       state.lists = state.lists.filter(
         (item) => item.listId !== action.meta.arg
       );
+    });
+    builder.addCase(deleteTask.fulfilled, (state, action) => {
+      const currentList = state.lists.find(
+        (list) => list.listId === action.meta.arg.listId
+      );
+
+      if (currentList) {
+        currentList.tasks = currentList.tasks.filter(
+          (item) => item.taskId !== action.meta.arg.taskId
+        );
+      }
     });
     builder.addCase(createTask.rejected, () => {});
     builder.addMatcher(isPendingAction, (state) => {

@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { ListsServerResponseType, TasksServerResponseType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import getGrouppedTasks from "./utils/getGrouppedTasks";
@@ -15,17 +14,12 @@ import { setLists } from "@/store/slices/Lists";
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
+import TaskSection from "@/components/UI/TaskSection";
 
-type PropsType = {
-  getTasks: () => Promise<TasksServerResponseType | undefined>;
-  getUserLists: () => Promise<ListsServerResponseType | undefined>;
-};
-
-export const TodayTasksSection: React.FC<PropsType> = (props) => {
+export const TodayTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
-  const isLoading = useAppSelector((state) => state.tasks.isLoading);
   const todayTasks = useAppSelector((state) => state.tasks.todayTasks);
   const grouppedTasks = getGrouppedTasks(todayTasks);
 
@@ -33,41 +27,38 @@ export const TodayTasksSection: React.FC<PropsType> = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      const [responseTask, responseList] = await Promise.all([
-        props.getTasks(),
-        props.getUserLists(),
-      ]);
+      const todayTasksPageResponse = await fetch(
+        "http://localhost:3000/tasks/today/api"
+      );
 
-      dispatch(setTodayTasks(responseTask?.data));
-      dispatch(setLists(responseList?.data));
+      const todayTasksPageResponseData = await todayTasksPageResponse.json();
+
+      dispatch(setTodayTasks(todayTasksPageResponseData?.tasks.data));
+      dispatch(setLists(todayTasksPageResponseData?.lists.data));
+
+      if (todayTasksPageResponseData?.accessToken) {
+        localStorage.setItem(
+          "accessToken",
+          todayTasksPageResponseData.accessToken
+        );
+      }
     })();
   }, []);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.today} />
+      <AddTaskButton />
 
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {
           return <TaskItem key={task.taskId} task={task} />;
         })}
-      <AddTaskButton />
       {!!grouppedTasks?.completed.length && (
-        <>
-          <div className="group-separator">Завершённые задачи</div>
-          {grouppedTasks.completed.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
-      )}
-
-      {!!grouppedTasks?.expired.length && (
-        <>
-          <div className="group-separator">Просроченные задачи</div>
-          {grouppedTasks.expired.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Завершённые задачи"
+          tasks={grouppedTasks.completed}
+        />
       )}
     </StyledTaskSection>
   );
@@ -80,26 +71,6 @@ const StyledTaskSection = styled.div<{ $isViewVisible: boolean }>`
   .date {
     width: 300px;
     height: 300px;
-  }
-
-  .group-separator {
-    ${(props) => props.theme.typography.fnTitle2}
-    ${(props) => props.theme.typography.fnMedium};
-    color: ${(props) => props.theme.colorValues.primary};
-
-    width: 100%;
-
-    margin-bottom: 20px;
-
-    display: flex;
-    align-items: flex-end;
-
-    padding: 12px 16px;
-
-    background-color: ${(props) => props.theme.colorValues.sidebarWhite};
-
-    border: 1px solid ${(props) => props.theme.colorValues.lightGrey};
-    border-radius: 5px;
   }
 `;
 
