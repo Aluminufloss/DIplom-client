@@ -9,7 +9,6 @@ import { addList } from "@/store/slices/Lists/thunks";
 import { addGroup } from "@/store/slices/Groups/thunks";
 import { openSnackbar } from "@/store/slices/Snackbar";
 
-import LoaderWithOverlay from "@/components/UI/LoaderWIthOverlay";
 import ReusableImage from "@/components/UI/image";
 import AddNewListButton from "../AddNewListButton";
 import CreateInput from "../CreateInput";
@@ -31,7 +30,6 @@ const GeneralSection: React.FC = () => {
   };
 
   const handleSave = React.useCallback(() => {
-    console.log("saving", savingMode)
     if (inputValue) {
       const hasItem =
         savingMode === "list"
@@ -102,9 +100,8 @@ const GeneralSection: React.FC = () => {
           />
         </div>
       )}
-      <Groups groups={groupsInfo.groups} />
+      <Groups groups={groupsInfo.groups} onSetInputVisible={onSetInputVisible}/>
       <Lists lists={listsInfo.lists} />
-      <LoaderWithOverlay isOpen={listsInfo.isLoading} />
     </StyledGeneralSection>
   );
 };

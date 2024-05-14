@@ -25,7 +25,9 @@ export const getUserGroups = async (
     method: "POST",
   });
 
-  const groupsWithoutLists = groupsFromServer?.data.filter(
+  const groupFromServerData = await groupsFromServer?.json() as { data: GroupType[] };
+
+  const groupsWithoutLists = groupFromServerData?.data.filter(
     (group) => group.lists.length === 0
   );
 
@@ -63,7 +65,7 @@ export const getUserGroups = async (
     }
   }
 
-  if (!!groupsWithoutLists) {
+  if (!!groupsWithoutLists?.length) {
     resultGroups.push(...groupsWithoutLists);
   }
 

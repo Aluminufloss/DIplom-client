@@ -1,73 +1,69 @@
 import React from "react";
 import styled from "styled-components";
-import TextField from "@mui/material/TextField";
+
+import { TextField } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import {
-  Categories,
-  STATIC_URLS,
-  TranslatedCategories,
-} from "@/utils/constant";
+
+import { useAppSelector } from "@/utils/hooks/useAppSelector";
+import { STATIC_URLS } from "@/utils/constant";
+
 import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
+  className?: string;
   setFieldValue: (
     field: string,
-    value: string,
-    shouldValidate?: boolean
+    value: any,
+    shouldValidate?: boolean | undefined
   ) => void;
-  value?: string;
-  className?: string;
+  value: string | undefined;
 };
 
-type CategoryOptionType = {
+type ListOptionType = {
+  listId: string;
   title: string;
-  value: string;
   inputValue?: string;
 };
 
-const filter = createFilterOptions<CategoryOptionType>();
+const filter = createFilterOptions<ListOptionType>();
 
-const CategorySelector: React.FC<ParamsType> = (props) => {
-  const [value, setValue] = React.useState<CategoryOptionType | null>({
-    title: props.value || "",
-    value: props.value || "",
-  });
+const ListSelector: React.FC<ParamsType> = (props) => {
+  const listsInfo = useAppSelector((state) => state.lists.lists);
+  const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
 
   React.useEffect(() => {
-    setValue({
-      title: props.value || "",
-      value: props.value || "",
-    });
-  }, [props.value]);
+    (async () => {
+      const listsNames = listsInfo?.map((list) => {
+        return {
+          title: list.title,
+          listId: list.listId,
+        };
+      });
+
+      setListsNames(listsNames);
+    })();
+  }, [listsInfo]);
 
   return (
-    <StyledCategorySelector className={props.className}>
+    <StyledListSelector className={props.className}>
       <div className="selector__main-title">
         <ReusableImage
-          src={`${STATIC_URLS.SVG_ICONS}/category.svg`}
-          alt="Category icon"
+          src={`${STATIC_URLS.SVG_ICONS}/list.svg`}
+          alt="List icon"
           className="selector__icon"
           width={36}
           height={36}
         />
-        <span className="selector__title">Выберите категорию</span>
+        <span className="selector__title">Выберите список</span>
       </div>
       <Autocomplete
-        value={value}
+        options={listsNames}
+        value={props.value}
         onChange={(event, newValue) => {
-          if (typeof newValue === "string") {
-            setValue({
-              title: newValue,
-              value: newValue,
-            });
-          } else if (newValue && newValue.inputValue) {
-            setValue({
-              title: newValue.inputValue,
-              value: newValue.inputValue,
-            });
+          if (newValue) {
+            props.setFieldValue("taskInfo.listId", newValue.listId);
           } else {
-            setValue(newValue);
-            props.setFieldValue("taskInfo.category", newValue?.value || "");
+            props.setFieldValue("taskInfo.listId", undefined);
           }
         }}
         filterOptions={(options, params) => {
@@ -80,38 +76,41 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
           if (inputValue !== "" && !isExisting) {
             filtered.push({
               inputValue,
-              title: `Категории "${inputValue}" не существует`,
-              value: inputValue,
+              title: `Списка "${inputValue}" не существует`,
+              listId: "",
             });
           }
 
           return filtered;
         }}
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        id="free-solo-with-text-demo"
-        options={Categories.map((category, index) => ({
-          title: TranslatedCategories[index],
-          value: category,
-        }))}
-        getOptionLabel={(option) => option.title}
+        getOptionLabel={(option) => {
+          if (typeof option === "string") {
+            return option;
+          }
+          if (option.inputValue) {
+            return option.inputValue;
+          }
+          return option.title;
+        }}
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
-        className="selector__autocomplete"
-        freeSolo
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Созданные категории"
+            label="Созданные списки"
             className="selector__input"
           />
         )}
+        freeSolo
+        selectOnFocus
+        handleHomeEndKeys
+        id="free-solo-with-text-demo"
+        className="selector__autocomplete"
       />
-    </StyledCategorySelector>
+    </StyledListSelector>
   );
 };
 
-const StyledCategorySelector = styled.div`
+const StyledListSelector = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,4 +170,4 @@ const StyledCategorySelector = styled.div`
   }
 `;
 
-export default CategorySelector;
+export default ListSelector;
