@@ -28,7 +28,8 @@ export default async function ListPage({
 
   return (
     <ListTaskSection
-      lists={userLists}
+      lists={lists}
+      groups={groups}
       listId={listById.listId}
       listName={listById.title}
     />

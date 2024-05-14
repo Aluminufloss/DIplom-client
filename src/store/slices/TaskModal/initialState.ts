@@ -12,7 +12,7 @@ export const taskModalInitState: TaskModalStoreType = {
       plannedDate: new Date().toISOString(),
       status: "active",
       priority: "low",
-      listId: "",
+      listId: [],
       taskId: "",
       category: "",
     },

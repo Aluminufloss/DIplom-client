@@ -11,6 +11,7 @@ type PropsType = {
   title: string;
   lists: TasksListType[];
   className?: string;
+  onAddListToGroup: (savingMode: "list" | "group") => void;
   onClick: (buttonPosition: number, groupId: string) => void;
 };
 

@@ -10,6 +10,7 @@ import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
   name: string;
+  modalType: "create" | "edit";
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   selectedDays: SelectesdDayType[];
   className?: string;
@@ -18,13 +19,23 @@ type ParamsType = {
 const RepeatSelector: React.FC<ParamsType> = (props) => {
   const [isActive, setIsActive] = React.useState(false);
 
+  React.useEffect(() => {
+    const hasRepeatDays = props.selectedDays.some((day) => day.isSelected);
+
+    if (hasRepeatDays) {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
+  }, [props.selectedDays]);
+
   const onSelect = React.useCallback(() => {
-    if (isActive) {
+    if (isActive && props.modalType === "create") {
       props.setFieldValue("taskInfo.repeatDays", initialRepeatDays);
     }
 
     setIsActive((prev) => !prev);
-  }, [isActive, initialRepeatDays]);
+  }, [isActive, initialRepeatDays, props.modalType]);
 
   return (
     <StyledRepeatSelector className={props.className} id={props.name}>

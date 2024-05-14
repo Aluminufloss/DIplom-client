@@ -8,11 +8,12 @@ import { setSelectedTab } from "@/store/slices/TabbedSidebar";
 import { TabEnum } from "@/store/slices/TabbedSidebar/models";
 
 const useTabbedNavigation = () => {
-  const pathname = usePathname().slice(1);
   const dispatch = useAppDispatch();
 
-  const handleSelectTab = React.useCallback(() => {
-    switch (pathname) {
+  const handleSelectTab = React.useCallback((pathname: string) => {
+    const path = pathname.slice(1);;
+
+    switch (path) {
       case AppRoutes.tasksToday:
         dispatch(setSelectedTab(TabEnum.today));
         break;
@@ -25,9 +26,11 @@ const useTabbedNavigation = () => {
       case AppRoutes.tasksAll:
         dispatch(setSelectedTab(TabEnum.tasks));
         break;
+      default:
+        dispatch(setSelectedTab(TabEnum.list));
+        break;
     }
-  }, [pathname]);
-
+  }, []);
 
   return { handleSelectTab };
 };

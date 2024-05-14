@@ -11,11 +11,13 @@ import GroupItem from "./GroupItem";
 
 type PropsType = {
   groups?: GroupType[];
+  onSetInputVisible: (savingMode: "list" | "group") => void;
 };
 
 const Groups: React.FC<PropsType> = (props) => {
   const [currentGroupId, setCurrentGroupId] = React.useState("");
-  const [isDeleteListButtonVisible, setIsDeleteListButtonVisible] = React.useState(false);
+  const [isDeleteListButtonVisible, setIsDeleteListButtonVisible] =
+    React.useState(false);
   const [deleteButtonPosition, setDeleteButtonPosition] = React.useState(0);
 
   const dispatch = useAppDispatch();
@@ -42,26 +44,29 @@ const Groups: React.FC<PropsType> = (props) => {
   }, [currentGroupId]);
 
   return (
-    <StyledLists>
+    <StyledGroups>
       {props.groups?.map((group) => (
         <GroupItem
+          lists={group.lists}
           key={group.id}
           groupId={group.id}
           title={group.name}
+          onAddListToGroup={props.onSetInputVisible}
           onClick={handleShowModal}
         />
       ))}
       <DeleteListButton
+        title="Удалить эту  группу?"
         isVisible={isDeleteListButtonVisible}
         deleteButtonPosition={deleteButtonPosition}
         handleHideButton={() => setIsDeleteListButtonVisible(false)}
         handleDeleteList={handleDeleteGroup}
       />
-    </StyledLists>
+    </StyledGroups>
   );
 };
 
-const StyledLists = styled.ul`
+const StyledGroups = styled.ul`
   position: relative;
 `;
 

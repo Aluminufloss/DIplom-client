@@ -52,7 +52,7 @@ export const removeListFromGroup = createAsyncThunk(
 
 export const addListToGroup = createAsyncThunk(
   "lists/addList",
-  async (options: { groupId: string; listId: string }, { rejectWithValue }) => {
+  async (options: { groupId: string; listName: string }, { rejectWithValue }) => {
     try {
       const response = await GroupService.addListToGroup(options);
       return response.data;

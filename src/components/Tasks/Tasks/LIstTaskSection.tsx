@@ -4,19 +4,22 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { TasksListType } from "@/models";
+import { GroupType, TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import getGrouppedTasks from "./utils/getGrouppedTasks";
 import { setLists } from "@/store/slices/Lists";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import getGrouppedTasks from "./utils/getGrouppedTasks";
+import TaskSection from "@/components/UI/TaskSection";
+import { setGroups } from "@/store/slices/Groups";
 
 type PropsType = {
   listId: string;
   listName: string;
+  groups: GroupType[];
   lists: TasksListType[];
 };
 
@@ -25,18 +28,19 @@ export const ListTaskSection: React.FC<PropsType> = (props) => {
     (state) => state.tabbedSidebar.isViewVisible
   );
 
-  const listTasks = useAppSelector((state) =>
-    state.lists.lists.find((item) => item.listId === props.listId)
-  );
+  const listInfo = useAppSelector((state) => state.lists);
+  const listTasks = listInfo.lists.find((list) => list.listId === props.listId);
+
   const grouppedTasks = getGrouppedTasks(listTasks?.tasks);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     (async () => {
+      dispatch(setGroups(props.groups));
       dispatch(setLists(props.lists));
     })();
-  }, [props.lists]);
+  }, [props.lists, props.groups]);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
@@ -44,30 +48,25 @@ export const ListTaskSection: React.FC<PropsType> = (props) => {
         sectionType={SectionEnum.list}
         listName={props.listName}
       />
+      <AddTaskButton />
 
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {
           return <TaskItem key={task.taskId} task={task} />;
         })}
 
-      <AddTaskButton />
-
       {!!grouppedTasks?.completed.length && (
-        <>
-          <div className="group-separator">Завершённые задачи</div>
-          {grouppedTasks.completed.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Завершённые задачи"
+          tasks={grouppedTasks.completed}
+        />
       )}
 
       {!!grouppedTasks?.expired.length && (
-        <>
-          <div className="group-separator">Просроченные задачи</div>
-          {grouppedTasks.expired.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Просроченные задачи"
+          tasks={grouppedTasks.expired}
+        />
       )}
     </StyledTaskSection>
   );

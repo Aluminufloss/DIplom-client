@@ -57,6 +57,15 @@ const TaskModal: React.FC = () => {
 
   const handleModalSubmit = React.useCallback(
     async (values: ModalParamsType) => {
+      if (!initialParamsRef.current) {
+        return;
+      }
+
+      if (compareModalParamsWithInitial(values.taskInfo, initialParamsRef.current.taskInfo)) {
+        dispatch(resetModalState());
+        return;
+      }
+
       if (values.modalType === "create") {
         if (!values.taskInfo.title.length) {
           dispatch(
@@ -107,6 +116,8 @@ const TaskModal: React.FC = () => {
       );
 
       setIsActionsModalVisible(false);
+
+      dispatch(resetModalState());
     },
     []
   );
@@ -151,7 +162,12 @@ const TaskModal: React.FC = () => {
   }, []);
 
   const handleDeleteTask = React.useCallback(() => {
-    dispatch(deleteTask(modalInfo.modalParams.taskInfo.taskId))
+    dispatch(
+      deleteTask({
+        taskId: modalInfo.modalParams.taskInfo.taskId,
+        listId: modalInfo.modalParams.taskInfo.listId?.[2],
+      })
+    )
       .unwrap()
       .catch((err) => {
         dispatch(
@@ -230,7 +246,7 @@ const TaskModal: React.FC = () => {
                 <ListSelector
                   className="modal__list"
                   setFieldValue={setFieldValue}
-                  value={values.taskInfo.listId}
+                  value={values.taskInfo.listId?.[0]}
                 />
                 <CategorySelector
                   setFieldValue={setFieldValue}
@@ -283,7 +299,7 @@ const StyledModal = styled(Form)<{
 
   width: 100%;
   max-width: 840px;
-  max-height: 100vh;
+  max-height: 90vh;
 
   z-index: 300;
 

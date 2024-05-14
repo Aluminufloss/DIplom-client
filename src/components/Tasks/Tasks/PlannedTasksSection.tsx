@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import getGrouppedTasks from "./utils/getGrouppedTasks";
@@ -12,19 +11,12 @@ import getGrouppedTasks from "./utils/getGrouppedTasks";
 import { setLists } from "@/store/slices/Lists";
 import { setPlannedTasks } from "@/store/slices/Tasks";
 
-import { ITask } from "@/api/models/Response/Tasks/ITask";
-
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
+import TaskSection from "@/components/UI/TaskSection";
 
-type PropsType = {
-  tasks?: ITask[];
-  lists?: TasksListType[];
-  accessToken?: string;
-};
-
-export const PlannedTasksSection: React.FC<PropsType> = (props) => {
+export const PlannedTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
@@ -34,44 +26,51 @@ export const PlannedTasksSection: React.FC<PropsType> = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      dispatch(setPlannedTasks(props.tasks));
-      dispatch(setLists(props.lists));
+      const plannedTasksPageResponse = await fetch(
+        "http://localhost:3000/tasks/planned/api"
+      );
 
-      if (props.accessToken) {
-        localStorage.setItem("accessToken", props.accessToken);
+      const plannedTasksPageResponseData =
+        await plannedTasksPageResponse.json();
+
+      dispatch(setPlannedTasks(plannedTasksPageResponseData?.tasks.data));
+      dispatch(setLists(plannedTasksPageResponseData?.lists.data));
+
+      if (plannedTasksPageResponseData?.accessToken) {
+        localStorage.setItem(
+          "accessToken",
+          plannedTasksPageResponseData.accessToken
+        );
       }
     })();
-  }, [props]);
+  }, []);
 
   const grouppedTasks = getGrouppedTasks(plannedTasks);
+
+  console.log(grouppedTasks);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.planned} />
+      <AddTaskButton />
 
-      {!!grouppedTasks?.active.length &&
-        grouppedTasks.active.map((task) => {
+      {!!grouppedTasks?.planned.length &&
+        grouppedTasks.planned.map((task) => {
           return <TaskItem key={task.taskId} task={task} />;
         })}
 
-      <AddTaskButton />
-
       {!!grouppedTasks?.completed.length && (
-        <>
-          <div className="group-separator">Завершённые задачи</div>
-          {grouppedTasks.completed.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Завершённые задачи"
+          tasks={grouppedTasks.completed}
+        />
       )}
 
       {!!grouppedTasks?.expired.length && (
-        <>
-          <div className="group-separator">Просроченные задачи</div>
-          {grouppedTasks.expired.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Просроченные задачи"
+          tasks={grouppedTasks.expired}
+        />
       )}
     </StyledTaskSection>
   );

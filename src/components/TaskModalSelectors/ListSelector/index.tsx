@@ -1,10 +1,9 @@
-"use client";
-
 import React from "react";
 import styled from "styled-components";
 
-import TextField from "@mui/material/TextField";
+import { TextField } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { STATIC_URLS } from "@/utils/constant";
 
@@ -12,9 +11,16 @@ import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
   className?: string;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => void;
+  value: string | undefined;
 };
 
 type ListOptionType = {
+  listId: string;
   title: string;
   inputValue?: string;
 };
@@ -22,15 +28,15 @@ type ListOptionType = {
 const filter = createFilterOptions<ListOptionType>();
 
 const ListSelector: React.FC<ParamsType> = (props) => {
-  const [value, setValue] = React.useState<FilmOptionType | null>(null);
   const listsInfo = useAppSelector((state) => state.lists.lists);
   const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
 
   React.useEffect(() => {
     (async () => {
-      const listsNames = listsInfo.map((list) => {
+      const listsNames = listsInfo?.map((list) => {
         return {
           title: list.title,
+          listId: list.listId,
         };
       });
 
@@ -51,18 +57,13 @@ const ListSelector: React.FC<ParamsType> = (props) => {
         <span className="selector__title">Выберите список</span>
       </div>
       <Autocomplete
-        value={value}
+        options={listsNames}
+        value={props.value}
         onChange={(event, newValue) => {
-          if (typeof newValue === "string") {
-            setValue({
-              title: newValue,
-            });
-          } else if (newValue && newValue.inputValue) {
-            setValue({
-              title: newValue.inputValue,
-            });
+          if (newValue) {
+            props.setFieldValue("taskInfo.listId", newValue.listId);
           } else {
-            setValue(newValue);
+            props.setFieldValue("taskInfo.listId", undefined);
           }
         }}
         filterOptions={(options, params) => {
@@ -76,16 +77,12 @@ const ListSelector: React.FC<ParamsType> = (props) => {
             filtered.push({
               inputValue,
               title: `Списка "${inputValue}" не существует`,
+              listId: "",
             });
           }
 
           return filtered;
         }}
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        id="free-solo-with-text-demo"
-        options={listsNames}
         getOptionLabel={(option) => {
           if (typeof option === "string") {
             return option;
@@ -96,8 +93,6 @@ const ListSelector: React.FC<ParamsType> = (props) => {
           return option.title;
         }}
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
-        className="selector__autocomplete"
-        freeSolo
         renderInput={(params) => (
           <TextField
             {...params}
@@ -105,15 +100,15 @@ const ListSelector: React.FC<ParamsType> = (props) => {
             className="selector__input"
           />
         )}
+        freeSolo
+        selectOnFocus
+        handleHomeEndKeys
+        id="free-solo-with-text-demo"
+        className="selector__autocomplete"
       />
     </StyledListSelector>
   );
 };
-
-interface FilmOptionType {
-  inputValue?: string;
-  title: string;
-}
 
 const StyledListSelector = styled.div`
   display: flex;
@@ -125,7 +120,7 @@ const StyledListSelector = styled.div`
 
     &.Mui-focused {
       color: ${(props) => props.theme.colorValues.black};
-      
+
       font-size: 16px;
 
       top: 0;

@@ -38,11 +38,13 @@ const StyledLayout = styled.div`
   position: relative;
   overflow-x: hidden;
 
+  height: 100vh;
+
   .content {
     width: 100vw;
-    height: 100%;
 
     margin-top: 77px;
+    margin-bottom: 20px;
   }
 `;
 

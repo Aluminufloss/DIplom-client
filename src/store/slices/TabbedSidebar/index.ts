@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { tabbedViewInitialState } from "./initialState";
 
 export const tabbedSidebar = createSlice({
-  name: "tabbedSidebar",
+  name: "tabbedSidebarInfo",
   initialState: tabbedViewInitialState,
   reducers: {
     toggleTabbedSidebarVisibility: (state) => {

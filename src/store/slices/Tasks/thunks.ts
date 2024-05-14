@@ -14,9 +14,9 @@ interface ErrorPayload {
 
 export const changeTaskStatus = createAsyncThunk(
   "tasks/changeTaskStatus",
-  async (options: { taskId: string; status: TaskStatusType }, { rejectWithValue }) => {
+  async (options: { task: ITask, status: TaskStatusType }, { rejectWithValue }) => {
     try {
-      const response = await TasksService.changeTaskStatus(options.taskId, options.status);
+      const response = await TasksService.changeTaskStatus(options.task.taskId, options.status);
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ErrorPayload>;
@@ -59,9 +59,9 @@ export const updateTask = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   "tasks/deleteTask",
-  async (taskId: string, { rejectWithValue }) => {
+  async (options: { taskId: string, listId?: string }, { rejectWithValue }) => {
     try {
-      await TasksService.deleteTask(taskId);
+      await TasksService.deleteTask(options.taskId);
     } catch (err) {
       const error = err as AxiosError<ErrorPayload>;
       return rejectWithValue({

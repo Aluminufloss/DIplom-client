@@ -7,21 +7,22 @@ export async function GET(request: Request) {
   const accessToken = requestHeaders[0].split("=")[1].split(";")[0];
   const refreshToken = requestHeaders[1].split("=")[1].split(";")[0];
 
-  const [todayTasks, userLists] = await Promise.all([
+  const [allTasks, userLists] = await Promise.all([
     getAllTasks({
       accessToken,
-      refreshToken,
+      refreshToken
     }),
     getUserLists({
       accessToken,
-      refreshToken,
+      refreshToken
     }),
   ]);
 
   return NextResponse.json(
     {
-      tasks: todayTasks?.data,
-      lists: userLists?.data,
+      tasks: allTasks,
+      lists: userLists,
+      refreshToken,
       accessToken,
     },
     {

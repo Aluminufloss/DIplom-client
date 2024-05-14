@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components";
 
 import { SectionEnum } from "./models";
-import { TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import getGrouppedTasks from "./utils/getGrouppedTasks";
@@ -12,22 +11,16 @@ import getGrouppedTasks from "./utils/getGrouppedTasks";
 import { setAllTasks } from "@/store/slices/Tasks";
 import { setLists } from "@/store/slices/Lists";
 
-import { ITask } from "@/api/models/Response/Tasks/ITask";
-
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
+import TaskSection from "@/components/UI/TaskSection";
 
-type PropsType = {
-  tasks?: ITask[];
-  lists?: TasksListType[];
-  accessToken?: string;
-};
-
-export const AllTasksSection: React.FC<PropsType> = (props) => {
+export const AllTasksSection: React.FC = async () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
+
   const allTasks = useAppSelector((state) => state.tasks.allTasks);
   const grouppedTasks = getGrouppedTasks(allTasks);
 
@@ -35,42 +28,50 @@ export const AllTasksSection: React.FC<PropsType> = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      dispatch(setAllTasks(props.tasks));
-      dispatch(setLists(props.lists));
+      const allTasksPageResponse = await fetch(
+        "http://localhost:3000/tasks/all/api"
+      );
 
-      if (props.accessToken) {
-        localStorage.setItem("accessToken", props.accessToken);
+      const allTasksPageData = await allTasksPageResponse.json();
+
+      dispatch(setAllTasks(allTasksPageData?.tasks.data));
+      dispatch(setLists(allTasksPageData?.lists.data));
+
+      if (allTasksPageData?.accessToken) {
+        localStorage.setItem("accessToken", allTasksPageData.accessToken);
       }
     })();
-  }, [props]);
+  }, []);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.tasks} />
+      <AddTaskButton />
 
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {
           return <TaskItem key={task.taskId} task={task} />;
         })}
 
-      <AddTaskButton />
+      {!!grouppedTasks?.planned.length && (
+        <TaskSection
+          sectionTitle="Запланированные задачи"
+          tasks={grouppedTasks.planned}
+        />
+      )}
 
       {!!grouppedTasks?.completed.length && (
-        <>
-          <div className="group-separator">Завершённые задачи</div>
-          {grouppedTasks.completed.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Завершённые задачи"
+          tasks={grouppedTasks.completed}
+        />
       )}
 
       {!!grouppedTasks?.expired.length && (
-        <>
-          <div className="group-separator">Просроченные задачи</div>
-          {grouppedTasks.expired.map((task) => {
-            return <TaskItem key={task.taskId} task={task} />;
-          })}
-        </>
+        <TaskSection
+          sectionTitle="Просроченные задачи"
+          tasks={grouppedTasks.expired}
+        />
       )}
     </StyledTaskSection>
   );

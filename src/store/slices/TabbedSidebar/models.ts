@@ -8,4 +8,5 @@ export enum TabEnum {
 	planned = "planned",
 	analytics = "analytics",
 	tasks = "tasks",
+	list = "list",
 }
