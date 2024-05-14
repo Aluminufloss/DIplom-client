@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { usePathname } from "next/navigation";
 
 import { getTodayDay } from "@/utils/getTodayDay";
 import { AppPaths, STATIC_URLS } from "@/utils/constant";
@@ -21,6 +22,7 @@ type PropsType = {
 };
 
 const TabbedSidebar: React.FC<PropsType> = (props) => {
+  const pathName = usePathname();
   const modalState = useAppSelector((state) => state.tabbedSidebar);
   const { handleSelectTab } = useTabbedNavigation();
 
@@ -29,8 +31,8 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
   const today = getTodayDay();
 
   React.useEffect(() => {
-    handleSelectTab();
-  }, []);
+    handleSelectTab(pathName);
+  }, [pathName]);
 
   return (
     <StyledView

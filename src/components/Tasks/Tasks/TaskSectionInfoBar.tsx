@@ -3,6 +3,8 @@
 import React from "react";
 import styled from "styled-components";
 import { format } from "date-fns/format";
+import { setDefaultOptions } from "date-fns";
+import { ru } from "date-fns/locale";
 
 import { SectionEnum } from "./models";
 
@@ -14,14 +16,19 @@ type PropsType = {
 };
 
 export const TaskSectionInfoBar: React.FC<PropsType> = (props) => {
-  const todayDate = format(new Date(), "EEE dd.MM.yyyy");
+  setDefaultOptions({ locale: ru });
+
+  const dateString = format(new Date(), "EEE dd.MM.yyyy");
+  const todayDate = dateString[0].toUpperCase() + dateString.slice(1);
 
   return (
     <StyledTaskSectionInfoBar>
       <p className="info-bar__title">{props.sectionType}</p>
-      {props.listName && <span className="info-bar__list">{props.listName}</span>}
+      {props.listName && (
+        <span className="info-bar__list">{props.listName}</span>
+      )}
       <span className="info-bar__date">{todayDate}</span>
-      <FiltersBlock className="info-bar__filters"/>
+      <FiltersBlock className="info-bar__filters" />
     </StyledTaskSectionInfoBar>
   );
 };
@@ -53,7 +60,7 @@ const StyledTaskSectionInfoBar = styled.div`
       ${(props) => props.theme.typography.fnMedium};
       color: ${(props) => props.theme.colorValues.grey};
 
-			margin-left: 8px;
+      margin-left: 8px;
     }
 
     &__list {

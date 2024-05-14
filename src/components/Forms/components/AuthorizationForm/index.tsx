@@ -61,7 +61,7 @@ const AuthorizationForm: React.FC = () => {
 
       localStorage.setItem("accessToken", response.data.accessToken);
 
-      router.push(AppPaths.tasksToday);
+      router.push(AppPaths.tasksAll);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response && err.response.data) {
         setError(err.response.data.message);
