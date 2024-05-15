@@ -1,4 +1,5 @@
 import $api from "@/axios";
+import { GroupType, TasksListType } from "@/models";
 import { AxiosResponse } from "axios";
 
 type UpdateGroupNameParamsType = {
@@ -19,8 +20,10 @@ export class GroupService {
 
   static async addListToGroup(
     options: GroupListActionsParamsType
-  ): Promise<AxiosResponse<string>> {
-    return await $api.post("/addList/group", { options });
+  ): Promise<AxiosResponse<TasksListType>> {
+    const newList = await $api.post<TasksListType>("/create/list", { title: options.listName, groupId: options.groupId });
+    await $api.post("/addList/group", { groupId: options.groupId, listId: newList.data.listId });
+    return newList;
   }
 
   static async removeListFromGroup(
@@ -35,7 +38,7 @@ export class GroupService {
     return await $api.post("/updateName/group", { options });
   }
 
-  static async createGroup(name: string): Promise<AxiosResponse<string>> {
+  static async createGroup(name: string): Promise<AxiosResponse<GroupType>> {
     return await $api.post("/create/group", { name });
   }
 }
