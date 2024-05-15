@@ -19,6 +19,11 @@ export type GroupType = {
   userId?: string;
 };
 
+export type ListsAndGroupsType = {
+  lists: TasksListType[];
+  groups: GroupType[];
+}
+
 export type TasksAnalyticsType = {
   completed: number;
   active: number;
@@ -65,7 +70,7 @@ export type TasksServerResponseType = {
 };
 
 export type ListsServerResponseType = {
-  data: TasksListType[];
+  data: ListsAndGroupsType;
   accessToken?: string;
 };
 

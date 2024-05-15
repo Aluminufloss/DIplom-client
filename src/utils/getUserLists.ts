@@ -2,7 +2,9 @@ import "server-only";
 import { serverSideFetch } from "./serverSideFetch";
 import { ListsServerResponseType } from "@/models";
 
-const getUserLists = async (options?: {
+//getUserLists
+
+const getUserListsAndGroups = async (options?: {
   accessToken?: string;
   refreshToken?: string;
 }): Promise<ListsServerResponseType | undefined> => {
@@ -13,9 +15,9 @@ const getUserLists = async (options?: {
     body: options,
   });
 
-  const listsData = await response?.json();
+  const data = await response?.json();
 
-  return listsData;
+  return data;
 };
 
-export default getUserLists;
+export default getUserListsAndGroups;

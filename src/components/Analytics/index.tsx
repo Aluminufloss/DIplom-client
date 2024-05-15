@@ -10,6 +10,7 @@ import { setLists } from "@/store/slices/Lists";
 import GraphSection from "./GraphSection";
 import AnalyticsSectionBar from "./AnalyticsSectionBar";
 import StatisticsSection from "./StatisticsSection";
+import { setGroups } from "@/store/slices/Groups";
 
 const AnalyticsSection: React.FC = () => {
   const [data, setData] = React.useState<AnalyticsType>();
@@ -26,7 +27,8 @@ const AnalyticsSection: React.FC = () => {
         await allTasksAnalyticsPageResponse.json();
 
       setData(allTasksAnalyticsPageData.data);
-      dispatch(setLists(allTasksAnalyticsPageData?.lists.data));
+      dispatch(setGroups(allTasksAnalyticsPageData?.groups));
+      dispatch(setLists(allTasksAnalyticsPageData?.lists));
 
       if (allTasksAnalyticsPageData?.accessToken) {
         localStorage.setItem(

@@ -15,6 +15,7 @@ import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import TaskSection from "@/components/UI/TaskSection";
+import { setGroups } from "@/store/slices/Groups";
 
 export const TodayTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
@@ -34,7 +35,8 @@ export const TodayTasksSection: React.FC = () => {
       const todayTasksPageResponseData = await todayTasksPageResponse.json();
 
       dispatch(setTodayTasks(todayTasksPageResponseData?.tasks.data));
-      dispatch(setLists(todayTasksPageResponseData?.lists.data));
+      dispatch(setLists(todayTasksPageResponseData?.lists));
+      dispatch(setGroups(todayTasksPageResponseData?.groups));
 
       if (todayTasksPageResponseData?.accessToken) {
         localStorage.setItem(

@@ -1,19 +1,19 @@
 import { NextResponse } from "next/server";
 
 import getAllTasksAnalytics from "@/utils/getAllTasksAnalytics";
-import getUserLists from "@/utils/getUserLists";
+import getUserListsAndGroups from "@/utils/getUserLists";
 
 export async function GET(request: Request) {
   const requestHeaders = request.headers.getSetCookie();
   const accessToken = requestHeaders[0].split("=")[1].split(";")[0];
   const refreshToken = requestHeaders[1].split("=")[1].split(";")[0];
 
-  const [allTasksAnalytics, userLists] = await Promise.all([
+  const [allTasksAnalytics, userListsAndGroups] = await Promise.all([
     getAllTasksAnalytics({
       accessToken,
       refreshToken,
     }),
-    getUserLists({
+    getUserListsAndGroups({
       accessToken,
       refreshToken,
     }),
@@ -22,7 +22,8 @@ export async function GET(request: Request) {
   return NextResponse.json(
     {
       data: allTasksAnalytics?.data,
-      lists: userLists,
+      lists: userListsAndGroups?.data.lists,
+      groups: userListsAndGroups?.data.groups,
       refreshToken,
       accessToken,
     },

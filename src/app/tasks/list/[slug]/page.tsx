@@ -1,22 +1,20 @@
 import { notFound } from "next/navigation";
 
-import getUserLists from "@/utils/getUserLists";
-
 import ListTaskSection from "@/components/Tasks/Tasks/LIstTaskSection";
-import { getUserGroups } from "@/utils/getUserGroups";
+import getUserListsAndGroups from "@/utils/getUserLists";
 
 export default async function ListPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const userListsResponse = await getUserLists();
+  const userListsResponse = await getUserListsAndGroups();
 
   if (!userListsResponse) {
     notFound();
   }
 
-  const userLists = userListsResponse.data;
+  const userLists = userListsResponse.data.lists;
 
   const listById = userLists.find((list) => list.listId === params.slug);
 
@@ -24,12 +22,12 @@ export default async function ListPage({
     notFound();
   }
 
-  const { groups, lists } = await getUserGroups(userLists);
+  const userGroups = userListsResponse.data.groups;
 
   return (
     <ListTaskSection
-      lists={lists}
-      groups={groups}
+      lists={userLists}
+      groups={userGroups}
       listId={listById.listId}
       listName={listById.title}
     />
