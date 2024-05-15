@@ -2,25 +2,43 @@
 
 import styled, { useTheme } from "styled-components";
 import * as React from "react";
-import { PieChart } from '@mui/x-charts/PieChart';
 
-const GraphSection: React.FC = () => {
+import { GraphSectionType, TasksAnalyticsType } from "@/models";
+
+import { PieChart } from "@mui/x-charts/PieChart";
+import { makeGraphSections } from "./utils/makeGraphSections";
+
+type PropsTYpe = {
+  tasksInfo?: TasksAnalyticsType;
+};
+
+const GraphSection: React.FC<PropsTYpe> = (props) => {
+  const [graphSections, setGraphSections] = React.useState<GraphSectionType[]>(
+    []
+  );
   const theme = useTheme();
+
+  React.useEffect(() => {
+    if (props.tasksInfo) {
+      const graphSectionsData = makeGraphSections(props.tasksInfo);
+      setGraphSections(graphSectionsData);
+    }
+  }, [props.tasksInfo]);
 
   return (
     <StyledGraphSection>
       <PieChart
         series={[
           {
-            data: [
-              { id: 0, value: 10 },
-              { id: 1, value: 15 },
-              { id: 2, value: 200 },
-            ],
-            highlightScope: { faded: 'global', highlighted: 'item' },
-            faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+            data: graphSections,
+            highlightScope: { faded: "global", highlighted: "item" },
+            faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
           },
         ]}
+        slotProps={{
+          legend: { hidden: true },
+        }}
+        colors={[theme.colorValues.green, theme.colorValues.primary, theme.colorValues.error]}
         margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
         width={700}
         height={450}
@@ -38,7 +56,7 @@ const StyledGraphSection = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: ${props => props.theme.colorValues.sidebarWhite};
+  background-color: ${(props) => props.theme.colorValues.sidebarWhite};
   border-radius: 5px;
 
   padding: 24px;
