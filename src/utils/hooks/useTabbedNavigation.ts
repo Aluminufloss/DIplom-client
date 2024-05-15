@@ -11,7 +11,12 @@ const useTabbedNavigation = () => {
   const dispatch = useAppDispatch();
 
   const handleSelectTab = React.useCallback((pathname: string) => {
-    const path = pathname.slice(1);;
+    const path = pathname.slice(1);
+
+    if (path.includes("analytics")) {
+      dispatch(setSelectedTab(TabEnum.analytics));
+      return;
+    }
 
     switch (path) {
       case AppRoutes.tasksToday:
@@ -19,9 +24,6 @@ const useTabbedNavigation = () => {
         break;
       case AppRoutes.tasksPlanned:
         dispatch(setSelectedTab(TabEnum.planned));
-        break;
-      case AppRoutes.tasksAnalytics:
-        dispatch(setSelectedTab(TabEnum.analytics));
         break;
       case AppRoutes.tasksAll:
         dispatch(setSelectedTab(TabEnum.tasks));
