@@ -37,6 +37,11 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
           return;
         }
 
+        if (values.password !== values.passwordAgain) {
+          setError("Пароли не совпадают");
+          return;
+        }
+
         await AuthService.changePassword(values.password, urlString);
 
         router.push(AppPaths.login);
@@ -102,7 +107,9 @@ const ChangePasswordForm: React.FC<PropsType> = (props) => {
                 className="form__show-passwords--checkbox"
                 onClick={() => setIsPasswordsVisible((prev) => !prev)}
               />
-              <span className="form__show-passwords--text">Показать пароли</span>
+              <span className="form__show-passwords--text">
+                Показать пароли
+              </span>
             </div>
 
             <PrimaryButton

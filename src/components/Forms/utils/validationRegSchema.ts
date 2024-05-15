@@ -2,25 +2,25 @@ import * as Yup from "yup";
 
 export const validationRegSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Email must be a valid")
-    .required("Email is Required."),
+    .email("Некорректная почта.")
+    .required("Данное поле необходимо."),
   username: Yup.string()
-    .required("Username is Required.")
-    .min(5, "Username is too Short.")
-    .max(16, "Username is too Long.")
+    .required("Данное поле необходимо.")
+    .min(5, "Логин слишком короткий.")
+    .max(16, "Логин слишком длинный.")
     .matches(
       /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-      "Username can only contain Latin letters."
+      "Логин может содержать только латинские буквы."
     ),
   password: Yup.string()
-    .required("Password is Required.")
-    .min(5, "Password is too short")
-    .max(30, "Password is too long")
+    .required("Данное поле необходимо.")
+    .min(5, "Пароль слишком короткий.")
+    .max(30, "Пароль слишком длинный.")
     .matches(
       /[a-zA-Z0-9]/,
-      "Password can only contain Latin letters and numbers."
+      "Пароли может содержать только латинские буквы и цифры."
     ),
   passwordAgain: Yup.string()
-    .required("Confirm your password")
-    .oneOf([Yup.ref("password")], "Passwords must match"),
+    .required("Подтвердите пароль.")
+    .oneOf([Yup.ref("password")], "Пароли должны совпадать."),
 });
