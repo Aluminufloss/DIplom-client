@@ -72,7 +72,7 @@ const TabbedSidebar: React.FC<PropsType> = (props) => {
         className="tab-item"
         isActiveTab={modalState.currentTab === TabEnum.analytics}
         onCLick={() => dispatch(setSelectedTab(TabEnum.analytics))}
-        href={AppPaths.tasksAnalytics}
+        href={AppPaths.analyticsAll}
       >
         <AnalyticsIcon />
       </TabItem>

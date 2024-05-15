@@ -16,7 +16,7 @@ import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import TaskSection from "@/components/UI/TaskSection";
 
-export const AllTasksSection: React.FC = async () => {
+export const AllTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
@@ -47,7 +47,6 @@ export const AllTasksSection: React.FC = async () => {
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.tasks} />
       <AddTaskButton />
-
       {!!grouppedTasks?.active.length &&
         grouppedTasks.active.map((task) => {
           return <TaskItem key={task.taskId} task={task} />;
