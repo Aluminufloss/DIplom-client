@@ -19,6 +19,40 @@ export type GroupType = {
   userId?: string;
 };
 
+export type TasksAnalyticsType = {
+  completed: number;
+  active: number;
+  expired: number;
+  tasksLength: number;
+};
+
+export type priorityAnalyticsType = {
+  low: number;
+  medium: number;
+  high: number;
+};
+
+export type categoriesAnalyticsType = {
+  personal: number;
+  work: number;
+  study: number;
+  other: number;
+  travelling: number;
+  without: number;
+};
+
+export type AnalyticsType = {
+  tasksAnalytics: TasksAnalyticsType;
+  priorityAnalytics: priorityAnalyticsType;
+  categoriesAnalytics: categoriesAnalyticsType;
+};
+
+export type GraphSectionType = {
+  id: number;
+  value: number;
+  label: string;
+}
+
 export type UserResponseType = {
   data: IUser;
   accessToken?: string;
@@ -32,6 +66,11 @@ export type TasksServerResponseType = {
 
 export type ListsServerResponseType = {
   data: TasksListType[];
+  accessToken?: string;
+};
+
+export type AnalyticsServerResponseType = {
+  data: AnalyticsType;
   accessToken?: string;
 };
 
@@ -49,9 +88,9 @@ export type PageDataType = {
 };
 
 export enum PagesEnum {
-	"today" = "today",
-	"all" = "all",
-	"list" = "list",	
-	"analytics" = "analytics",
-	"planned" = "planned",
+  "today" = "today",
+  "all" = "all",
+  "list" = "list",
+  "analytics" = "analytics",
+  "planned" = "planned",
 }
