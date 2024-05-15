@@ -4,14 +4,12 @@ import styled from "styled-components";
 import ReusableImage from "@/components/UI/image";
 import { STATIC_URLS } from "@/utils/constant";
 import Lists from "../Lists";
-import { TasksListType } from "@/models";
+import { GroupType } from "@/models";
 
 type PropsType = {
-  groupId: string;
-  title: string;
-  lists: TasksListType[];
+  group: GroupType;
   className?: string;
-  onAddListToGroup: (savingMode: "list" | "group") => void;
+  onAddListToGroup: () => void;
   onClick: (buttonPosition: number, groupId: string) => void;
 };
 
@@ -22,13 +20,9 @@ const GroupItem: React.FC<PropsType> = (props) => {
 
   const handleDeleteGroup = React.useCallback((event: React.MouseEvent) => {
     const itemOffset = itemRef.current?.offsetTop || 0;
-    props.onClick(itemOffset + ITEM_HEIGHT, props.groupId);
+    props.onClick(itemOffset + ITEM_HEIGHT, props.group?.id);
     event.stopPropagation();
   }, []);
-
-  const handleAddListToGroup = React.useCallback(() => {
-    
-  }, [props.groupId]);
 
   return (
     <div className="wrapper">
@@ -38,7 +32,7 @@ const GroupItem: React.FC<PropsType> = (props) => {
           alt="Group icon"
           className="icon"
         />
-        <p className="title">{props.title}</p>
+        <p className="title">{props.group.name}</p>
         <div className="group__actions">
           <ReusableImage
             width={20}
@@ -53,12 +47,12 @@ const GroupItem: React.FC<PropsType> = (props) => {
             height={20}
             src={`${STATIC_URLS.SVG_ICONS}/plus.svg`}
             alt="Add list icon"
-            onClick={handleAddListToGroup}
+            onClick={() => props.onAddListToGroup()}
             className="icon__plus"
           />
         </div>
       </StyledGroupItem>
-      <Lists lists={props.lists} />
+      <Lists lists={props.group.lists} isInsideGroup/>
     </div>
   );
 };
@@ -127,7 +121,8 @@ const StyledGroupItem = styled.li`
   &:hover {
     background-color: ${(props) => props.theme.colorValues.lightGrey};
 
-    .icon__delete, .icon__plus {
+    .icon__delete,
+    .icon__plus {
       opacity: 1;
     }
   }
