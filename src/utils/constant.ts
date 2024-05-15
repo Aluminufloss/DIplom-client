@@ -24,9 +24,10 @@ export enum AppRoutes {
   tasksToday = "tasks/today",
   tasksAll = "tasks/all",
   tasksPlanned = "tasks/planned",
-  tasksAnalytics = "tasks/analytics",
   sendChangePasswordLink = "changePassword",
   list = "tasks/list",
+  analyticsAll = "tasks/analytics/all",
+  analytics = "tasks/analytics",
 }
 
 export enum AppPaths {
@@ -35,9 +36,10 @@ export enum AppPaths {
   sendChangePasswordLink = `${CLIENT_URL}/${AppRoutes.sendChangePasswordLink}`,
   tasksToday = `${CLIENT_URL}/${AppRoutes.tasksToday}`,
   tasksPlanned = `${CLIENT_URL}/${AppRoutes.tasksPlanned}`,
-  tasksAnalytics = `${CLIENT_URL}/${AppRoutes.tasksAnalytics}`,
   tasksAll = `${CLIENT_URL}/${AppRoutes.tasksAll}`,
   list = `${CLIENT_URL}/${AppRoutes.list}`,
+  analytics = `${CLIENT_URL}/${AppRoutes.analytics}`,
+  analyticsAll = `${CLIENT_URL}/${AppRoutes.analyticsAll}`,
 }
 
 export enum ApiPaths {
@@ -60,7 +62,7 @@ export const Categories = [
   "Study",
   "Home",
   "Travelling",
-  "Other",
+  "Without",
 ];
 
 export const TranslatedCategories = [
@@ -69,5 +71,5 @@ export const TranslatedCategories = [
   "Учеба",
   "Дом",
   "Путешествия",
-  "Другое",
+  "Без категории",
 ];
