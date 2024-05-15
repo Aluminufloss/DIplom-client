@@ -1,9 +1,21 @@
 "use client";
 
 import styled, { useTheme } from "styled-components";
+
+import { getAnalyticsPercent } from "@/utils/getAnalyticsPercent";
+
 import { PieChart } from "@mui/x-charts/PieChart";
 
-const ProgressBlock: React.FC = () => {
+type PropsType = {
+  tasksLength?: number;
+  completedTasksLength?: number;
+};
+
+const ProgressBlock: React.FC<PropsType> = (props) => {
+  const getCompletedPercent: number = getAnalyticsPercent(
+    props.completedTasksLength,
+    props.tasksLength
+  );
   const theme = useTheme();
 
   return (
@@ -14,8 +26,8 @@ const ProgressBlock: React.FC = () => {
           series={[
             {
               data: [
-                { id: 0, value: 10 },
-                { id: 1, value: 30 },
+                { id: 0, value: props.tasksLength ?? 0 },
+                { id: 1, value: props.completedTasksLength ?? 0 },
               ],
               innerRadius: 88,
               startAngle: 90,
@@ -29,7 +41,9 @@ const ProgressBlock: React.FC = () => {
           className="graph"
         />
         <div className="progress__description">
-          <span className="progress__description--percent">75%</span>
+          <span className="progress__description--percent">
+            {getCompletedPercent}%
+          </span>
           <span className="progress__description--text">Выполнено</span>
         </div>
       </div>
@@ -46,6 +60,7 @@ const StyledProgressBlock = styled.div`
   max-height: 300px;
 
   padding: 20px 24px;
+  margin-bottom: 20px;
 
   background-color: ${(props) => props.theme.colorValues.white};
   border-radius: 5px;
@@ -92,6 +107,10 @@ const StyledProgressBlock = styled.div`
       ${(props) => props.theme.typography.fnTitle2}
       ${(props) => props.theme.typography.fnSemiBold};
       color: ${(props) => props.theme.colorValues.black};
+
+      align-self: center;
+
+      margin-bottom: 16px;
     }
   }
 `;
