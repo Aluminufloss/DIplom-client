@@ -33,7 +33,6 @@ const AddNewListButton: React.FC<PropsType> = (props) => {
         <ReusableImage
           src={`${STATIC_URLS.SVG_ICONS}/group.svg`}
           alt="Создать новую группу"
-          onClick={handleAddGroup}
         />
       </div>
     </StyledButton>

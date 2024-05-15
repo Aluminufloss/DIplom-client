@@ -6,7 +6,7 @@ import { GroupService } from "@/api/services/GroupService";
 import { ErrorPayload, ServerErrorMessage } from "../Lists/models";
 
 export const addGroup = createAsyncThunk(
-  "lists/addList",
+  "groups/addGroup",
   async (name: string, { rejectWithValue }) => {
     try {
       const response = await GroupService.createGroup(name);
@@ -21,7 +21,7 @@ export const addGroup = createAsyncThunk(
 );
 
 export const updateGroupName = createAsyncThunk(
-  "lists/addList",
+  "groups/updateGroupName",
   async (options: { name: string; groupId: string }, { rejectWithValue }) => {
     try {
       const response = await GroupService.updateGroupName(options);
@@ -36,7 +36,7 @@ export const updateGroupName = createAsyncThunk(
 );
 
 export const removeListFromGroup = createAsyncThunk(
-  "lists/addList",
+  "groups/removeListFromGroup",
   async (options: { groupId: string; listId: string }, { rejectWithValue }) => {
     try {
       const response = await GroupService.removeListFromGroup(options);
@@ -51,7 +51,7 @@ export const removeListFromGroup = createAsyncThunk(
 );
 
 export const addListToGroup = createAsyncThunk(
-  "lists/addList",
+  "groups/addListToGroup",
   async (options: { groupId: string; listName: string }, { rejectWithValue }) => {
     try {
       const response = await GroupService.addListToGroup(options);
@@ -66,7 +66,7 @@ export const addListToGroup = createAsyncThunk(
 );
 
 export const deleteGroup = createAsyncThunk(
-  "lists/deleteList",
+  "groups/deleteGroup",
   async (groupId: string, { rejectWithValue }) => {
     try {
       const response = await GroupService.deleteGroup(groupId);
