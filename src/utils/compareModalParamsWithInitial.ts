@@ -8,7 +8,8 @@ export const compareModalParamsWithInitial = (
   const isDescriptionsEqual = newTaskInfo.description === initialParams.description;
   const isCategoriesEqual = newTaskInfo.category === initialParams.category;
   const isPrioritiesEqual = newTaskInfo.priority === initialParams.priority;
-  const isListsEqual = newTaskInfo.listId === initialParams.listId;
+  const isListsEqual = newTaskInfo.listId?.length === initialParams.listId?.length;
+  const isPlannedDataEqual = newTaskInfo.plannedDate === initialParams.plannedDate;
 
   const isRepeatDaysEqual = newTaskInfo.repeatDays.some((item, index) => {
     return item.isSelected !== initialParams.repeatDays[index].isSelected;
@@ -20,6 +21,7 @@ export const compareModalParamsWithInitial = (
     isCategoriesEqual &&
     isPrioritiesEqual &&
     !isRepeatDaysEqual &&
+    isPlannedDataEqual &&
     isListsEqual
   );
 }

@@ -2,8 +2,6 @@ import "server-only";
 import { serverSideFetch } from "./serverSideFetch";
 import { ListsServerResponseType } from "@/models";
 
-//getUserLists
-
 const getUserListsAndGroups = async (options?: {
   accessToken?: string;
   refreshToken?: string;
