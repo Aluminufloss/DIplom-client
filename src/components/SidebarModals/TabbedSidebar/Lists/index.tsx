@@ -1,11 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { useParams, useRouter } from "next/navigation";
 
 import { TasksListType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { AppPaths } from "@/utils/constant";
-import cn from "classnames";
 
 import { deleteList } from "@/store/slices/Lists/thunks";
 import { openSnackbar } from "@/store/slices/Snackbar";
@@ -50,13 +48,23 @@ const Lists: React.FC<PropsType> = (props) => {
       });
     setIsDeleteListButtonVisible(false);
 
+    dispatch(
+      openSnackbar({
+        title: "Успешно",
+        message: "Список был успешно удалён.",
+        type: "success",
+      })
+    );
+
     if (currentListId === url.slug) {
       router.push(AppPaths.tasksToday);
     }
   }, [currentListId, url.slug]);
 
   return (
-    <StyledLists className={cn(props.className, props.isInsideGroup && "list__inside-group")}>
+    <ul
+      className={props.className}
+    >
       {!!props.lists?.length &&
         props.lists.map((list) => {
           return (
@@ -64,6 +72,7 @@ const Lists: React.FC<PropsType> = (props) => {
               key={list.listId}
               title={list.title}
               isActiveTab={url.slug === list.listId}
+              isInsideGroup={props.isInsideGroup}
               listId={list.listId}
               onClick={handleShowModal}
             />
@@ -75,27 +84,8 @@ const Lists: React.FC<PropsType> = (props) => {
         handleHideButton={() => setIsDeleteListButtonVisible(false)}
         handleDeleteList={handleDeleteList}
       />
-    </StyledLists>
+    </ul>
   );
 };
-
-const StyledLists = styled.ul`
-  position: relative;
-  height: 100%;
-  overflow-y: scroll;
-
-  & {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    overflow-y: scroll;
-  }
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .list__inside-group {
-    
-  }
-`;
 
 export default Lists;

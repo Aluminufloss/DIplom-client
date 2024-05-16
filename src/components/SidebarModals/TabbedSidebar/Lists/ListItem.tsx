@@ -9,6 +9,7 @@ type PropsType = {
   title: string;
   isActiveTab: boolean;
   listId: string;
+  isInsideGroup?: boolean;
   className?: string;
   onClick: (buttonPosition: number, listId: string) => void;
 };
@@ -30,6 +31,7 @@ const ListItem: React.FC<PropsType> = (props) => {
     <StyledListItem
       className={props.className}
       $isActiveTab={props.isActiveTab}
+      $isInsideGroup={props.isInsideGroup}
       ref={itemRef}
       onClick={() => router.push(`${AppPaths.list}/${props.listId}`)}
     >
@@ -40,9 +42,7 @@ const ListItem: React.FC<PropsType> = (props) => {
         height={24}
         className="icon"
       />
-      <p className="title">
-        {props.title}
-      </p>
+      <p className="title">{props.title}</p>
       <ReusableImage
         width={20}
         height={20}
@@ -55,7 +55,10 @@ const ListItem: React.FC<PropsType> = (props) => {
   );
 };
 
-const StyledListItem = styled.li<{ $isActiveTab: boolean }>`
+const StyledListItem = styled.li<{
+  $isActiveTab: boolean;
+  $isInsideGroup?: boolean;
+}>`
   width: 100%;
   position: relative;
 
@@ -74,6 +77,8 @@ const StyledListItem = styled.li<{ $isActiveTab: boolean }>`
         : props.theme.colorValues.lightGrey};
 
   padding: 5px 8px;
+
+  padding-left: ${props => props.$isInsideGroup ? "20px" : "8px"};
 
   transition: all 0.3s ease;
 
