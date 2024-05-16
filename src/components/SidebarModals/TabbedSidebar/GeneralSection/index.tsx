@@ -29,36 +29,57 @@ const GeneralSection: React.FC = () => {
     setInputValue(event.target.value);
   };
 
-  const handleSave = React.useCallback(() => {
+  const handleSaveGroup = React.useCallback(() => {
     if (inputValue) {
-      const hasItem =
-        savingMode === "list"
-          ? listsInfo.lists.some((list) => list.title === inputValue)
-          : groupsInfo.groups.some((group) => group.name === inputValue);
+      const hasItem = groupsInfo.groups.some(
+        (group) => group.name === inputValue
+      );
 
       if (hasItem) {
         dispatch(
           openSnackbar({
             title: "Ошибка",
-            message:
-              savingMode === "list"
-                ? "Список с таким названием уже существует"
-                : "Группа с таким названием уже существует",
+            message: "Группа с таким названием уже существует",
             type: "error",
           })
         );
       } else {
-        if (savingMode === "list") {
-          dispatch(addList(inputValue));
-        } else {
-          dispatch(addGroup(inputValue));
-        }
+        dispatch(addGroup(inputValue));
       }
     }
 
     setIsInputVisible(false);
     setInputValue("");
-  }, [inputValue, listsInfo.lists, groupsInfo.groups, savingMode]);
+  }, [groupsInfo.groups, inputValue]);
+
+  const handleSaveList = React.useCallback(() => {
+    if (inputValue) {
+      const hasItem = listsInfo.lists.some((list) => list.title === inputValue);
+
+      if (hasItem) {
+        dispatch(
+          openSnackbar({
+            title: "Ошибка",
+            message: "Список с таким названием уже существует",
+            type: "error",
+          })
+        );
+      } else {
+        dispatch(addList(inputValue));
+      }
+    }
+
+    setIsInputVisible(false);
+    setInputValue("");
+  }, [listsInfo.lists, inputValue]);
+
+  const handleSave = React.useCallback(() => {
+    if (savingMode === "list") {
+      handleSaveList();
+    } else if (savingMode === "group") {
+      handleSaveGroup();
+    }
+  }, [handleSaveList, handleSaveGroup, savingMode]);
 
   const handleClickOnEnter = React.useCallback(
     (ev: React.KeyboardEvent<HTMLInputElement>) => {
@@ -100,7 +121,9 @@ const GeneralSection: React.FC = () => {
           />
         </div>
       )}
-      <Groups groups={groupsInfo.groups} onSetInputVisible={onSetInputVisible}/>
+      <Groups
+        groups={groupsInfo.groups}
+      />
       <Lists lists={listsInfo.lists} />
     </StyledGeneralSection>
   );

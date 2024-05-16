@@ -11,6 +11,7 @@ import GraphSection from "./GraphSection";
 import AnalyticsSectionBar from "./AnalyticsSectionBar";
 import StatisticsSection from "./StatisticsSection";
 import { setGroups } from "@/store/slices/Groups";
+import EmptySection from "./EmptySection";
 
 const AnalyticsSection: React.FC = () => {
   const [data, setData] = React.useState<AnalyticsType>();
@@ -43,7 +44,11 @@ const AnalyticsSection: React.FC = () => {
     <StyledAnalyticsSection>
       <AnalyticsSectionBar />
       <div className="content--analytics">
-        <GraphSection tasksInfo={data?.tasksAnalytics} />
+        {!!data?.tasksAnalytics.tasksLength ? (
+          <GraphSection tasksInfo={data.tasksAnalytics} />
+        ) : (
+          <EmptySection />
+        )}
         <StatisticsSection data={data} />
       </div>
     </StyledAnalyticsSection>
