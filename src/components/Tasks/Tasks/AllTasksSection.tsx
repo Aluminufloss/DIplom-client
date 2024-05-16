@@ -16,14 +16,17 @@ import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import TaskSection from "@/components/UI/TaskSection";
 import { setGroups } from "@/store/slices/Groups";
+import AllTasksListSection from "./AllTasksListSection";
 
 export const AllTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
 
-  const allTasks = useAppSelector((state) => state.tasks.allTasks);
-  const grouppedTasks = getGrouppedTasks(allTasks);
+  const filteredTasks = useAppSelector((state) => state.tasks.filteredTasks);
+  const groupInfo = useAppSelector((state) => state.groups);
+  const listInfo = useAppSelector((state) => state.lists);
+  const grouppedTasks = getGrouppedTasks(filteredTasks);
 
   const dispatch = useAppDispatch();
 
@@ -74,6 +77,15 @@ export const AllTasksSection: React.FC = () => {
           tasks={grouppedTasks.expired}
         />
       )}
+
+      {!!listInfo.lists.length && (
+        <AllTasksListSection lists={listInfo.lists} />
+      )}
+
+      {!!groupInfo.groups.length &&
+        groupInfo.groups.map((group) => {
+          return <AllTasksListSection lists={group.lists} />;
+        })}
     </StyledTaskSection>
   );
 };
