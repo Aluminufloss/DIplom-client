@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import {
@@ -7,6 +8,7 @@ import {
   STATIC_URLS,
   TranslatedCategories,
 } from "@/utils/constant";
+
 import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
@@ -30,6 +32,19 @@ const filter = createFilterOptions<CategoryOptionType>();
 const CategorySelector: React.FC<ParamsType> = (props) => {
   const [value, setValue] = React.useState<CategoryOptionType | null>(null);
 
+  React.useEffect(() => {
+    const categoryTitle = TranslatedCategories.findIndex((item) => item === props.value);
+
+    console.log()
+
+    if (categoryTitle !== -1) {
+      setValue({
+        title: TranslatedCategories[categoryTitle],
+        value: Categories[categoryTitle],
+      });
+    }
+  }, [props.value]);
+
   return (
     <StyledCategorySelector className={props.className}>
       <div className="selector__main-title">
@@ -44,16 +59,20 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
       </div>
       <Autocomplete
         value={value}
-        onChange={(event, newValue) => {
+        defaultValue={{
+          title: TranslatedCategories[TranslatedCategories.length - 1],
+          value: TranslatedCategories[TranslatedCategories.length - 1],
+        }}
+        onChange={(_, newValue) => {
           if (typeof newValue === "string") {
             setValue({
               title: newValue,
               value: newValue,
             });
-          } else if (newValue && newValue.inputValue) {
+          } else if (newValue && newValue.title) {
             setValue({
-              title: newValue.inputValue,
-              value: newValue.inputValue,
+              title: newValue.title,
+              value: newValue.value,
             });
           } else {
             setValue(newValue);
