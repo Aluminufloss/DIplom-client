@@ -14,7 +14,7 @@ export const taskModalInitState: TaskModalStoreType = {
       priority: "low",
       listId: [],
       taskId: "",
-      category: "",
+      category: "Without",
     },
   },
 };

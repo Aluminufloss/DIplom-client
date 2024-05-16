@@ -14,19 +14,53 @@ import { changeTaskStatus, createTask, deleteTask, updateTask } from "./thunks";
 
 import { TasksInitialState } from "./initialState";
 
-
 const Tasks = createSlice({
   name: "tasks",
   initialState: TasksInitialState,
   reducers: {
     setTodayTasks: (state, action) => {
       state.todayTasks = action.payload;
+      state.filteredTasks = action.payload;
     },
     setPlannedTasks: (state, action) => {
       state.plannedTasks = action.payload;
+      state.filteredTasks = action.payload;
     },
     setAllTasks: (state, action) => {
       state.allTasks = action.payload;
+      state.filteredTasks = action.payload;
+    },
+
+    searchTasks: (
+      state,
+      action: PayloadAction<{
+        searchValue: string;
+        pageType: PagesEnum;
+        listId?: string;
+      }>
+    ) => {
+      const { searchValue, pageType } = action.payload;
+      const { todayTasks, plannedTasks, allTasks } = state;
+
+      const filterTasks = (tasks: ITask[]) =>
+        tasks.filter(
+          (task) =>
+            task.title.toLowerCase().startsWith(searchValue.toLowerCase())
+        );
+
+      switch (pageType) {
+        case PagesEnum.today:
+          state.filteredTasks = filterTasks(todayTasks);
+          break;
+        case PagesEnum.planned:
+          state.filteredTasks = filterTasks(plannedTasks);
+          break;
+        case PagesEnum.all:
+          state.filteredTasks = filterTasks(allTasks);
+          break;
+        default:
+          break;
+      }
     },
 
     sortTasksByPriority: (
@@ -275,7 +309,6 @@ const Tasks = createSlice({
         const task = action.payload;
 
         if (task.listId?.length !== 3) {
-          console.log("yes");
           const plannedDate = task.plannedDate;
 
           if (isDatesEqual(new Date(plannedDate), new Date())) {
@@ -362,6 +395,7 @@ export const {
   sortTasksByDate,
   sortTasksByPriority,
   sortTasksByTitle,
+  searchTasks,
 } = Tasks.actions;
 
 export default Tasks.reducer;
