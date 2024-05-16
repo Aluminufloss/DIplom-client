@@ -61,7 +61,12 @@ const TaskModal: React.FC = () => {
         return;
       }
 
-      if (compareModalParamsWithInitial(values.taskInfo, initialParamsRef.current.taskInfo)) {
+      if (
+        compareModalParamsWithInitial(
+          values.taskInfo,
+          initialParamsRef.current.taskInfo
+        )
+      ) {
         dispatch(resetModalState());
         return;
       }
@@ -188,7 +193,6 @@ const TaskModal: React.FC = () => {
     );
     setIsActionsModalVisible(false);
   }, [modalInfo.modalParams.taskInfo.taskId]);
-
   return (
     <>
       <Formik
@@ -246,7 +250,11 @@ const TaskModal: React.FC = () => {
                 <ListSelector
                   className="modal__list"
                   setFieldValue={setFieldValue}
-                  value={values.taskInfo.listId?.[0]}
+                  value={
+                    values.taskInfo.listId?.length === 1
+                      ? values.taskInfo.listId[0]
+                      : ""
+                  }
                 />
                 <CategorySelector
                   setFieldValue={setFieldValue}
@@ -292,14 +300,14 @@ const StyledModal = styled(Form)<{
   $isModalVisible: boolean;
   $isActionsModalVisible?: boolean;
 }>`
-  position: absolute;
+  position: fixed;
   top: ${(props) => (props.$isModalVisible ? "3%" : "-100vh")};
   right: 50%;
   transform: translateX(50%);
 
   width: 100%;
   max-width: 840px;
-  max-height: 90vh;
+  max-height: 95vh;
 
   z-index: 300;
 
@@ -384,10 +392,12 @@ const StyledModal = styled(Form)<{
 `;
 
 const StyledOverlay = styled.div`
-  position: absolute;
+  position: fixed;
 
   top: 0;
   left: 0;
+  bottom: 0;
+  right: 0;
 
   width: 100vw;
   height: 100vh;
