@@ -29,7 +29,9 @@ const filter = createFilterOptions<ListOptionType>();
 
 const ListSelector: React.FC<ParamsType> = (props) => {
   const listsInfo = useAppSelector((state) => state.lists.lists);
+  const groupInfo = useAppSelector((state) => state.groups.groups);
   const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
+  const [currentList, setCurrentList] = React.useState({} as ListOptionType);
 
   React.useEffect(() => {
     (async () => {
@@ -40,9 +42,26 @@ const ListSelector: React.FC<ParamsType> = (props) => {
         };
       });
 
+      groupInfo?.forEach((group) => {
+        group.lists?.forEach((list) => {
+          listsNames.push({
+            title: list.title,
+            listId: list.listId,
+          });
+        });
+      });
+
+      const currentList = listsNames.find(
+        (list) => list.listId === props.value
+      );
+
+      setCurrentList({
+        title: currentList?.title ?? "",
+        listId: props.value ?? "",
+      });
       setListsNames(listsNames);
     })();
-  }, [listsInfo]);
+  }, [listsInfo, groupInfo, props.value]);
 
   return (
     <StyledListSelector className={props.className}>
@@ -58,12 +77,19 @@ const ListSelector: React.FC<ParamsType> = (props) => {
       </div>
       <Autocomplete
         options={listsNames}
-        value={props.value}
-        onChange={(event, newValue) => {
+        value={{
+          title: currentList?.title ?? "",
+          listId: props.value ?? "",
+        }}
+        defaultValue={{
+          title: "",
+          listId: "",
+        }}
+        onChange={(_, newValue) => {
           if (newValue) {
-            props.setFieldValue("taskInfo.listId", newValue.listId);
+            props.setFieldValue("taskInfo.listId", [newValue.listId]);
           } else {
-            props.setFieldValue("taskInfo.listId", undefined);
+            props.setFieldValue("taskInfo.listId", []);
           }
         }}
         filterOptions={(options, params) => {
