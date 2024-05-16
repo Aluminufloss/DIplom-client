@@ -10,6 +10,7 @@ import getGrouppedTasks from "./utils/getGrouppedTasks";
 
 import { setLists } from "@/store/slices/Lists";
 import { setPlannedTasks } from "@/store/slices/Tasks";
+import { setGroups } from "@/store/slices/Groups";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
@@ -20,7 +21,7 @@ export const PlannedTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
-  const plannedTasks = useAppSelector((state) => state.tasks.plannedTasks);
+  const filteredTasks = useAppSelector((state) => state.tasks.filteredTasks);
 
   const dispatch = useAppDispatch();
 
@@ -34,7 +35,8 @@ export const PlannedTasksSection: React.FC = () => {
         await plannedTasksPageResponse.json();
 
       dispatch(setPlannedTasks(plannedTasksPageResponseData?.tasks.data));
-      dispatch(setLists(plannedTasksPageResponseData?.lists.data));
+      dispatch(setLists(plannedTasksPageResponseData?.lists));
+      dispatch(setGroups(plannedTasksPageResponseData?.groups));
 
       if (plannedTasksPageResponseData?.accessToken) {
         localStorage.setItem(
@@ -45,9 +47,7 @@ export const PlannedTasksSection: React.FC = () => {
     })();
   }, []);
 
-  const grouppedTasks = getGrouppedTasks(plannedTasks);
-
-  console.log(grouppedTasks);
+  const grouppedTasks = getGrouppedTasks(filteredTasks);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>

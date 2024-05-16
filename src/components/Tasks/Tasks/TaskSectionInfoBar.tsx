@@ -12,6 +12,7 @@ import FiltersBlock from "@/components/FiltersBlock";
 
 type PropsType = {
   sectionType: SectionEnum;
+  isInsideAllTasks?: boolean;
   listName?: string;
 };
 
@@ -27,8 +28,12 @@ export const TaskSectionInfoBar: React.FC<PropsType> = (props) => {
       {props.listName && (
         <span className="info-bar__list">{props.listName}</span>
       )}
-      <span className="info-bar__date">{todayDate}</span>
-      <FiltersBlock className="info-bar__filters" />
+      {!props.isInsideAllTasks && (
+        <>
+          <span className="info-bar__date">{todayDate}</span>
+          <FiltersBlock className="info-bar__filters" />
+        </>
+      )}
     </StyledTaskSectionInfoBar>
   );
 };

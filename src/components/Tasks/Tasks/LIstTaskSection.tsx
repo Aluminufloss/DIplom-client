@@ -17,10 +17,11 @@ import TaskSection from "@/components/UI/TaskSection";
 import { setGroups } from "@/store/slices/Groups";
 
 type PropsType = {
-  listId: string;
-  listName: string;
+  listId?: string;
+  listName?: string;
   groups: GroupType[];
   lists: TasksListType[];
+  accessToken?: string;
 };
 
 export const ListTaskSection: React.FC<PropsType> = (props) => {
@@ -39,8 +40,12 @@ export const ListTaskSection: React.FC<PropsType> = (props) => {
     (async () => {
       dispatch(setGroups(props.groups));
       dispatch(setLists(props.lists));
+
+      if (props.accessToken) {
+        localStorage.setItem("accessToken", props.accessToken);
+      }
     })();
-  }, [props.lists, props.groups]);
+  }, [props.lists, props.groups, props.accessToken]);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
@@ -59,6 +64,13 @@ export const ListTaskSection: React.FC<PropsType> = (props) => {
         <TaskSection
           sectionTitle="Завершённые задачи"
           tasks={grouppedTasks.completed}
+        />
+      )}
+
+      {!!grouppedTasks?.planned.length && (
+        <TaskSection
+          sectionTitle="Запланированные задачи"
+          tasks={grouppedTasks.planned}
         />
       )}
 

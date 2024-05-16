@@ -21,8 +21,8 @@ export const TodayTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
-  const todayTasks = useAppSelector((state) => state.tasks.todayTasks);
-  const grouppedTasks = getGrouppedTasks(todayTasks);
+  const filteredTasks = useAppSelector((state) => state.tasks.filteredTasks);
+  const grouppedTasks = getGrouppedTasks(filteredTasks);
 
   const dispatch = useAppDispatch();
 

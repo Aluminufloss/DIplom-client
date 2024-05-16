@@ -3,13 +3,21 @@ import styled from "styled-components";
 import { usePathname } from "next/navigation";
 
 import { STATIC_URLS } from "@/utils/constant";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import { getPageType } from "@/utils/getPageType";
+
+import { searchTasks } from "@/store/slices/Tasks";
 
 import ReusableImage from "@/components/UI/image";
 
 const TaskSearchBar: React.FC = () => {
-  const pathName = usePathname();
-  const isAnalyticsPage = pathName.includes("analytics");
   const [isInputFocused, setIsInputFocused] = React.useState(false);
+
+  const pathName = usePathname();
+  const pageType = getPageType(pathName);
+  const isAnalyticsPage = pathName.includes("analytics");
+
+  const dispatch = useAppDispatch();
 
   return !isAnalyticsPage ? (
     <StyledSearch
@@ -23,6 +31,10 @@ const TaskSearchBar: React.FC = () => {
       <input
         type="search"
         onBlur={() => setIsInputFocused(false)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(searchTasks({
+          searchValue: e.target.value,
+          pageType,
+        }))}
         placeholder="Поиск задач..."
         className="input"
       />
