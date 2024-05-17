@@ -29,7 +29,6 @@ const filter = createFilterOptions<ListOptionType>();
 
 const ListSelector: React.FC<ParamsType> = (props) => {
   const listsInfo = useAppSelector((state) => state.lists.lists);
-  const groupInfo = useAppSelector((state) => state.groups.groups);
   const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
   const [currentList, setCurrentList] = React.useState({} as ListOptionType);
 
@@ -42,15 +41,6 @@ const ListSelector: React.FC<ParamsType> = (props) => {
         };
       });
 
-      groupInfo?.forEach((group) => {
-        group.lists?.forEach((list) => {
-          listsNames.push({
-            title: list.title,
-            listId: list.listId,
-          });
-        });
-      });
-
       const currentList = listsNames.find(
         (list) => list.listId === props.value
       );
@@ -61,7 +51,7 @@ const ListSelector: React.FC<ParamsType> = (props) => {
       });
       setListsNames(listsNames);
     })();
-  }, [listsInfo, groupInfo, props.value]);
+  }, [listsInfo, props.value]);
 
   return (
     <StyledListSelector className={props.className}>

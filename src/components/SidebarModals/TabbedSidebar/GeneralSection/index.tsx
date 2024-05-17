@@ -19,6 +19,8 @@ const GeneralSection: React.FC = () => {
   const listsInfo = useAppSelector((state) => state.lists);
   const groupsInfo = useAppSelector((state) => state.groups);
 
+  const listsWithoutGroup = listsInfo.lists.filter((list) => !list.groupId)
+
   const [savingMode, setSavingMode] = React.useState<string>("");
   const [inputValue, setInputValue] = React.useState("");
   const [isInputVisible, setIsInputVisible] = React.useState(false);
@@ -124,7 +126,7 @@ const GeneralSection: React.FC = () => {
       <Groups
         groups={groupsInfo.groups}
       />
-      <Lists lists={listsInfo.lists} />
+      <Lists lists={listsWithoutGroup} />
     </StyledGeneralSection>
   );
 };

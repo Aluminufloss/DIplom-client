@@ -45,7 +45,7 @@ const AnalyticsSection: React.FC = () => {
       <AnalyticsSectionBar />
       <div className="content--analytics">
         {!!data?.tasksAnalytics.tasksLength ? (
-          <GraphSection tasksInfo={data.tasksAnalytics} />
+          <GraphSection tasksInfo={data.tasksAnalytics} type={"pie"} />
         ) : (
           <EmptySection />
         )}

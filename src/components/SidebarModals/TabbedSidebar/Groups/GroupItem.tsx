@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-import ReusableImage from "@/components/UI/image";
+import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { STATIC_URLS } from "@/utils/constant";
+
+import ReusableImage from "@/components/UI/image";
 import Lists from "../Lists";
-import { GroupType } from "@/models";
 
 type PropsType = {
-  group: GroupType;
+  groupId: string;
+  groupName: string;
   className?: string;
   onAddListToGroup: () => void;
   onClick: (buttonPosition: number, groupId: string) => void;
@@ -16,11 +18,15 @@ type PropsType = {
 const ITEM_HEIGHT = 34;
 
 const GroupItem: React.FC<PropsType> = (props) => {
+  const listsInfo = useAppSelector((state) => state.lists);
+  const lists = listsInfo.lists.filter(
+    (list) => list.groupId === props.groupId
+  );
   const itemRef = React.useRef<HTMLLIElement>(null);
 
   const handleDeleteGroup = React.useCallback((event: React.MouseEvent) => {
     const itemOffset = itemRef.current?.offsetTop || 0;
-    props.onClick(itemOffset + ITEM_HEIGHT, props.group?.id);
+    props.onClick(itemOffset + ITEM_HEIGHT, props.groupId);
     event.stopPropagation();
   }, []);
 
@@ -32,7 +38,7 @@ const GroupItem: React.FC<PropsType> = (props) => {
           alt="Group icon"
           className="icon"
         />
-        <p className="title">{props.group.name}</p>
+        <p className="title">{props.groupName}</p>
         <div className="group__actions">
           <ReusableImage
             width={20}
@@ -52,7 +58,7 @@ const GroupItem: React.FC<PropsType> = (props) => {
           />
         </div>
       </StyledGroupItem>
-      <Lists lists={props.group.lists} isInsideGroup/>
+      <Lists lists={lists} isInsideGroup />
     </div>
   );
 };

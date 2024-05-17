@@ -100,7 +100,8 @@ const Groups: React.FC<PropsType> = (props) => {
       {props.groups?.map((group) => (
         <GroupItem
           key={group.id}
-          group={group}
+          groupId={group.id}
+          groupName={group.name}
           onAddListToGroup={() => {
             setIsInputVisible(true);
             setCurrentGroupId(group.id);
