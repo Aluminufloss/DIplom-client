@@ -13,9 +13,9 @@ const getUserListsAndGroups = async (options?: {
     body: options,
   });
 
-  const data = await response?.json();
+  const responseData = await response?.json() as ListsServerResponseType;
 
-  return data;
+  return responseData;
 };
 
 export default getUserListsAndGroups;
