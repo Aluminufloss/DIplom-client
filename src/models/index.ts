@@ -15,7 +15,7 @@ export type TasksListType = {
 export type GroupType = {
   id: string;
   name: string;
-  lists: TasksListType[];
+  lists: string[];
   userId?: string;
 };
 
@@ -52,9 +52,30 @@ export type AnalyticsType = {
   categoriesAnalytics: categoriesAnalyticsType;
 };
 
+export type WeekAnalyticsType = {
+  tasks: {
+    thisWeek: TasksAnalyticsType;
+    lastWeek: TasksAnalyticsType;
+  },
+  priority: {
+    thisWeek: priorityAnalyticsType;
+    lastWeek: priorityAnalyticsType;
+  },
+  categories: {
+    thisWeek: categoriesAnalyticsType;
+    lastWeek: categoriesAnalyticsType;
+  },
+}
+
 export type GraphSectionType = {
   id: number;
   value: number;
+  label: string;
+}
+
+export type LinearGraphSectionType = {
+  id: number;
+  data: number[];
   label: string;
 }
 
@@ -78,6 +99,11 @@ export type AnalyticsServerResponseType = {
   data: AnalyticsType;
   accessToken?: string;
 };
+
+export type AnalyticsByWeekResponseType = {
+  data: WeekAnalyticsType;
+  accessToken?: string;
+}
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 
