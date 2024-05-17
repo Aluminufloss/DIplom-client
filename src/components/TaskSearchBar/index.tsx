@@ -6,7 +6,7 @@ import { STATIC_URLS } from "@/utils/constant";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { getPageType } from "@/utils/getPageType";
 
-import { searchTasks } from "@/store/slices/Tasks";
+import { setSearchValue } from "@/store/slices/Tasks";
 
 import ReusableImage from "@/components/UI/image";
 
@@ -31,10 +31,9 @@ const TaskSearchBar: React.FC = () => {
       <input
         type="search"
         onBlur={() => setIsInputFocused(false)}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(searchTasks({
-          searchValue: e.target.value,
-          pageType,
-        }))}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          dispatch(setSearchValue(e.target.value))
+        }
         placeholder="Поиск задач..."
         className="input"
       />

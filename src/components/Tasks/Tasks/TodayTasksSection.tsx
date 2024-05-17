@@ -8,21 +8,31 @@ import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import getGrouppedTasks from "./utils/getGrouppedTasks";
 
+import { ITask } from "@/api/models/Response/Tasks/ITask";
+
 import { setTodayTasks } from "@/store/slices/Tasks";
+import { setGroups } from "@/store/slices/Groups";
 import { setLists } from "@/store/slices/Lists";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import TaskSection from "@/components/UI/TaskSection";
-import { setGroups } from "@/store/slices/Groups";
+import EmptySearchCard from "@/components/UI/EmptySearchCard";
 
 export const TodayTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
-  const filteredTasks = useAppSelector((state) => state.tasks.filteredTasks);
-  const grouppedTasks = getGrouppedTasks(filteredTasks);
+
+  const searchValue: string = useAppSelector(
+    (state) => state.tasks.searchValue
+  );
+  const todayTasks: ITask[] = useAppSelector((state) => state.tasks.todayTasks);
+  const filteredTodayTasks: ITask[] = todayTasks.filter((task) => {
+    return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
+  });
+  const grouppedTasks = getGrouppedTasks(filteredTodayTasks);
 
   const dispatch = useAppDispatch();
 
@@ -61,6 +71,9 @@ export const TodayTasksSection: React.FC = () => {
           sectionTitle="Завершённые задачи"
           tasks={grouppedTasks.completed}
         />
+      )}
+      {!!searchValue.length && !filteredTodayTasks.length && (
+        <EmptySearchCard />
       )}
     </StyledTaskSection>
   );

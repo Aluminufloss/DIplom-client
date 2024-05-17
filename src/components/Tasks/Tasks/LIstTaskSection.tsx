@@ -2,56 +2,73 @@
 
 import React from "react";
 import styled from "styled-components";
+import { useParams } from "next/navigation";
 
 import { SectionEnum } from "./models";
-import { GroupType, TasksListType } from "@/models";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import getGrouppedTasks from "./utils/getGrouppedTasks";
+
 import { setLists } from "@/store/slices/Lists";
+import { setGroups } from "@/store/slices/Groups";
+import { openSnackbar } from "@/store/slices/Snackbar";
 
 import TaskItem from "./TaskItem";
-import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
+import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import TaskSection from "@/components/UI/TaskSection";
-import { setGroups } from "@/store/slices/Groups";
 
-type PropsType = {
-  listId?: string;
-  listName?: string;
-  groups: GroupType[];
-  lists: TasksListType[];
-  accessToken?: string;
-};
-
-export const ListTaskSection: React.FC<PropsType> = (props) => {
+export const ListTaskSection: React.FC = () => {
+  const urlParams = useParams() as { slug: string };
+  const searchValue: string = useAppSelector(
+    (state) => state.tasks.searchValue
+  )
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
 
   const listInfo = useAppSelector((state) => state.lists);
-  const listTasks = listInfo.lists.find((list) => list.listId === props.listId);
-
-  const grouppedTasks = getGrouppedTasks(listTasks?.tasks);
+  const currentList = listInfo.lists.find(
+    (list) => list.listId === urlParams.slug
+  );
+  const grouppedTasks = getGrouppedTasks(currentList?.tasks.filter((task) => {
+    return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
+  }));
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     (async () => {
-      dispatch(setGroups(props.groups));
-      dispatch(setLists(props.lists));
+      const listsPageResponse = await fetch(
+        `http://localhost:3000/tasks/list/${urlParams.slug}/api`
+      );
 
-      if (props.accessToken) {
-        localStorage.setItem("accessToken", props.accessToken);
+      if (listsPageResponse.status === 404) {
+        dispatch(
+          openSnackbar({
+            title: "Список не найден",
+            message: "Список не найден. Переход на главную страницу",
+            type: "error",
+          })
+        );
+      }
+
+      const listsPageData = await listsPageResponse.json();
+
+      dispatch(setGroups(listsPageData?.groups));
+      dispatch(setLists(listsPageData?.lists));
+
+      if (listsPageData?.accessToken) {
+        localStorage.setItem("accessToken", listsPageData.accessToken);
       }
     })();
-  }, [props.lists, props.groups, props.accessToken]);
+  }, [urlParams.slug]);
 
   return (
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar
         sectionType={SectionEnum.list}
-        listName={props.listName}
+        listName={currentList?.title}
       />
       <AddTaskButton />
 
