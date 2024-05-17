@@ -8,25 +8,34 @@ import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import getGrouppedTasks from "./utils/getGrouppedTasks";
 
+import { ITask } from "@/api/models/Response/Tasks/ITask";
+
 import { setAllTasks } from "@/store/slices/Tasks";
+import { setGroups } from "@/store/slices/Groups";
 import { setLists } from "@/store/slices/Lists";
 
 import TaskItem from "./TaskItem";
-import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
-import TaskSection from "@/components/UI/TaskSection";
-import { setGroups } from "@/store/slices/Groups";
+import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AllTasksListSection from "./AllTasksListSection";
+import TaskSection from "@/components/UI/TaskSection";
+import EmptySearchCard from "@/components/UI/EmptySearchCard";
 
 export const AllTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
 
-  const filteredTasks = useAppSelector((state) => state.tasks.filteredTasks);
-  const groupInfo = useAppSelector((state) => state.groups);
+  const searchValue: string = useAppSelector((state) => state.tasks.searchValue);
+  const allTasks: ITask[] = useAppSelector((state) => state.tasks.allTasks);
+
+  const filteredAllTasks: ITask[] = allTasks.filter((task) => {
+    return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
+  })
+
   const listInfo = useAppSelector((state) => state.lists);
-  const grouppedTasks = getGrouppedTasks(filteredTasks);
+  
+  const grouppedTasks = getGrouppedTasks(filteredAllTasks);
 
   const dispatch = useAppDispatch();
 
@@ -82,10 +91,9 @@ export const AllTasksSection: React.FC = () => {
         <AllTasksListSection lists={listInfo.lists} />
       )}
 
-      {!!groupInfo.groups.length &&
-        groupInfo.groups.map((group) => {
-          return <AllTasksListSection lists={group.lists} />;
-        })}
+      {!!searchValue.length && !filteredAllTasks.length && (
+        <EmptySearchCard />
+      )}
     </StyledTaskSection>
   );
 };
