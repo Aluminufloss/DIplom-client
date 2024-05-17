@@ -5,5 +5,5 @@ export type TasksStoreType = {
   todayTasks: ITask[];
   plannedTasks: ITask[];
   allTasks: ITask[]; 
-  filteredTasks: ITask[];
+  searchValue: string;
 }

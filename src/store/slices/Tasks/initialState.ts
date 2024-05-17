@@ -4,6 +4,6 @@ export const TasksInitialState: TasksStoreType = {
   todayTasks: [],
   plannedTasks: [],
   allTasks: [],
-  filteredTasks: [],
   isLoading: false,
+  searchValue: "",
 }

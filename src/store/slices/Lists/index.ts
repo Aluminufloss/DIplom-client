@@ -7,7 +7,12 @@ import {
   isPendingAction,
   isRejectedAction,
 } from "@/utils/checkReduxActions";
-import { createTask, deleteTask, updateTask } from "../Tasks/thunks";
+import {
+  changeTaskStatus,
+  createTask,
+  deleteTask,
+  updateTask,
+} from "../Tasks/thunks";
 
 export const listsInfo = createSlice({
   name: "listsInfo",
@@ -36,13 +41,21 @@ export const listsInfo = createSlice({
 
         const task = action.payload;
 
-        const currentList = state.lists.find((list) => list.listId === listId[0]);
+        const currentList = state.lists.find((list) => {
+          return list.listId === listId[0];
+        });
 
-        if (currentList) {
-          currentList.tasks = [task, ...currentList.tasks];
+        if (!currentList) {
+          return;
         }
+
+        currentList.tasks = [task, ...currentList.tasks];
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
+        if (action.meta.arg.listId?.length !== 1) {
+          return;
+        }
+
         const currentList = state.lists.find(
           (list) => list.listId === action.meta.arg.listId
         );
@@ -71,6 +84,48 @@ export const listsInfo = createSlice({
           });
         }
       });
+    builder.addCase(changeTaskStatus.pending, (state, action) => {
+      const task = action.meta.arg.task;
+
+      if (task.listId?.length !== 1) {
+        return;
+      }
+
+      const currentList = state.lists.find(
+        (list) => list.listId === task.listId?.[0]
+      );
+
+      if (!currentList) {
+        return;
+      }
+
+      currentList.tasks = currentList.tasks.map((item) => {
+        if (item.taskId === task.taskId) {
+          return {
+            ...item,
+            status: action.meta.arg.status,
+          };
+        }
+        return item;
+      });
+    });
+    builder.addCase(changeTaskStatus.rejected, (state, action) => {
+      if (action.meta.arg.task.listId?.length !== 1) {
+        return;
+      }
+
+      const currentList = state.lists.find(
+        (list) => list.listId === action.meta.arg.task.listId?.[0]
+      );
+
+      if (!currentList) {
+        return;
+      }
+
+      currentList.tasks = currentList.tasks.filter((task) => {
+        return task.taskId !== action.meta.arg.task.taskId;
+      });
+    });
     builder.addCase(createTask.rejected, () => {});
     builder.addMatcher(isPendingAction, (state) => {
       state.isLoading = true;

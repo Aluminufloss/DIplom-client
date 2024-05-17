@@ -1,10 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { GroupType } from "@/models";
-import { addGroup, addListToGroup, deleteGroup, removeListFromGroup } from "./thunks";
+import {
+  addGroup,
+  addListToGroup,
+  deleteGroup,
+  removeListFromGroup,
+} from "./thunks";
 
 import { GroupInitialState } from "./initialState";
-import { isFulfilledAction, isPendingAction, isRejectedAction } from "@/utils/checkReduxActions";
+import {
+  isFulfilledAction,
+  isPendingAction,
+  isRejectedAction,
+} from "@/utils/checkReduxActions";
 import { createTask } from "../Tasks/thunks";
 
 export const groupsInfo = createSlice({
@@ -21,7 +30,7 @@ export const groupsInfo = createSlice({
           return { ...item, lists: item.lists };
         }
         return item;
-      })
+      });
     },
   },
   extraReducers: (builder) => {
@@ -29,23 +38,32 @@ export const groupsInfo = createSlice({
       const deletedGroupId = action.meta.arg;
       state.groups = state.groups.filter((item) => item.id !== deletedGroupId);
     });
-    builder.addCase(addGroup.fulfilled, (state, action: PayloadAction<GroupType>) => {
-      state.groups = [action.payload, ...state.groups];
-    });
+    builder.addCase(
+      addGroup.fulfilled,
+      (state, action: PayloadAction<GroupType>) => {
+        state.groups = [action.payload, ...state.groups];
+      }
+    );
     builder.addCase(addListToGroup.fulfilled, (state, action) => {
-      console.log('sussy', action)
-      state.groups = state.groups.map((item) => {
-        if (item.id === action.meta.arg.groupId) {
-          return { ...item, lists: [...item.lists, action.payload] };
+      state.groups = state.groups.map((group) => {
+        if (group.id === action.meta.arg.groupId) {
+          return {
+            ...group,
+            lists: [...group.lists, action.payload.listId],
+          };
         }
-        return item;
-      })
+        return group;
+      });
     });
     builder.addCase(removeListFromGroup.fulfilled, (state, action) => {
-      const group = state.groups.find((item) => item.id === action.meta.arg.groupId);
+      const group = state.groups.find(
+        (item) => item.id === action.meta.arg.groupId
+      );
 
       if (group) {
-        group.lists = group.lists.filter((item) => item.listId !== action.meta.arg.listId);
+        group.lists = group.lists.filter(
+          (item) => item !== action.meta.arg.listId
+        );
       }
 
       state.groups = [...state.groups];
