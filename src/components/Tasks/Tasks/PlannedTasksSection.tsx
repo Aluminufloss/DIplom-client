@@ -10,7 +10,7 @@ import getGrouppedTasks from "./utils/getGrouppedTasks";
 
 import { ITask } from "@/api/models/Response/Tasks/ITask";
 
-import { setLists } from "@/store/slices/Lists";
+import { setLists, setListsLoading } from "@/store/slices/Lists";
 import { setPlannedTasks } from "@/store/slices/Tasks";
 import { setGroups } from "@/store/slices/Groups";
 
@@ -19,14 +19,20 @@ import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import TaskSection from "@/components/UI/TaskSection";
 import EmptySearchCard from "@/components/UI/EmptySearchCard";
+import TaskSkeletonsSection from "@/components/UI/Skeletons/Task/TaskSkeletonsSection";
 
 export const PlannedTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
     (state) => state.tabbedSidebar.isViewVisible
   );
 
-  const searchValue: string = useAppSelector((state) => state.tasks.searchValue);
-  const plannedTasks: ITask[] = useAppSelector((state) => state.tasks.plannedTasks);
+  const searchValue: string = useAppSelector(
+    (state) => state.tasks.searchValue
+  );
+  const plannedTasks: ITask[] = useAppSelector(
+    (state) => state.tasks.plannedTasks
+  );
+  const isTasksLoading = useAppSelector((state) => state.lists.isLoading);
 
   const filteredPlannedTasks = plannedTasks.filter((task) => {
     return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
@@ -36,6 +42,8 @@ export const PlannedTasksSection: React.FC = () => {
 
   React.useEffect(() => {
     (async () => {
+      dispatch(setListsLoading(true));
+
       const plannedTasksPageResponse = await fetch(
         "http://localhost:3000/tasks/planned/api"
       );
@@ -46,6 +54,8 @@ export const PlannedTasksSection: React.FC = () => {
       dispatch(setPlannedTasks(plannedTasksPageResponseData?.tasks.data));
       dispatch(setLists(plannedTasksPageResponseData?.lists));
       dispatch(setGroups(plannedTasksPageResponseData?.groups));
+
+      dispatch(setListsLoading(false));
 
       if (plannedTasksPageResponseData?.accessToken) {
         localStorage.setItem(
@@ -63,26 +73,33 @@ export const PlannedTasksSection: React.FC = () => {
       <TaskSectionInfoBar sectionType={SectionEnum.planned} />
       <AddTaskButton />
 
-      {!!grouppedTasks?.planned.length &&
-        grouppedTasks.planned.map((task) => {
-          return <TaskItem key={task.taskId} task={task} />;
-        })}
+      {isTasksLoading ? (
+        <TaskSkeletonsSection />
+      ) : (
+        <>
+          {!!grouppedTasks?.planned.length &&
+            grouppedTasks.planned.map((task) => {
+              return <TaskItem key={task.taskId} task={task} />;
+            })}
 
-      {!!grouppedTasks?.completed.length && (
-        <TaskSection
-          sectionTitle="Завершённые задачи"
-          tasks={grouppedTasks.completed}
-        />
-      )}
+          {!!grouppedTasks?.completed.length && (
+            <TaskSection
+              sectionTitle="Завершённые задачи"
+              tasks={grouppedTasks.completed}
+            />
+          )}
 
-      {!!grouppedTasks?.expired.length && (
-        <TaskSection
-          sectionTitle="Просроченные задачи"
-          tasks={grouppedTasks.expired}
-        />
-      )}
-      {!!searchValue.length && !filteredPlannedTasks.length && (
-        <EmptySearchCard />
+          {!!grouppedTasks?.expired.length && (
+            <TaskSection
+              sectionTitle="Просроченные задачи"
+              tasks={grouppedTasks.expired}
+            />
+          )}
+
+          {!!searchValue.length && !filteredPlannedTasks.length && (
+            <EmptySearchCard />
+          )}
+        </>
       )}
     </StyledTaskSection>
   );

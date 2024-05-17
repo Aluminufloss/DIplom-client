@@ -12,13 +12,14 @@ import { ITask } from "@/api/models/Response/Tasks/ITask";
 
 import { setTodayTasks } from "@/store/slices/Tasks";
 import { setGroups } from "@/store/slices/Groups";
-import { setLists } from "@/store/slices/Lists";
+import { setLists, setListsLoading } from "@/store/slices/Lists";
 
 import TaskItem from "./TaskItem";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AddTaskButton from "./AddTaskButton";
 import TaskSection from "@/components/UI/TaskSection";
 import EmptySearchCard from "@/components/UI/EmptySearchCard";
+import TaskSkeletonsSection from "@/components/UI/Skeletons/Task/TaskSkeletonsSection";
 
 export const TodayTasksSection: React.FC = () => {
   const isTabbedViewVisible = useAppSelector(
@@ -28,6 +29,7 @@ export const TodayTasksSection: React.FC = () => {
   const searchValue: string = useAppSelector(
     (state) => state.tasks.searchValue
   );
+  const isTasksLoading = useAppSelector((state) => state.lists.isLoading);
   const todayTasks: ITask[] = useAppSelector((state) => state.tasks.todayTasks);
   const filteredTodayTasks: ITask[] = todayTasks.filter((task) => {
     return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
@@ -38,6 +40,8 @@ export const TodayTasksSection: React.FC = () => {
 
   React.useEffect(() => {
     (async () => {
+      dispatch(setListsLoading(true));
+
       const todayTasksPageResponse = await fetch(
         "http://localhost:3000/tasks/today/api"
       );
@@ -47,6 +51,8 @@ export const TodayTasksSection: React.FC = () => {
       dispatch(setTodayTasks(todayTasksPageResponseData?.tasks.data));
       dispatch(setLists(todayTasksPageResponseData?.lists));
       dispatch(setGroups(todayTasksPageResponseData?.groups));
+
+      dispatch(setListsLoading(false));
 
       if (todayTasksPageResponseData?.accessToken) {
         localStorage.setItem(
@@ -61,19 +67,27 @@ export const TodayTasksSection: React.FC = () => {
     <StyledTaskSection $isViewVisible={isTabbedViewVisible}>
       <TaskSectionInfoBar sectionType={SectionEnum.today} />
       <AddTaskButton />
+      
+      {isTasksLoading ? (
+        <TaskSkeletonsSection />
+      ) : (
+        <>
+          {!!grouppedTasks?.active.length &&
+            grouppedTasks.active.map((task) => {
+              return <TaskItem key={task.taskId} task={task} />;
+            })}
 
-      {!!grouppedTasks?.active.length &&
-        grouppedTasks.active.map((task) => {
-          return <TaskItem key={task.taskId} task={task} />;
-        })}
-      {!!grouppedTasks?.completed.length && (
-        <TaskSection
-          sectionTitle="Завершённые задачи"
-          tasks={grouppedTasks.completed}
-        />
-      )}
-      {!!searchValue.length && !filteredTodayTasks.length && (
-        <EmptySearchCard />
+          {!!grouppedTasks?.completed.length && (
+            <TaskSection
+              sectionTitle="Завершённые задачи"
+              tasks={grouppedTasks.completed}
+            />
+          )}
+
+          {!!searchValue.length && !filteredTodayTasks.length && (
+            <EmptySearchCard />
+          )}
+        </>
       )}
     </StyledTaskSection>
   );

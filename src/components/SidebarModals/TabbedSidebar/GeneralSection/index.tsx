@@ -14,12 +14,14 @@ import AddNewListButton from "../AddNewListButton";
 import CreateInput from "../CreateInput";
 import Lists from "../Lists";
 import Groups from "../Groups";
+import ListkeletonsSection from "@/components/UI/Skeletons/List/ListSkeletonsSection";
 
 const GeneralSection: React.FC = () => {
   const listsInfo = useAppSelector((state) => state.lists);
   const groupsInfo = useAppSelector((state) => state.groups);
+  const isDataLoading = listsInfo.isLoading;
 
-  const listsWithoutGroup = listsInfo.lists.filter((list) => !list.groupId)
+  const listsWithoutGroup = listsInfo.lists.filter((list) => !list.groupId);
 
   const [savingMode, setSavingMode] = React.useState<string>("");
   const [inputValue, setInputValue] = React.useState("");
@@ -123,10 +125,14 @@ const GeneralSection: React.FC = () => {
           />
         </div>
       )}
-      <Groups
-        groups={groupsInfo.groups}
-      />
-      <Lists lists={listsWithoutGroup} />
+      {isDataLoading ? (
+        <ListkeletonsSection />
+      ) : (
+        <>
+          <Groups groups={groupsInfo.groups} />
+          <Lists lists={listsWithoutGroup} />
+        </>
+      )}
     </StyledGeneralSection>
   );
 };

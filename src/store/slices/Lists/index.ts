@@ -13,6 +13,7 @@ import {
   deleteTask,
   updateTask,
 } from "../Tasks/thunks";
+import { addListToGroup } from "../Groups/thunks";
 
 export const listsInfo = createSlice({
   name: "listsInfo",
@@ -21,6 +22,10 @@ export const listsInfo = createSlice({
     setLists: (state, action) => {
       state.lists = action.payload;
     },
+
+    setListsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(addList.fulfilled, (state, action) => {
@@ -126,6 +131,9 @@ export const listsInfo = createSlice({
         return task.taskId !== action.meta.arg.task.taskId;
       });
     });
+    builder.addCase(addListToGroup.fulfilled, (state, action) => {
+      state.lists = [action.payload, ...state.lists];
+    })
     builder.addCase(createTask.rejected, () => {});
     builder.addMatcher(isPendingAction, (state) => {
       state.isLoading = true;
@@ -136,6 +144,6 @@ export const listsInfo = createSlice({
   },
 });
 
-export const { setLists } = listsInfo.actions;
+export const { setLists, setListsLoading } = listsInfo.actions;
 
 export default listsInfo.reducer;
