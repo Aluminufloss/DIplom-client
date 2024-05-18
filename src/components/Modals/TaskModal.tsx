@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { Ref, RefObject } from "react";
 import styled, { useTheme } from "styled-components";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikProps } from "formik";
 
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
@@ -30,6 +30,8 @@ import PrimaryButton from "../UI/buttons/PrimaryButton";
 import TaskModalActionButtons from "../TaskModalActionButtons";
 
 const TaskModal: React.FC = () => {
+  const theme = useTheme();
+
   const modalInfo = useAppSelector((state) => state.taskModal);
   const [isActionsModalVisible, setIsActionsModalVisible] =
     React.useState(false);
@@ -38,10 +40,9 @@ const TaskModal: React.FC = () => {
   >("editing");
 
   const initialParamsRef = React.useRef<ModalParamsType | null>(null);
+  const formRef = React.useRef<FormikProps<ModalParamsType> | null>(null);
 
   const dispatch = useAppDispatch();
-
-  const theme = useTheme();
 
   React.useEffect(() => {
     if (modalInfo.isModalVisible) {
@@ -55,8 +56,16 @@ const TaskModal: React.FC = () => {
     };
   }, [modalInfo.isModalVisible, modalInfo.modalParams.taskInfo]);
 
+  const onExitAction = React.useCallback(() => {
+    dispatch(resetModalState());
+    setIsActionsModalVisible(false);
+
+    formRef.current?.resetForm();
+  }, []);
+
   const handleModalSubmit = React.useCallback(
     async (values: ModalParamsType) => {
+      console.log("values from modal", values);
       if (!initialParamsRef.current) {
         return;
       }
@@ -67,7 +76,7 @@ const TaskModal: React.FC = () => {
           initialParamsRef.current.taskInfo
         )
       ) {
-        dispatch(resetModalState());
+        onExitAction();
         return;
       }
 
@@ -120,11 +129,9 @@ const TaskModal: React.FC = () => {
         })
       );
 
-      setIsActionsModalVisible(false);
-
-      dispatch(resetModalState());
+      onExitAction();
     },
-    []
+    [onExitAction]
   );
 
   const handleCloseModal = React.useCallback(
@@ -144,9 +151,9 @@ const TaskModal: React.FC = () => {
         return;
       }
 
-      dispatch(resetModalState());
+      onExitAction();
     },
-    [compareModalParamsWithInitial]
+    [compareModalParamsWithInitial, onExitAction]
   );
 
   const onClickOnOverlay = React.useCallback(
@@ -159,11 +166,6 @@ const TaskModal: React.FC = () => {
   const onClickDeleteButton = React.useCallback(() => {
     setActionsModalType("deleting");
     setIsActionsModalVisible(true);
-  }, []);
-
-  const onExitAction = React.useCallback(() => {
-    dispatch(resetModalState());
-    setIsActionsModalVisible(false);
   }, []);
 
   const handleDeleteTask = React.useCallback(() => {
@@ -191,16 +193,19 @@ const TaskModal: React.FC = () => {
         type: "success",
       })
     );
-    setIsActionsModalVisible(false);
-  }, [modalInfo.modalParams.taskInfo.taskId]);
+
+    onExitAction();
+  }, [modalInfo.modalParams.taskInfo.taskId, onExitAction]);
+
   return (
     <>
       <Formik
+        innerRef={formRef}
         enableReinitialize
         initialValues={modalInfo.modalParams}
         onSubmit={handleModalSubmit}
       >
-        {({ values, handleChange, setFieldValue, handleReset }) => (
+        {({ values, handleChange, setFieldValue }) => (
           <>
             <StyledModal
               $isModalVisible={modalInfo.isModalVisible}
@@ -209,8 +214,8 @@ const TaskModal: React.FC = () => {
               <ModalHeader
                 modalType={values.modalType}
                 modalParams={values}
-                handleSaveChanges={handleModalSubmit}
-                handleCloseModal={handleCloseModal}
+                handleSaveChanges={() => handleModalSubmit(values)}
+                handleCloseModal={() => handleCloseModal(values.taskInfo)}
               />
               <div className="modal__content">
                 <Input
@@ -277,10 +282,7 @@ const TaskModal: React.FC = () => {
                 actionType={actionsModalType}
                 cancelAction={() => setIsActionsModalVisible(false)}
                 deleteAction={handleDeleteTask}
-                exitAction={() => {
-                  onExitAction();
-                  handleReset();
-                }}
+                exitAction={onExitAction}
                 isVisible={isActionsModalVisible}
               />
             </StyledModal>
