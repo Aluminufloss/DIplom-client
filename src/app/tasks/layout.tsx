@@ -3,6 +3,10 @@
 import React from "react";
 import { Provider } from "react-redux";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
+
+import { setRedirectCallback } from "@/axios";
+import { AppPaths } from "@/utils/constant";
 
 import { store } from "@/store";
 
@@ -17,6 +21,12 @@ const TasksLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    setRedirectCallback(() => router.push(AppPaths.login));
+  }, []);
+
   return (
     <Provider store={store}>
       <StyledLayout>

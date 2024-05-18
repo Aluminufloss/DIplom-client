@@ -8,6 +8,12 @@ const $api = axios.create({
   baseURL: API_URL,
 });
 
+let redirectCallback: () => void;
+
+export const setRedirectCallback = (cb: () => void) => {
+  redirectCallback = cb;
+};
+
 $api.interceptors.request.use((config) => {
   try {
     const token = localStorage.getItem("accessToken");
@@ -45,6 +51,10 @@ $api.interceptors.response.use((config) => {
       return $api.request(originalRequest);
     } catch (err) {
       console.warn("Ошибка перехватчика на 401 статус-код");
+
+      if (redirectCallback) {
+        redirectCallback();
+      }
     }
   }
   throw error;
