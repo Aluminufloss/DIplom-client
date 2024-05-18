@@ -32,10 +32,12 @@ $api.interceptors.response.use((config) => {
   if (error.response.status === 401 && error.config && !error.config._isRetry) {
     originalRequest._isRetry = true;
     try {
-      const { refreshToken } = JSON.parse(originalRequest.data);
-
-      const response = await axios.post<AuthResponse>(`${API_URL}/refresh`, { withCredentials: true, refreshToken });
+      const response = await axios.post<AuthResponse>(`${API_URL}/refresh`, {}, {
+        withCredentials: true,
+      });
       const token = response.data.accessToken;
+
+      localStorage.setItem("accessToken", token);
 
       originalRequest.headers.Authorization = `Bearer ${token}`;
       originalRequest.headers.token = response.data.refreshToken;
