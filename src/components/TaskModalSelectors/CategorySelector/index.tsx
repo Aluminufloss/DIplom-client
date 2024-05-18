@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import TextField from "@mui/material/TextField";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import Autocomplete from "@mui/material/Autocomplete";
+
 import {
   Categories,
   STATIC_URLS,
@@ -23,24 +24,20 @@ type ParamsType = {
 
 type CategoryOptionType = {
   title: string;
-  value: string; 
+  value: string;
   inputValue?: string;
 };
-
-const filter = createFilterOptions<CategoryOptionType>();
 
 const CategorySelector: React.FC<ParamsType> = (props) => {
   const [value, setValue] = React.useState<CategoryOptionType | null>(null);
 
   React.useEffect(() => {
-    const categoryTitle = TranslatedCategories.findIndex((item) => item === props.value);
+    const categoryIndex = Categories.findIndex((item) => item === props.value);
 
-    console.log()
-
-    if (categoryTitle !== -1) {
+    if (categoryIndex !== -1) {
       setValue({
-        title: TranslatedCategories[categoryTitle],
-        value: Categories[categoryTitle],
+        title: TranslatedCategories[categoryIndex],
+        value: Categories[categoryIndex],
       });
     }
   }, [props.value]);
@@ -61,50 +58,46 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
         value={value}
         defaultValue={{
           title: TranslatedCategories[TranslatedCategories.length - 1],
-          value: TranslatedCategories[TranslatedCategories.length - 1],
+          value: Categories[Categories.length - 1],
         }}
         onChange={(_, newValue) => {
-          if (typeof newValue === "string") {
-            setValue({
-              title: newValue,
-              value: newValue,
-            });
-          } else if (newValue && newValue.title) {
-            setValue({
-              title: newValue.title,
-              value: newValue.value,
-            });
-          } else {
+          if (newValue && typeof newValue === "string") {
+            const categoryIndex = TranslatedCategories.findIndex(
+              (item) => item === newValue
+            );
+
+            if (categoryIndex !== -1) {
+              const selectedCategory = {
+                title: TranslatedCategories[categoryIndex],
+                value: Categories[categoryIndex],
+              };
+              setValue(selectedCategory);
+              props.setFieldValue("taskInfo.category", selectedCategory.value);
+            }
+          } else if (newValue && typeof newValue === "object") {
             setValue(newValue);
-            props.setFieldValue("taskInfo.category", newValue?.value || "");
-          }
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-
-          const { inputValue } = params;
-          const isExisting = options.some(
-            (option) => inputValue === option.title
-          );
-          if (inputValue !== "" && !isExisting) {
-            filtered.push({
-              inputValue,
-              title: `Категории "${inputValue}" не существует`,
-              value: inputValue,
+            props.setFieldValue("taskInfo.category", newValue.value);
+          } else {
+            setValue({
+              title: TranslatedCategories[TranslatedCategories.length - 1],
+              value: Categories[Categories.length - 1],
             });
+            props.setFieldValue(
+              "taskInfo.category",
+              Categories[Categories.length - 1]
+            );
           }
-
-          return filtered;
         }}
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
-        id="free-solo-with-text-demo"
         options={Categories.map((category, index) => ({
           title: TranslatedCategories[index],
-          value: category, 
+          value: category,
         }))}
-        getOptionLabel={(option) => option.title}
+        getOptionLabel={(option) =>
+          typeof option === "string" ? option : option.title
+        }
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
         className="selector__autocomplete"
         freeSolo
@@ -118,7 +111,7 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
       />
     </StyledCategorySelector>
   );
-}
+};
 
 const StyledCategorySelector = styled.div`
   display: flex;
