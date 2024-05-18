@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useParams } from "next/navigation";
 
 import { TextField } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
@@ -30,28 +31,53 @@ const filter = createFilterOptions<ListOptionType>();
 const ListSelector: React.FC<ParamsType> = (props) => {
   const listsInfo = useAppSelector((state) => state.lists.lists);
   const [listsNames, setListsNames] = React.useState<ListOptionType[]>([]);
-  const [currentList, setCurrentList] = React.useState({} as ListOptionType);
+  const [currentList, setCurrentList] = React.useState<ListOptionType>({
+    listId: "",
+    title: "",
+  });
+
+  const urlParams = useParams() as { slug: string };
 
   React.useEffect(() => {
-    (async () => {
-      const listsNames = listsInfo?.map((list) => {
-        return {
-          title: list.title,
-          listId: list.listId,
-        };
-      });
+    const updateListsNames = () => {
+      const listsNames = listsInfo?.map((list) => ({
+        title: list.title,
+        listId: list.listId,
+      })) || [];
 
-      const currentList = listsNames.find(
-        (list) => list.listId === props.value
-      );
+      let selectedList;
+
+      if (props.value) {
+        selectedList = listsNames.find((list) => list.listId === props.value);
+      } else if (urlParams.slug) {
+        selectedList = listsNames.find(
+          (list) => list.listId === urlParams.slug
+        );
+      }
 
       setCurrentList({
-        title: currentList?.title ?? "",
-        listId: props.value ?? "",
+        title: selectedList?.title ?? "",
+        listId: selectedList?.listId ?? "",
       });
+
       setListsNames(listsNames);
-    })();
-  }, [listsInfo, props.value]);
+    };
+
+    updateListsNames();
+  }, [listsInfo, props.value, urlParams.slug]);
+
+  const handleListChange = (
+    _: any,
+    newValue: ListOptionType | string | null
+  ) => {
+    if (newValue && typeof newValue === "object") {
+      props.setFieldValue("taskInfo.listId", [newValue.listId]);
+      setCurrentList(newValue);
+    } else {
+      props.setFieldValue("taskInfo.listId", []);
+      setCurrentList({ listId: "", title: "" });
+    }
+  };
 
   return (
     <StyledListSelector className={props.className}>
@@ -67,21 +93,8 @@ const ListSelector: React.FC<ParamsType> = (props) => {
       </div>
       <Autocomplete
         options={listsNames}
-        value={{
-          title: currentList?.title ?? "",
-          listId: props.value ?? "",
-        }}
-        defaultValue={{
-          title: "",
-          listId: "",
-        }}
-        onChange={(_, newValue) => {
-          if (newValue) {
-            props.setFieldValue("taskInfo.listId", [newValue.listId]);
-          } else {
-            props.setFieldValue("taskInfo.listId", []);
-          }
-        }}
+        value={currentList}
+        onChange={handleListChange}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
@@ -99,15 +112,9 @@ const ListSelector: React.FC<ParamsType> = (props) => {
 
           return filtered;
         }}
-        getOptionLabel={(option) => {
-          if (typeof option === "string") {
-            return option;
-          }
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          return option.title;
-        }}
+        getOptionLabel={(option) =>
+          typeof option === "string" ? option : option.title
+        }
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
         renderInput={(params) => (
           <TextField
@@ -136,9 +143,7 @@ const StyledListSelector = styled.div`
 
     &.Mui-focused {
       color: ${(props) => props.theme.colorValues.black};
-
       font-size: 16px;
-
       top: 0;
     }
   }
@@ -171,10 +176,8 @@ const StyledListSelector = styled.div`
     &__icon {
       width: auto;
       height: auto;
-
       padding-right: 10px;
       margin-right: 2px;
-
       transform: translateY(1px);
     }
 
