@@ -10,6 +10,8 @@ import snackbar from "./slices/Snackbar";
 import groups from "./slices/Groups";
 import appState from "./slices/AppState";
 
+import urlChangeMiddleware from "./slices/TaskModal/middleware";
+
 export const store = configureStore({
   reducer: {
     tabbedSidebar,
@@ -22,6 +24,7 @@ export const store = configureStore({
     lists,
     tasks,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(urlChangeMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,6 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { taskModalInitState } from "./initialState";
+
 import { SelectesdDayType, TaskModalStoreType } from "./models";
+
+import { taskModalInitState } from "./initialState";
+
 import { createTask, deleteTask, updateTask } from "../Tasks/thunks";
 
 export const taskModal = createSlice({
@@ -37,6 +40,10 @@ export const taskModal = createSlice({
             : item;
         });
     },
+
+    setListId: (state, action: PayloadAction<string[]>) => {
+      state.modalParams.taskInfo.listId = action.payload;
+    },
   },
   extraReducers(builder) {
     const handleFulfilled = (state: TaskModalStoreType) => {
@@ -48,10 +55,14 @@ export const taskModal = createSlice({
       state.isModalVisible = false;
     };
 
+    builder.addCase(createTask.fulfilled, (state) => {
+      state.isModalVisible = false;
+    });
+
     builder
+      .addCase(deleteTask.pending, handlePending)
       .addCase(updateTask.pending, handlePending)
       .addCase(createTask.pending, handlePending)
-      .addCase(createTask.fulfilled, handleFulfilled)
       .addCase(updateTask.fulfilled, handleFulfilled)
       .addCase(deleteTask.fulfilled, handleFulfilled);
   },
@@ -64,6 +75,7 @@ export const {
   setTaskPriority,
   setRepeatDay,
   setModalType,
+  setListId,
 } = taskModal.actions;
 
 export default taskModal.reducer;

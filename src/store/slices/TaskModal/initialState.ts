@@ -1,5 +1,6 @@
 import { getInitialSelectedDays } from "@/utils/getInitialSelectedDays";
 import { TaskModalStoreType } from "./models";
+import getInitialListId from "@/utils/getInitialListId";
 
 export const taskModalInitState: TaskModalStoreType = {
   isModalVisible: false,
@@ -12,7 +13,7 @@ export const taskModalInitState: TaskModalStoreType = {
       plannedDate: new Date().toISOString(),
       status: "active",
       priority: "low",
-      listId: [],
+      listId: getInitialListId(),
       taskId: "",
       category: "Without",
     },

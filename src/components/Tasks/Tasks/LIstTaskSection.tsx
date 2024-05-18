@@ -34,11 +34,10 @@ export const ListTaskSection: React.FC = () => {
   const currentList = listInfo.lists.find(
     (list) => list.listId === urlParams.slug
   );
-  const grouppedTasks = getGrouppedTasks(
-    currentList?.tasks.filter((task) => {
-      return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
-    })
-  );
+  const currentListTasks = currentList?.tasks.filter((task) => {
+    return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
+  });
+  const grouppedTasks = getGrouppedTasks(currentListTasks);
 
   const dispatch = useAppDispatch();
 
