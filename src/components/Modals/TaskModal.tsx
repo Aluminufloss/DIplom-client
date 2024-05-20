@@ -1,9 +1,9 @@
-"use client";
-
-import React, { Ref, RefObject } from "react";
+import React from "react";
 import styled, { useTheme } from "styled-components";
 import { Form, Formik, FormikProps } from "formik";
+import { usePathname } from "next/navigation";
 
+import { getPageType } from "@/utils/getPageType";
 import { useAppSelector } from "@/utils/hooks/useAppSelector";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { compareModalParamsWithInitial } from "@/utils/compareModalParamsWithInitial";
@@ -28,9 +28,11 @@ import ListSelector from "../TaskModalSelectors/ListSelector";
 import CategorySelector from "../TaskModalSelectors/CategorySelector";
 import PrimaryButton from "../UI/buttons/PrimaryButton";
 import TaskModalActionButtons from "../TaskModalActionButtons";
+import TimeSelector from "../TaskModalSelectors/TimeSelector";
 
 const TaskModal: React.FC = () => {
   const theme = useTheme();
+  const pathName = usePathname();
 
   const modalInfo = useAppSelector((state) => state.taskModal);
   const [isActionsModalVisible, setIsActionsModalVisible] =
@@ -66,6 +68,7 @@ const TaskModal: React.FC = () => {
   const handleModalSubmit = React.useCallback(
     async (values: ModalParamsType) => {
       console.log("values from modal", values);
+
       if (!initialParamsRef.current) {
         return;
       }
@@ -172,7 +175,11 @@ const TaskModal: React.FC = () => {
     dispatch(
       deleteTask({
         taskId: modalInfo.modalParams.taskInfo.taskId,
-        listId: modalInfo.modalParams.taskInfo.listId?.[2],
+        listId:
+          modalInfo.modalParams.taskInfo.listId?.length === 1
+            ? modalInfo.modalParams.taskInfo.listId[0]
+            : "",
+        pageType: getPageType(pathName),
       })
     )
       .unwrap()
@@ -249,7 +256,6 @@ const TaskModal: React.FC = () => {
                   name="taskInfo.plannedDate"
                   value={values.taskInfo.plannedDate}
                   setFieldValue={setFieldValue}
-                  shouldDisablePast={values.modalType === "create"}
                   className="modal__planned"
                 />
                 <ListSelector
@@ -266,6 +272,11 @@ const TaskModal: React.FC = () => {
                   value={values.taskInfo.category}
                   className="modal__category"
                 />
+                <TimeSelector
+                  value={values.taskInfo.timeDuration}
+                  setFieldValue={setFieldValue}
+                  className="modal__time"
+                />
                 {modalInfo.modalParams.modalType === "edit" && (
                   <PrimaryButton
                     type="button"
@@ -276,15 +287,14 @@ const TaskModal: React.FC = () => {
                     title="Удалить задачу"
                   />
                 )}
+                <TaskModalActionButtons
+                  actionType={actionsModalType}
+                  cancelAction={() => setIsActionsModalVisible(false)}
+                  deleteAction={handleDeleteTask}
+                  exitAction={onExitAction}
+                  isVisible={isActionsModalVisible}
+                />
               </div>
-              <div className="modal__actions-overlay" />
-              <TaskModalActionButtons
-                actionType={actionsModalType}
-                cancelAction={() => setIsActionsModalVisible(false)}
-                deleteAction={handleDeleteTask}
-                exitAction={onExitAction}
-                isVisible={isActionsModalVisible}
-              />
             </StyledModal>
             {modalInfo.isModalVisible && (
               <StyledOverlay
@@ -332,6 +342,8 @@ const StyledModal = styled(Form)<{
 
   .modal {
     &__content {
+      position: relative;
+
       padding: 20px 24px;
     }
 
@@ -341,7 +353,8 @@ const StyledModal = styled(Form)<{
     &__date,
     &__list,
     &__planned,
-    &__category {
+    &__category,
+    &__time {
       margin-bottom: 20px;
     }
 
