@@ -3,6 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 import { format } from "date-fns";
+import classNames from "classnames";
 
 import { isDatesEqual } from "@/utils/dateUtils";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
@@ -84,6 +85,12 @@ export const TaskItem: React.FC<PropsType> = (props) => {
           </p>
         </>
       )}
+      <div
+        className={classNames(
+          "task__priority",
+          `task__priority--${props.task.priority}`
+        )}
+      />
     </StyledTaskItem>
   );
 };
@@ -171,6 +178,31 @@ const StyledTaskItem = styled.div`
       ${(props) => props.theme.typography.fnTitle2}
       ${(props) => props.theme.typography.fnMedium};
       color: ${(props) => props.theme.colorValues.grey};
+    }
+
+    &__priority {
+      width: 18px;
+      height: 18px;
+
+      border-radius: 100px;
+
+      margin-left: auto;
+    }
+
+    &:hover {
+      &.task__priority {
+        &--low {
+          background-color: ${(props) => props.theme.colorValues.green};
+        }
+
+        &--medium {
+          background-color: ${(props) => props.theme.colorValues.yellow};
+        }
+
+        &--high {
+          background-color: ${(props) => props.theme.colorValues.redSecondary};
+        }
+      }
     }
   }
 `;

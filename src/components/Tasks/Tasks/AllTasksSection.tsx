@@ -101,11 +101,7 @@ export const AllTasksSection: React.FC = () => {
           )}
 
           {!!listInfo.lists.length && (
-            <AllTasksListSection lists={listInfo.lists} />
-          )}
-
-          {!!searchValue.length && !filteredAllTasks.length && (
-            <EmptySearchCard />
+            <AllTasksListSection lists={listInfo.lists} searchValue={searchValue} />
           )}
         </>
       )}

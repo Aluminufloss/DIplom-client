@@ -13,11 +13,18 @@ import TaskSection from "@/components/UI/TaskSection";
 
 type PropsType = {
   lists?: TasksListType[];
+  searchValue?: string;
 };
 
 export const AllTasksListSection: React.FC<PropsType> = (props) => {
   return props.lists?.map((list) => {
-    const grouppedTasks = getGrouppedTasks(list.tasks);
+    const grouppedTasks = getGrouppedTasks(
+      list.tasks.filter((task) => {
+        return task.title
+          .toLowerCase()
+          .startsWith(props.searchValue?.toLowerCase() || "");
+      })
+    );
 
     return !!list.tasks.length ? (
       <StyledTaskSection>
@@ -59,6 +66,8 @@ export const AllTasksListSection: React.FC<PropsType> = (props) => {
 
 const StyledTaskSection = styled.div`
   width: 100%;
+
+  margin-top: 30px;
 
   .date {
     width: 300px;
