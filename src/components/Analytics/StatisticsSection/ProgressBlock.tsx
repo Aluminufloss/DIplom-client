@@ -12,6 +12,9 @@ type PropsType = {
 };
 
 const ProgressBlock: React.FC<PropsType> = (props) => {
+  const numberOfCompletedTasks = props.completedTasksLength ?? 0;
+  const numberOfTasks = props.tasksLength ?? 0;
+
   const getCompletedPercent: number = getAnalyticsPercent(
     props.completedTasksLength,
     props.tasksLength
@@ -26,14 +29,21 @@ const ProgressBlock: React.FC<PropsType> = (props) => {
           series={[
             {
               data: [
-                { id: 0, value: props.tasksLength ?? 0 },
-                { id: 1, value: props.completedTasksLength ?? 0 },
+                {
+                  id: 0,
+                  value: numberOfTasks - numberOfCompletedTasks,
+                  label: "Активные",
+                },
+                { id: 1, value: numberOfCompletedTasks, label: "Завершённые" },
               ],
               innerRadius: 88,
               startAngle: 90,
               endAngle: 450,
             },
           ]}
+          slotProps={{
+            legend: { hidden: true },
+          }}
           colors={[theme.colorValues.lightGrey, theme.colorValues.green]}
           margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
           width={200}

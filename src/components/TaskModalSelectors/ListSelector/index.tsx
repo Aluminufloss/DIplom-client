@@ -139,12 +139,14 @@ const StyledListSelector = styled.div`
   align-items: center;
 
   & label {
-    top: -4px;
+    top: -5px;
 
     &.Mui-focused {
-      color: ${(props) => props.theme.colorValues.black};
-      font-size: 16px;
       top: 0;
+
+      color: ${(props) => props.theme.colorValues.black};
+      
+      font-size: 16px;
     }
   }
 
@@ -160,11 +162,11 @@ const StyledListSelector = styled.div`
       }
 
       .MuiOutlinedInput-root {
-        padding: 12px 16px 0;
+        padding: 7.5px 16px;
       }
 
       .MuiAutocomplete-input {
-        padding: 0 0 12px;
+        padding: 6px 0;
       }
     }
 

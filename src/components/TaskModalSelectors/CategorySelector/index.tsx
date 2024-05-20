@@ -24,7 +24,7 @@ type ParamsType = {
 
 type CategoryOptionType = {
   title: string;
-  value: string;
+  value?: string;
   inputValue?: string;
 };
 
@@ -91,6 +91,7 @@ const CategorySelector: React.FC<ParamsType> = (props) => {
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
+        disableClearable
         options={Categories.map((category, index) => ({
           title: TranslatedCategories[index],
           value: category,
@@ -119,7 +120,7 @@ const StyledCategorySelector = styled.div`
   align-items: center;
 
   & label {
-    top: -4px;
+    top: 0;
 
     &.Mui-focused {
       color: ${(props) => props.theme.colorValues.black};
@@ -142,11 +143,11 @@ const StyledCategorySelector = styled.div`
       }
 
       .MuiOutlinedInput-root {
-        padding: 12px 16px 0;
+        padding: 7.5px 16px;
       }
 
       .MuiAutocomplete-input {
-        padding: 0 0 12px;
+        padding: 6px 0;
       }
     }
 
