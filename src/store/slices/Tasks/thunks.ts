@@ -3,7 +3,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import { TaskStatusType } from "@/models";
+import { PagesEnum, TaskStatusType } from "@/models";
 
 import { ITask } from "@/api/models/Response/Tasks/ITask";
 import TasksService from "@/api/services/TasksService";
@@ -59,7 +59,7 @@ export const updateTask = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   "tasks/deleteTask",
-  async (options: { taskId: string, listId?: string }, { rejectWithValue }) => {
+  async (options: { taskId: string, pageType: PagesEnum, listId?: string }, { rejectWithValue }) => {
     try {
       await TasksService.deleteTask(options.taskId);
     } catch (err) {

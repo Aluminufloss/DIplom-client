@@ -5,15 +5,22 @@ export const compareModalParamsWithInitial = (
   initialParams: ITask
 ) => {
   const isTitlesEqual = newTaskInfo.title === initialParams.title;
-  const isDescriptionsEqual = newTaskInfo.description === initialParams.description;
+  const isDescriptionsEqual =
+    newTaskInfo.description === initialParams.description;
   const isCategoriesEqual = newTaskInfo.category === initialParams.category;
   const isPrioritiesEqual = newTaskInfo.priority === initialParams.priority;
-  const isListsEqual = newTaskInfo.listId?.length === initialParams.listId?.length;
-  const isPlannedDataEqual = newTaskInfo.plannedDate === initialParams.plannedDate;
+  const isListsEqual =
+    newTaskInfo.listId?.length === initialParams.listId?.length;
+  const isPlannedDataEqual =
+    newTaskInfo.plannedDate === initialParams.plannedDate;
 
   const isRepeatDaysEqual = newTaskInfo.repeatDays.some((item, index) => {
     return item.isSelected !== initialParams.repeatDays[index].isSelected;
   });
+
+  const isDurationTimeEqual =
+    newTaskInfo.timeDuration?.hours === initialParams.timeDuration?.hours &&
+    newTaskInfo.timeDuration?.minutes === initialParams.timeDuration?.minutes;
 
   return (
     isTitlesEqual &&
@@ -22,6 +29,7 @@ export const compareModalParamsWithInitial = (
     isPrioritiesEqual &&
     !isRepeatDaysEqual &&
     isPlannedDataEqual &&
+    isDurationTimeEqual &&
     isListsEqual
   );
-}
+};

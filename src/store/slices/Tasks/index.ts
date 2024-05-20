@@ -186,7 +186,6 @@ const Tasks = createSlice({
           });
         } else {
           state.plannedTasks = state.plannedTasks.map((item) => {
-            console.log("planned item", item.title);
             if (item.taskId === task.taskId) {
               return {
                 ...item,
@@ -290,24 +289,18 @@ const Tasks = createSlice({
         }
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-        if (action.meta.arg.listId) {
+        if (action.meta.arg.pageType === "list") {
           return;
         }
 
-        const task = state.allTasks.find(
-          (item) => item.taskId === action.meta.arg.taskId
-        );
-
-        if (task) {
-          if (isDatesEqual(new Date(task?.plannedDate), new Date())) {
-            state.todayTasks = state.todayTasks.filter(
-              (item) => item.taskId !== task.taskId
-            );
-          } else {
-            state.plannedTasks = state.plannedTasks.filter(
-              (item) => item.taskId !== task.taskId
-            );
-          }
+        if (action.meta.arg.pageType === "today") {
+          state.todayTasks = state.todayTasks.filter(
+            (item) => item.taskId !== action.meta.arg.taskId
+          );
+        } else {
+          state.plannedTasks = state.plannedTasks.filter(
+            (item) => item.taskId !== action.meta.arg.taskId
+          );
         }
 
         state.allTasks = state.allTasks.filter(
@@ -317,7 +310,7 @@ const Tasks = createSlice({
       .addCase(updateTask.fulfilled, (state, action) => {
         const updatedTask = action.payload;
 
-        if (updatedTask.listId?.length === 3) {
+        if (updatedTask.listId?.length === 1) {
           return;
         }
 
@@ -328,12 +321,26 @@ const Tasks = createSlice({
             }
             return item;
           });
+
+          state.plannedTasks = state.plannedTasks.filter((item) => {
+            if (item.taskId === updatedTask.taskId) {
+              return false;
+            }
+            return true;
+          });
         } else {
           state.plannedTasks = state.plannedTasks.map((item) => {
             if (item.taskId === updatedTask.taskId) {
               return updatedTask;
             }
             return item;
+          });
+
+          state.todayTasks = state.todayTasks.filter((item) => {
+            if (item.taskId === updatedTask.taskId) {
+              return false;
+            }
+            return true;
           });
         }
 

@@ -1,5 +1,6 @@
-import { getInitialSelectedDays } from "@/utils/getInitialSelectedDays";
 import { TaskModalStoreType } from "./models";
+
+import { getInitialSelectedDays } from "@/utils/getInitialSelectedDays";
 import getInitialListId from "@/utils/getInitialListId";
 
 export const taskModalInitState: TaskModalStoreType = {
@@ -16,6 +17,10 @@ export const taskModalInitState: TaskModalStoreType = {
       listId: getInitialListId(),
       taskId: "",
       category: "Without",
+      timeDuration: {
+        hours: 0,
+        minutes: 0,
+      },
     },
   },
 };

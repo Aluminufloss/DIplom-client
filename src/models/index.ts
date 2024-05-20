@@ -37,14 +37,24 @@ export type priorityAnalyticsType = {
   high: number;
 };
 
+export type categoryEntityType = {
+  numberOfTasks: number;
+  totalTime: DurationType;
+}
+
 export type categoriesAnalyticsType = {
-  personal: number;
-  work: number;
-  study: number;
-  other: number;
-  travelling: number;
-  without: number;
+  personal: categoryEntityType;
+  work: categoryEntityType;
+  study: categoryEntityType;
+  other: categoryEntityType;
+  travelling: categoryEntityType;
+  without: categoryEntityType;
 };
+
+export type DurationType = {
+  hours: number;
+  minutes: number;
+}
 
 export type AnalyticsType = {
   tasksAnalytics: TasksAnalyticsType;

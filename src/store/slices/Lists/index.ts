@@ -57,7 +57,7 @@ export const listsInfo = createSlice({
         currentList.tasks = [task, ...currentList.tasks];
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-        if (action.meta.arg.listId?.length !== 1) {
+        if (action.meta.arg.pageType !== "list") {
           return;
         }
 
@@ -72,7 +72,7 @@ export const listsInfo = createSlice({
         }
       })
       .addCase(updateTask.fulfilled, (state, action) => {
-        if (action.meta.arg.listId?.length !== 1) {
+        if (!action.meta.arg.listId) {
           return;
         }
 
