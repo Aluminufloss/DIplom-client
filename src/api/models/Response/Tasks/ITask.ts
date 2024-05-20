@@ -1,4 +1,4 @@
-import { TaskPriorityType, TaskStatusType } from "@/models";
+import { DurationType, TaskPriorityType, TaskStatusType } from "@/models";
 import { SelectesdDayType } from "@/store/slices/TaskModal/models";
 
 export interface ITask {
@@ -11,4 +11,5 @@ export interface ITask {
   repeatDays: SelectesdDayType[];
   description?: string;
   category?: string;
+  timeDuration?: DurationType;
 }
