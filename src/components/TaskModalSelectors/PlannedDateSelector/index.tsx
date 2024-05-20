@@ -14,7 +14,6 @@ import ReusableImage from "@/components/UI/image";
 
 type ParamsType = {
   name: string;
-  shouldDisablePast?: boolean;
   setFieldValue: (
     field: string,
     value: string,
@@ -49,8 +48,8 @@ const PlannedDateSelector: React.FC<ParamsType> = (props) => {
           defaultValue={dayjs(new Date())}
           onChange={handleDateChange}
           value={datepickerValue}
-          disablePast={props.shouldDisablePast}
           className="selector__datepicker"
+          disablePast
         />
       </LocalizationProvider>
     </StyledPlannedDateSelector>
