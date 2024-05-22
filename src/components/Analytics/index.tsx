@@ -5,13 +5,14 @@ import styled from "styled-components";
 
 import { AnalyticsType } from "@/models";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+
 import { setLists } from "@/store/slices/Lists";
+import { setGroups } from "@/store/slices/Groups";
 
 import GraphSection from "./GraphSection";
+import EmptySection from "./EmptySection";
 import AnalyticsSectionBar from "./AnalyticsSectionBar";
 import StatisticsSection from "./StatisticsSection";
-import { setGroups } from "@/store/slices/Groups";
-import EmptySection from "./EmptySection";
 
 const AnalyticsSection: React.FC = () => {
   const [data, setData] = React.useState<AnalyticsType>();
