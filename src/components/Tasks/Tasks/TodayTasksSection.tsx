@@ -31,7 +31,8 @@ export const TodayTasksSection: React.FC = () => {
   );
   const isTasksLoading = useAppSelector((state) => state.lists.isLoading);
   const todayTasks: ITask[] = useAppSelector((state) => state.tasks.todayTasks);
-  const filteredTodayTasks: ITask[] = todayTasks.filter((task) => {
+  console.log("todayTasks", todayTasks);
+  const filteredTodayTasks: ITask[] = todayTasks?.filter((task) => {
     return task.title.toLowerCase().startsWith(searchValue.toLowerCase());
   });
   const grouppedTasks = getGrouppedTasks(filteredTodayTasks);
@@ -48,9 +49,9 @@ export const TodayTasksSection: React.FC = () => {
 
       const todayTasksPageResponseData = await todayTasksPageResponse.json();
 
-      dispatch(setTodayTasks(todayTasksPageResponseData?.tasks.data));
-      dispatch(setLists(todayTasksPageResponseData?.lists));
-      dispatch(setGroups(todayTasksPageResponseData?.groups));
+      dispatch(setTodayTasks(todayTasksPageResponseData?.tasks.data ?? []));
+      dispatch(setLists(todayTasksPageResponseData?.lists ?? []));
+      dispatch(setGroups(todayTasksPageResponseData?.groups ?? []));
 
       dispatch(setListsLoading(false));
 

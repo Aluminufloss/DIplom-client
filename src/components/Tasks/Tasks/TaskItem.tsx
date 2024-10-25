@@ -17,13 +17,12 @@ type PropsType = {
   task: ITask;
 };
 
-const TASK_SOUND = new Audio("/sounds/task_complete_sound.mp3");
-
 export const TaskItem: React.FC<PropsType> = (props) => {
   const dispatch = useAppDispatch();
 
   const handleChangeTaskStatus = React.useCallback(
     (ev: React.MouseEvent) => {
+      const TASK_SOUND = new Audio("/sounds/task_complete_sound.mp3");
       TASK_SOUND.play();
       ev.stopPropagation();
 

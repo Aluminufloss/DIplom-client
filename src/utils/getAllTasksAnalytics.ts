@@ -9,8 +9,8 @@ const getAllTasksAnalytics = async (options: {
   "use server";
 
   const analyticsResponse = await serverSideFetch<AnalyticsServerResponseType>({
-    url: "http://localhost:5000/getAll/analytics",
-    method: "POST",
+    url: "http://localhost:5000/analytics",
+    method: "GET",
     body: options,
   });
 

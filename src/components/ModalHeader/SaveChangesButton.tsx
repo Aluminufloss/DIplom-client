@@ -1,11 +1,20 @@
 import styled from "styled-components";
 
 type PropsType = {
+  isDisabled: boolean;
   onSaveChanges: () => void;
 };
 
 const SaveChangesButton: React.FC<PropsType> = (props) => {
-  return <StyledButton onClick={props.onSaveChanges} type="button">Сохранить</StyledButton>;
+  return (
+    <StyledButton
+      onClick={props.onSaveChanges}
+      type="button"
+      disabled={props.isDisabled}
+    >
+      Сохранить
+    </StyledButton>
+  );
 };
 
 const StyledButton = styled.button`

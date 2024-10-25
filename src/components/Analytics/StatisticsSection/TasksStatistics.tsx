@@ -55,6 +55,7 @@ const StyledCategoriesStatistics = styled.div`
 
   .statistics {
     &__title {
+      text-align: center;
       margin-bottom: 16px;
 
       ${(props) => props.theme.typography.fnTitle2}

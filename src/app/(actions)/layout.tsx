@@ -1,9 +1,15 @@
 "use client";
 
-import { STATIC_URLS } from "@/utils/constant";
-import media from "@/utils/media";
 import Image from "next/image";
 import styled from "styled-components";
+import { Provider } from "react-redux";
+
+import { STATIC_URLS } from "@/utils/constant";
+import media from "@/utils/media";
+
+import { store } from "@/store";
+
+import SnackBar from "@/components/UI/snackbar";
 
 export default function FormsLayout({
   children,
@@ -11,16 +17,20 @@ export default function FormsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StyledFormsLayout>
-      <div className="image__container">
-        <Image
-          src={`${STATIC_URLS.BACKGROUND}/actions_background.png`}
-          alt="Actions background"
-          fill
-        />
-      </div>
-      <div className="content">{children}</div>
-    </StyledFormsLayout>
+    <Provider store={store}>
+      <StyledFormsLayout>
+        <div className="image__container">
+          <Image
+            src={`${STATIC_URLS.BACKGROUND}/actions_background.png`}
+            alt="Actions background"
+            fill
+          />
+        </div>
+        <div className="content">{children}</div>
+      </StyledFormsLayout>
+      <SnackBar />
+    </Provider>
+    
   );
 }
 

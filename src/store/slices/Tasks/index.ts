@@ -311,6 +311,22 @@ const Tasks = createSlice({
         const updatedTask = action.payload;
 
         if (updatedTask.listId?.length === 1) {
+          if (isDatesEqual(new Date(updatedTask.plannedDate), new Date())) {
+            state.todayTasks = state.todayTasks.filter((item) => {
+              if (item.taskId === updatedTask.taskId) {
+                return false;
+              }
+              return true;
+            });
+          } else {
+            state.plannedTasks = state.plannedTasks.filter((item) => {
+              if (item.taskId === updatedTask.taskId) {
+                return false;
+              }
+              return true;
+            });
+          } 
+
           return;
         }
 

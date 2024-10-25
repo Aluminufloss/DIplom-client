@@ -26,8 +26,11 @@ export enum AppRoutes {
   tasksPlanned = "tasks/planned",
   sendChangePasswordLink = "changePassword",
   list = "tasks/list",
-  analyticsAll = "tasks/analytics/all",
   analytics = "tasks/analytics",
+  analyticsAll = "tasks/analytics/all",
+  analyticsMonth = "tasks/analytics/month",
+  analyticsWeek = "tasks/analytics/week",
+  analyticsYear = "tasks/analytics/year",
 }
 
 export enum AppPaths {
@@ -40,6 +43,9 @@ export enum AppPaths {
   list = `${CLIENT_URL}/${AppRoutes.list}`,
   analytics = `${CLIENT_URL}/${AppRoutes.analytics}`,
   analyticsAll = `${CLIENT_URL}/${AppRoutes.analyticsAll}`,
+  analyticsMonth = `${CLIENT_URL}/${AppRoutes.analyticsMonth}`,
+  analyticsWeek = `${CLIENT_URL}/${AppRoutes.analyticsWeek}`,
+  analyticsYear = `${CLIENT_URL}/${AppRoutes.analyticsYear}`,
 }
 
 export enum ApiPaths {

@@ -161,9 +161,13 @@ const TaskModal: React.FC = () => {
 
   const onClickOnOverlay = React.useCallback(
     (taskInfo: ITask) => {
+      if (isActionsModalVisible) {
+        return;
+      }
+
       handleCloseModal(taskInfo);
     },
-    [handleCloseModal]
+    [handleCloseModal, isActionsModalVisible]
   );
 
   const onClickDeleteButton = React.useCallback(() => {
@@ -221,6 +225,7 @@ const TaskModal: React.FC = () => {
               <ModalHeader
                 modalType={values.modalType}
                 modalParams={values}
+                isDisabled={isActionsModalVisible}
                 handleSaveChanges={() => handleModalSubmit(values)}
                 handleCloseModal={() => handleCloseModal(values.taskInfo)}
               />
@@ -287,6 +292,7 @@ const TaskModal: React.FC = () => {
                     title="Удалить задачу"
                   />
                 )}
+                <div className="modal__actions-overlay" />
                 <TaskModalActionButtons
                   actionType={actionsModalType}
                   cancelAction={() => setIsActionsModalVisible(false)}

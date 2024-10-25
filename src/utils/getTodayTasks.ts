@@ -10,8 +10,8 @@ const getTodayTasks = async (options?: {
   "use server";
 
   const tasksResponse = await serverSideFetch<TasksServerResponseType>({
-    url: "http://localhost:5000/getToday/task",
-    method: "POST",
+    url: "http://localhost:5000/tasks/today",
+    method: "GET",
     body: options,
   });
 

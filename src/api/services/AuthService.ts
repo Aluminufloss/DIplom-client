@@ -1,11 +1,17 @@
 import $api from "@/axios";
 import { AxiosError, AxiosResponse } from "axios";
-import { AuthResponse, UserLoginType, UserRegistrationType } from "../models/Response/Auth";
+import {
+  AuthResponse,
+  UserLoginType,
+  UserRegistrationType,
+} from "../models/Response/Auth";
 
 export default class AuthService {
-  static async login(options: UserLoginType): Promise<AxiosResponse<AuthResponse>> {
+  static async login(
+    options: UserLoginType
+  ): Promise<AxiosResponse<AuthResponse>> {
     const { email, password, shouldRememberMe } = options;
-    
+
     return $api.post<AuthResponse>("/login", {
       email,
       password,

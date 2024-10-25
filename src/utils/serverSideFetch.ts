@@ -52,7 +52,7 @@ export async function serverSideFetch<T>(
           cookie: `refreshToken=${refreshToken}`,
           Accept: "application/json",
         },
-        method: options.method,
+        method: "POST",
         credentials: "include",
       });
 

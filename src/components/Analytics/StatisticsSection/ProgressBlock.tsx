@@ -32,7 +32,7 @@ const ProgressBlock: React.FC<PropsType> = (props) => {
                 {
                   id: 0,
                   value: numberOfTasks - numberOfCompletedTasks,
-                  label: "Активные",
+                  label: "Незавершённые",
                 },
                 { id: 1, value: numberOfCompletedTasks, label: "Завершённые" },
               ],

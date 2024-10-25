@@ -13,6 +13,8 @@ import AuthService from "@/api/services/AuthService";
 import Input from "@/components/UI/input";
 import PrimaryButton from "@/components/UI/buttons/PrimaryButton";
 import ConfirmationMessageModal from "@/components/ConfirmationMessageModal";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
+import { openSnackbar } from "@/store/slices/Snackbar";
 
 const SendChangePasswordLinkForm: React.FC = () => {
   const [isSuccess, setIsSuccess] = React.useState(true);
@@ -36,9 +38,13 @@ const SendChangePasswordLinkForm: React.FC = () => {
 
         setIsSuccess(true);
         setIsConfirmationModalVisible(true);
+
+        
       } catch (err) {
         setIsSuccess(false);
         setIsConfirmationModalVisible(true);
+
+        
       }
     },
     []

@@ -43,12 +43,12 @@ export type categoryEntityType = {
 }
 
 export type categoriesAnalyticsType = {
-  personal: categoryEntityType;
-  work: categoryEntityType;
-  study: categoryEntityType;
-  other: categoryEntityType;
-  travelling: categoryEntityType;
-  without: categoryEntityType;
+  Personal: categoryEntityType;
+  Work: categoryEntityType;
+  Study: categoryEntityType;
+  Home: categoryEntityType;
+  Travelling: categoryEntityType;
+  Without: categoryEntityType;
 };
 
 export type DurationType = {
@@ -74,6 +74,36 @@ export type WeekAnalyticsType = {
   categories: {
     thisWeek: categoriesAnalyticsType;
     lastWeek: categoriesAnalyticsType;
+  },
+}
+
+export type MonthAnalyticsType = {
+  tasks: {
+    thisMonth: TasksAnalyticsType;
+    lastMonth: TasksAnalyticsType;
+  },
+  priority: {
+    thisMonth: priorityAnalyticsType;
+    lastMonth: priorityAnalyticsType;
+  },
+  categories: {
+    thisMonth: categoriesAnalyticsType;
+    lastMonth: categoriesAnalyticsType;
+  },
+}
+
+export type YearAnalyticsType = {
+  tasks: {
+    thisYear: TasksAnalyticsType;
+    lastYear: TasksAnalyticsType;
+  },
+  priority: {
+    thisYear: priorityAnalyticsType;
+    lastYear: priorityAnalyticsType;
+  },
+  categories: {
+    thisYear: categoriesAnalyticsType;
+    lastYear: categoriesAnalyticsType;
   },
 }
 

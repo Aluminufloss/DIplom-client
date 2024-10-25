@@ -10,6 +10,7 @@ import { ITask } from "@/api/models/Response/Tasks/ITask";
 type PropsType = {
   modalParams: ModalParamsType;
   modalType: ModalType;
+  isDisabled: boolean;
   handleSaveChanges: (values: ModalParamsType) => void;
   handleCloseModal: (taskInfo: ITask) => void;
 };
@@ -24,10 +25,16 @@ const ModalHeader: React.FC<PropsType> = (props) => {
   return (
     <StyledHeader>
       <CancelChangesButton
-        onCancelChanges={() => props.handleCloseModal(props.modalParams.taskInfo)}
+        isDisabled={props.isDisabled}
+        onCancelChanges={() =>
+          props.handleCloseModal(props.modalParams.taskInfo)
+        }
       />
       <p className="title">{modalTitle}</p>
-      <SaveChangesButton onSaveChanges={() => props.handleSaveChanges(props.modalParams)} />
+      <SaveChangesButton
+        isDisabled={props.isDisabled}
+        onSaveChanges={() => props.handleSaveChanges(props.modalParams)}
+      />
     </StyledHeader>
   );
 };

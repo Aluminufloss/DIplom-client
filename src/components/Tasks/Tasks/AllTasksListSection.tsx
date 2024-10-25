@@ -67,7 +67,8 @@ export const AllTasksListSection: React.FC<PropsType> = (props) => {
 const StyledTaskSection = styled.div`
   width: 100%;
 
-  margin-top: 30px;
+  margin-top: 20px;
+  padding-bottom: 20px;
 
   .date {
     width: 300px;

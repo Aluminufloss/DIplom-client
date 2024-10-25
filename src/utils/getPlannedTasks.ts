@@ -10,8 +10,8 @@ const getPlannedTasks = async (options?: {
   "use server"
 
   const tasksResponse = await serverSideFetch<TasksServerResponseType>({
-    url: "http://localhost:5000/getPlanned/task",
-    method: "POST",
+    url: "http://localhost:5000/tasks/planned",
+    method: "GET",
     body: options,
   });
 

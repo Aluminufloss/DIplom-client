@@ -19,7 +19,6 @@ import AddTaskButton from "./AddTaskButton";
 import TaskSectionInfoBar from "./TaskSectionInfoBar";
 import AllTasksListSection from "./AllTasksListSection";
 import TaskSection from "@/components/UI/TaskSection";
-import EmptySearchCard from "@/components/UI/EmptySearchCard";
 import TaskSkeletonsSection from "@/components/UI/Skeletons/Task/TaskSkeletonsSection";
 
 export const AllTasksSection: React.FC = () => {

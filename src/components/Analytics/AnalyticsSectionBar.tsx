@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import AnalyticsDropdown from "./StatisticsSection/AnalyticsDropdown";
 
 const AnalyticsSectionBar: React.FC = () => {
   return (
     <StyledAnalyticsSectionBar>
-      <h3 className="analytics__title">Аналитика</h3>
+      <h3 className="analytics__title">Аналитика по всем задачам</h3>
+      <AnalyticsDropdown />
     </StyledAnalyticsSectionBar>
   );
 };
@@ -11,10 +13,9 @@ const AnalyticsSectionBar: React.FC = () => {
 const StyledAnalyticsSectionBar = styled.section`
   width: 100%;
 
-  background-color: red;
-
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   padding: 12px 16px;
 

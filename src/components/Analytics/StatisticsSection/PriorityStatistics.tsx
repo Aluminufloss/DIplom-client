@@ -41,6 +41,7 @@ const StyledPriorityStatistics = styled.div`
   padding: 24px;
 
   .statistics__title {
+    text-align: center;
     margin-bottom: 16px;
 
     ${(props) => props.theme.typography.fnTitle2}

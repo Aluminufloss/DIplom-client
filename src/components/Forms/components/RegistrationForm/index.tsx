@@ -10,6 +10,7 @@ import axios from "axios";
 import { FormTypes } from "../../models";
 import media from "@/utils/media";
 import { AppPaths, STATIC_URLS } from "@/utils/constant";
+import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { validationRegSchema } from "../../utils/validationRegSchema";
 
 import AuthService from "@/api/services/AuthService";
@@ -19,6 +20,7 @@ import InputWithValidation from "../InputWithValidation";
 import ChangeFormLink from "../ChangeFormLink";
 import ErrorString from "../ErrorString";
 import ReusableImage from "@/components/UI/image";
+import { openSnackbar } from "@/store/slices/Snackbar";
 
 type FormParamsType = {
   email: string;
@@ -34,6 +36,8 @@ const RegistrationForm: React.FC = () => {
     React.useState(false);
   const [passwordSecondVisibility, setPasswordSecondVisibility] =
     React.useState(false);
+
+  const dispatch = useAppDispatch();
 
   const firstPasswordIconPath = passwordFirstVisibility
     ? `${STATIC_URLS.SVG_ICONS}/visibility.svg`
@@ -64,6 +68,14 @@ const RegistrationForm: React.FC = () => {
       });
 
       router.push(AppPaths.login);
+
+      dispatch(
+        openSnackbar({
+          title: "Успешно",
+          message: "Вы успешно зарегистрировались!",
+          type: "success",
+        })
+      );
     } catch (err) {
       if (axios.isAxiosError(err) && err.response && err.response.data) {
         setError(err.response.data.message);

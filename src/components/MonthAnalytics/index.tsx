@@ -3,7 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { WeekAnalyticsType } from "@/models";
+import { MonthAnalyticsType } from "@/models";
 
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 import { setGroups } from "@/store/slices/Groups";
@@ -15,14 +15,14 @@ import AnalyticsSectionBar from "../Analytics/AnalyticsSectionBar";
 import WeekStatisticsSection from "../Analytics/StatisticsSection/WeekStatisticsSection";
 
 const WeekAnalyticsSection: React.FC = () => {
-  const [data, setData] = React.useState<WeekAnalyticsType>();
+  const [data, setData] = React.useState<MonthAnalyticsType>();
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     (async () => {
       const allTasksAnalyticsPageResponse = await fetch(
-        "http://localhost:3000/tasks/analytics/week/api"
+        "http://localhost:3000/tasks/analytics/month/api"
       );
 
       const allTasksAnalyticsPageData =
@@ -46,7 +46,7 @@ const WeekAnalyticsSection: React.FC = () => {
       <AnalyticsSectionBar />
       <div className="content--analytics">
         {!!data?.tasks.thisWeek.tasksLength ? (
-          <GraphSection tasksInfo={data.tasks.thisWeek} type="pie"/>
+          <GraphSection tasksInfo={data.tasks.thisMonth} type="pie"/>
         ) : (
           <EmptySection />
         )}

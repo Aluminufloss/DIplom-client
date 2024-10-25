@@ -8,8 +8,8 @@ const getUserListsAndGroups = async (options?: {
 }): Promise<ListsServerResponseType | undefined> => {
   "use server";
   const response = await serverSideFetch<ListsServerResponseType>({
-    url: "http://localhost:5000/get/lists",
-    method: "POST",
+    url: "http://localhost:5000/lists",
+    method: "GET",
     body: options,
   });
 

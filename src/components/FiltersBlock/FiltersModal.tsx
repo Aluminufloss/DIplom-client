@@ -1,6 +1,9 @@
+import React from "react";
 import styled from "styled-components";
 import { usePathname } from "next/navigation";
+import classNames from "classnames";
 
+import { STATIC_URLS } from "@/utils/constant";
 import { getPageType } from "@/utils/getPageType";
 import { useAppDispatch } from "@/utils/hooks/useAppDispatch";
 
@@ -10,8 +13,8 @@ import {
   sortTasksByPriority,
   sortTasksByTitle,
 } from "@/store/slices/Tasks";
-import React from "react";
-import classNames from "classnames";
+
+import ReusableImage from "../UI/image";
 
 type PropsType = {
   isModalVisible: boolean;
@@ -36,6 +39,13 @@ const FiltersModal: React.FC<PropsType> = (props) => {
           setActiveFilterNumber(0);
         }}
       >
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/today.svg`}
+          alt="calendar icon"
+          width={16}
+          height={16}
+          className="icon"
+        />
         По дате
       </li>
       <li
@@ -48,6 +58,13 @@ const FiltersModal: React.FC<PropsType> = (props) => {
           setActiveFilterNumber(1);
         }}
       >
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/alphabet.svg`}
+          alt="calendar icon"
+          width={16}
+          height={16}
+          className="icon"
+        />
         По алфавиту
       </li>
       <li
@@ -60,6 +77,13 @@ const FiltersModal: React.FC<PropsType> = (props) => {
           setActiveFilterNumber(2);
         }}
       >
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/exclamation_mark.svg`}
+          alt="calendar icon"
+          width={16}
+          height={16}
+          className="icon"
+        />
         По приоритету
       </li>
       <li
@@ -72,6 +96,13 @@ const FiltersModal: React.FC<PropsType> = (props) => {
           setActiveFilterNumber(3);
         }}
       >
+        <ReusableImage
+          src={`${STATIC_URLS.SVG_ICONS}/category.svg`}
+          alt="calendar icon"
+          width={16}
+          height={16}
+          className="icon"
+        />
         По категории
       </li>
     </StyledFiltersModal>
@@ -109,6 +140,9 @@ const StyledFiltersModal = styled.ul<{ $isModalVisible: boolean }>`
   }
 
   .filters__item {
+    display: flex;
+    align-items: center;
+
     ${(props) => props.theme.typography.fnLabel2};
     ${(props) => props.theme.typography.fnMedium};
     color: ${(props) => props.theme.colorValues.black};
@@ -119,9 +153,14 @@ const StyledFiltersModal = styled.ul<{ $isModalVisible: boolean }>`
 
     transition: background-color 0.3s ease;
 
-    &:hover, &--active {
+    &:hover,
+    &--active {
       background-color: ${(props) => props.theme.colorValues.strokeGrey};
     }
+  }
+
+  .icon {
+    margin-right: 8px;
   }
 `;
 

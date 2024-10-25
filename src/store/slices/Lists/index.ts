@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { listsInitialState } from "./initialState";
 
 import { addList, deleteList } from "./thunks";
@@ -25,7 +25,7 @@ export const listsInfo = createSlice({
 
     setListsLoading: (state, action) => {
       state.isLoading = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(addList.fulfilled, (state, action) => {
@@ -72,22 +72,39 @@ export const listsInfo = createSlice({
         }
       })
       .addCase(updateTask.fulfilled, (state, action) => {
-        if (!action.meta.arg.listId) {
+        const updatedTask = action.payload;
+
+        const currentList =
+          updatedTask.listId?.length === 1
+            ? state.lists.find(
+                (list) => list.listId === updatedTask.listId?.[0]
+              )
+            : state.lists.find((list) =>
+                list.tasks.some((item) => item.taskId === updatedTask.taskId)
+              );
+
+        if (!currentList) {
           return;
         }
 
-        const currentList = state.lists.find(
-          (list) => list.listId === action.meta.arg.listId?.[0]
+        if (updatedTask.listId?.length !== 1) {
+          currentList.tasks = currentList.tasks.filter((item) => {
+            return item.taskId !== updatedTask.taskId;
+          });
+
+          return;
+        }
+
+        const taskIndex = currentList?.tasks.findIndex(
+          (item) => item.taskId === action.meta.arg.taskId
         );
 
-        if (currentList) {
-          currentList.tasks = currentList.tasks.map((item) => {
-            if (item.taskId === action.meta.arg.taskId) {
-              return action.payload;
-            }
-            return item;
-          });
+        if (taskIndex === -1) {
+          currentList.tasks = [action.payload, ...currentList.tasks];
+          return;
         }
+
+        currentList.tasks[taskIndex] = action.payload;
       });
     builder.addCase(changeTaskStatus.pending, (state, action) => {
       const task = action.meta.arg.task;
@@ -133,7 +150,7 @@ export const listsInfo = createSlice({
     });
     builder.addCase(addListToGroup.fulfilled, (state, action) => {
       state.lists = [action.payload, ...state.lists];
-    })
+    });
     builder.addCase(createTask.rejected, () => {});
     builder.addMatcher(isPendingAction, (state) => {
       state.isLoading = true;
